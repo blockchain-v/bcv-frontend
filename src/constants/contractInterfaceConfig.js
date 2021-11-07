@@ -1,0 +1,18 @@
+export const contractMethodList = [
+  {
+    id: "REGISTER",
+    displayText: "Register as new user",
+  },
+  {
+    id: "UNREGISTER",
+    displayText: "Unregister current user",
+  },
+  {
+    id: "DEPLOY_VNF",
+    displayText: "Request VNF deployment",
+  },
+  {
+    id: "DELETE_VNF",
+    displayText: "Request Deletion of selected VNF",
+  },
+];
