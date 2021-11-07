@@ -1,5 +1,6 @@
 <template>
   <div id="nav">
+    <router-link to="/contract-interface">Contract Interface</router-link> |
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </div>

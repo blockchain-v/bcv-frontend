@@ -16,6 +16,11 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
+  {
+    path: "/contract-interface",
+    name: "Contract Interface",
+    component: () => import("../views/ContractInterface.vue"),
+  },
 ];
 
 const router = createRouter({

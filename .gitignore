@@ -2,6 +2,8 @@
 node_modules
 /dist
 
+# built contracts
+src/truffle/build
 
 # local env files
 .env.local
