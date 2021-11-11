@@ -115,8 +115,14 @@ export default {
       // TODO: not sure which signature method to use here yet. currently just signs
       // address with address (lmao?)
       // https://ethereum.stackexchange.com/a/25610
-      const signedAddress = window.web3.eth.sign(account, account);
-      const registerRequest = VNFContract.methods.register(signedAddress);
+      const msg = account;
+      const signedAddress = await window.web3.eth.sign(
+        window.web3.utils.sha3(msg),
+        account
+      );
+      const registerRequest = await VNFContract.methods.registerUser(
+        signedAddress
+      );
       const registerResult = await registerRequest.send(
         getDefaultCallParams(account)
       );
@@ -125,7 +131,7 @@ export default {
     },
     async performContractCall_unregister() {
       const account = await this.getAccount();
-      const unregisterRequest = VNFContract.methods.unregister();
+      const unregisterRequest = VNFContract.methods.unregisterUser();
       const unregisterResult = await unregisterRequest.send(
         getDefaultCallParams(account)
       );
