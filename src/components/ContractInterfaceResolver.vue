@@ -8,11 +8,15 @@
       <RegisterUser :method-specification="callMethodSpecification" />
     </div>
     <div v-else-if="methodId === 'UNREGISTER'">
-      <UnregisterUser :method-specification="callMethodSpecification"/>
+      <UnregisterUser :method-specification="callMethodSpecification" />
     </div>
-    <div v-else-if="methodId === 'DEPLOY_VNF'">TODO: Deploy VNF UI</div>
-    <div v-else-if="methodId === 'DELETE_VNF'">TODO: Delete VNF UI</div>
-    <div v-else-if="methodId === 'DEV__GET_VNFS'">TODO: (DEV) Get VNFs UI</div>
+    <div v-else-if="methodId === 'DEPLOY_VNF'">
+      <DeployVNF :method-specification="callMethodSpecification" />
+    </div>
+    <div v-else-if="methodId === 'DELETE_VNF'">TODO: Delete VNF</div>
+    <div v-else-if="methodId === 'DEV__GET_VNFS'">
+      <DEV_getVNFs :method-specification="callMethodSpecification" />
+    </div>
     <div v-else-if="methodId === 'DEV__GET_VNF_DETAILS'">
       TODO: (DEV) GET VNF Details UI
     </div>
@@ -49,6 +53,8 @@ So I'm thinking about the following:
 
 import RegisterUser from "./contractInterfaces/RegisterUser";
 import UnregisterUser from "./contractInterfaces/UnregisterUser";
+import DeployVNF from "./contractInterfaces/DeployVNF";
+import DEV_getVNFs from "./contractInterfaces/DEV_getVNFs";
 import HeaderText from "./atoms/HeaderText";
 import { contractMethodList } from "../constants/contractInterfaceConfig";
 import { isNil as _isNil, find as _find } from "lodash";
@@ -59,6 +65,8 @@ export default {
     // call UIs
     RegisterUser,
     UnregisterUser,
+    DeployVNF,
+    DEV_getVNFs,
     // others
     HeaderText,
   },

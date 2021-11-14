@@ -8,22 +8,27 @@ export const contractMethodList = [
   {
     id: "UNREGISTER",
     displayText: "Unregister current user",
-    actionText: "Unregister",
+    buttonText: "Unregister",
     infoText: "(unregister) imagine a longer text explanation here",
   },
   {
     id: "DEPLOY_VNF",
     displayText: "Request VNF deployment",
+    buttonText: "Deploy VNF",
     infoText: "(deployVNF) imagine a longer text explanation here",
+    inputPlaceholder: "Enter/paste your VNF Descriptor here.",
   },
   {
     id: "DELETE_VNF",
     displayText: "Request Deletion of selected VNF",
+    buttonText: "Delete VNF",
     infoText: "(deleteVNF) imagine a longer text explanation here",
+    inputPlaceholder: "Enter/paste the ID of the VNF you wish to delete.",
   },
   {
     id: "DEV__GET_VNFS",
     displayText: "(DEV only) Get VNFs of calling user",
+    buttonText: "Get VNFs",
     infoText: "(DEV-getVNF) imagine a longer text explanation here",
   },
   {

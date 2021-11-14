@@ -3,6 +3,7 @@
 // https://stackoverflow.com/a/35256494
 html {
   box-sizing: border-box;
+  font-size: 1.25 * $rem-baseline;
 }
 *, *:before, *:after {
   box-sizing: inherit;

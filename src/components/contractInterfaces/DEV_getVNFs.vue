@@ -1,5 +1,5 @@
 <template>
-  <div class="unregister-user-ui">
+  <div class="get-vnfs-ui">
     <CustomButton
       @button-click="initiateContractCall"
       :button-text="buttonText"
@@ -11,10 +11,8 @@
 import { performContractCall } from "../../services/contractCallService";
 import CustomButton from "../atoms/CustomButton";
 
-// TODO: currently identical to RegisterUser -> maybe consolidate
-
 export default {
-  name: "UnregisterUser",
+  name: "DEV_getVNFs",
   components: { CustomButton },
   props: {
     methodSpecification: {
@@ -40,7 +38,7 @@ export default {
 <style lang="scss" scoped>
 @import "src/styles/global.scss";
 
-.unregister-user-ui {
+.get-vnfs-ui {
   display: flex;
   align-items: center;
   justify-content: center;

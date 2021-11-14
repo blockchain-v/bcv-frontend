@@ -10,6 +10,7 @@ import { contractMethodList } from "../constants/contractInterfaceConfig";
 import store from "../store/store.js";
 import { isNil as _isNil } from "lodash";
 import { getDefaultCallParams, VNFContract } from "./truffleService";
+import { v4 as uuidv4 } from "uuid";
 
 export const performContractCall = async (methodId) => {
   console.log("registered call invocation for method id:", methodId);
@@ -20,15 +21,23 @@ export const performContractCall = async (methodId) => {
       break;
     case contractMethodList[1].id:
       // Unregister
-      performContractCall_unregister();
+      await performContractCall_unregister();
       break;
     case contractMethodList[2].id:
-      performContractCall_deployVNF();
+      await performContractCall_deployVNF();
       // DeployVNF
       break;
     case contractMethodList[3].id:
-      performContractCall_deleteVNF();
+      await performContractCall_deleteVNF();
       // DeleteVNF
+      break;
+    case contractMethodList[4].id:
+      await performContractCall_DEV_getVNFs();
+      // DEV only - getVNFs
+      break;
+    case contractMethodList[5].id:
+      await performContractCall_DEV_getVNFDetails();
+      // DEV only - getVNFDetails
       break;
     default:
       console.log(
@@ -75,10 +84,38 @@ const performContractCall_unregister = async () => {
   }
 };
 
-function performContractCall_deployVNF() {
+const performContractCall_deployVNF = async () => {
   console.log("call for deployVNF");
-}
+  const account = store.getters["contracts/getUserETHAccount"];
+  if (!_isNil(account)) {
+    // TODO: real VNFD-ids from backend
+    const VNFD_ID = uuidv4();
+    // TODO: let the user parameters, not VNFDs - that is a different call that goes to
+    // the backend
+    const parameters = store.getters["contracts/getCurrentVNFDescriptorInput"];
+    const deployVNFrequest = VNFContract.methods.deployVNF(VNFD_ID, parameters);
+    const deployVNFresult = await deployVNFrequest.send(
+      getDefaultCallParams(account)
+    );
+    // TODO: CLEANUP logs
+    console.log("deployVNF", deployVNFresult);
+  } else {
+    console.log("no user account to make call with, rejecting...");
+  }
+};
 
-function performContractCall_deleteVNF() {
+const performContractCall_deleteVNF = async () => {
   console.log("call for deleteVNF");
-}
+};
+
+const performContractCall_DEV_getVNFs = async () => {
+  console.log("call for DEV_getVNFS");
+  const getVNFrequest = VNFContract.methods.getVnfs();
+  const getVNFresult = await getVNFrequest.call();
+  // TODO: CLEANUP logs
+  console.log("getVNFs", getVNFresult);
+};
+
+const performContractCall_DEV_getVNFDetails = async () => {
+  console.log("call for DEV_getVNFDetails");
+};

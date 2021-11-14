@@ -57,7 +57,6 @@ import { VNFContract } from "../services/truffleService";
 import { contractMethodList } from "../constants/contractInterfaceConfig";
 import ContractInterfaceResolver from "../components/ContractInterfaceResolver";
 import { isNil as _isNil } from "lodash";
-// import { v4 as uuidv4 } from "uuid";
 import CustomButton from "../components/atoms/CustomButton";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 
@@ -153,22 +152,6 @@ export default {
     //   console.log("account change emit result: ", accounts);
     // },
     // ---------------- CONTRACT CALLS ---------------------------------------------------------------------------------
-    // async performContractCall_deployVNF() {
-    //   const account = await this.getAccount();
-    //   const VNFD_ID = uuidv4(); // TODO: get list from backend
-    //   const parameters = {
-    //     brot: "vollkorn",
-    //     fuellung: ["salami", "gurken", "yoghurt-sauce"],
-    //     laenge: 15,
-    //   };
-    //
-    //   const deployRequest = VNFContract.methods.deployVNF(VNFD_ID, parameters);
-    //   const deployResult = await deployRequest.send(
-    //     getDefaultCallParams(account)
-    //   );
-    //   console.log("result of VNF deployment call:", deployResult);
-    //   this.vnfids.push(deployResult.events.DeployVNF.returnValues.vnfId); // TODO: CLEANUP
-    // },
     // async performContractCall_deleteVNF() {
     //   const account = await this.getAccount();
     //
@@ -236,7 +219,6 @@ export default {
       width: 100%;
 
       .contract-call-item {
-        font-size: 18px;
         cursor: pointer;
         margin: 10px 30px 50px;
         display: flex;
