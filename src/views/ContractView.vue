@@ -21,7 +21,7 @@
 
     <div v-else-if="contractFound && ethereumAccountIsKnown" class="container">
       <h1 class="title has-subtext">Invoke Contract Calls</h1>
-      <p><b>using address:</b><br />{{ ethereumAccount }}</p>
+      <p class="subtitle"><b>using address:</b><br />{{ ethereumAccount }}</p>
       <hr class="horizontal-divider" />
       <div
         class="contract-call-item-container"
@@ -186,6 +186,10 @@ export default {
       justify-content: center;
       align-items: center;
       margin: 50px 0 30px;
+    }
+
+    .subtitle {
+      font-size: 18px;
     }
 
     .title {
