@@ -5,9 +5,11 @@
     </div>
 
     <div v-if="methodId === 'REGISTER'">
-      <RegisterUser :method-id="methodId" />
+      <RegisterUser :method-specification="callMethodSpecification" />
     </div>
-    <div v-else-if="methodId === 'UNREGISTER'">TODO: Unregister UI</div>
+    <div v-else-if="methodId === 'UNREGISTER'">
+      <UnregisterUser :method-specification="callMethodSpecification"/>
+    </div>
     <div v-else-if="methodId === 'DEPLOY_VNF'">TODO: Deploy VNF UI</div>
     <div v-else-if="methodId === 'DELETE_VNF'">TODO: Delete VNF UI</div>
     <div v-else-if="methodId === 'DEV__GET_VNFS'">TODO: (DEV) Get VNFs UI</div>
@@ -23,6 +25,10 @@
 Purpose of this component is to dynamically map a method id from the
 contractMethodList to a UI component specific to that method.
 Think of it as a switch of some sort.
+
+TODO: investigate - v-for option with dynamic component resolution
+see if there is a way to dynamically instantiate a component, because currently
+they all only the 'method-specification'
 
 TODO: decide on variant
 Communication of data is performed with one of two options:
@@ -42,6 +48,7 @@ So I'm thinking about the following:
  */
 
 import RegisterUser from "./contractInterfaces/RegisterUser";
+import UnregisterUser from "./contractInterfaces/UnregisterUser";
 import HeaderText from "./atoms/HeaderText";
 import { contractMethodList } from "../constants/contractInterfaceConfig";
 import { isNil as _isNil, find as _find } from "lodash";
@@ -49,7 +56,10 @@ import { isNil as _isNil, find as _find } from "lodash";
 export default {
   name: "ContractInterfaceResolver",
   components: {
+    // call UIs
     RegisterUser,
+    UnregisterUser,
+    // others
     HeaderText,
   },
   props: {

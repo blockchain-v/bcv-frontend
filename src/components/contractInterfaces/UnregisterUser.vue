@@ -1,5 +1,5 @@
 <template>
-  <div class="register-user-ui">
+  <div class="unregister-user-ui">
     <CustomButton
       @button-click="initiateContractCall"
       :button-text="buttonText"
@@ -11,8 +11,10 @@
 import { performContractCall } from "../../services/contractCallService";
 import CustomButton from "../atoms/CustomButton";
 
+// TODO: currently identical to RegisterUser -> maybe consolidate
+
 export default {
-  name: "RegisterUser",
+  name: "UnregisterUser",
   components: { CustomButton },
   props: {
     methodSpecification: {
@@ -38,7 +40,7 @@ export default {
 <style lang="scss" scoped>
 @import "src/styles/global.scss";
 
-.register-user-ui {
+.unregister-user-ui {
   display: flex;
   align-items: center;
   justify-content: center;

@@ -6,14 +6,14 @@
 
     <div v-else-if="!ethereumAccountIsKnown" class="container">
       <h1 class="title">No Ethereum Account Detected</h1>
-      <p>Please use Metamask to set up a connection with an account</p>
+      <p>Please use MetaMask to set up a connection with an account</p>
       <p>
         The MetaMask extension should open automatically. If it does not, press
         the button below
       </p>
       <div class="button-container">
         <CustomButton
-          @click="connectMetaMask"
+          @button-click="connectMetaMask"
           button-text="Connect to Metamask"
         />
       </div>
@@ -153,57 +153,6 @@ export default {
     //   console.log("account change emit result: ", accounts);
     // },
     // ---------------- CONTRACT CALLS ---------------------------------------------------------------------------------
-    // performContractCall(methodId) {
-    //   console.log("registered call invocation for method id:", methodId);
-    //   switch (methodId) {
-    //     case contractMethodList[0].id:
-    //       // Register
-    //       this.performContractCall_register();
-    //       break;
-    //     case contractMethodList[1].id:
-    //       // Unregister
-    //       this.performContractCall_unregister();
-    //       break;
-    //     case contractMethodList[2].id:
-    //       this.performContractCall_deployVNF();
-    //       // DeployVNF
-    //       break;
-    //     case contractMethodList[3].id:
-    //       this.performContractCall_deleteVNF();
-    //       // DeleteVNF
-    //       break;
-    //     default:
-    //       console.log(
-    //         "unable to identify method to be used with methodId",
-    //         methodId
-    //       );
-    //       break;
-    //   }
-    // },
-    // async performContractCall_register() {
-    //   const account = await this.getAccount();
-    //   // TODO: not sure which signature method to use here yet. currently just signs
-    //   // address with address (lmao?)
-    //   // https://ethereum.stackexchange.com/a/25610
-    //   const signedAddress = await window.web3.eth.sign(
-    //     window.web3.utils.sha3(account),
-    //     account
-    //   );
-    //   const registerRequest = VNFContract.methods.registerUser(signedAddress);
-    //   const registerResult = await registerRequest.send(
-    //     getDefaultCallParams(account)
-    //   );
-    //   console.log("result of registration call:", registerResult);
-    //   // TODO: CLEANUP
-    // },
-    // async performContractCall_unregister() {
-    //   const account = await this.getAccount();
-    //   const unregisterRequest = VNFContract.methods.unregisterUser();
-    //   const unregisterResult = await unregisterRequest.send(
-    //     getDefaultCallParams(account)
-    //   );
-    //   console.log("result of unregistration call:", unregisterResult);
-    // },
     // async performContractCall_deployVNF() {
     //   const account = await this.getAccount();
     //   const VNFD_ID = uuidv4(); // TODO: get list from backend

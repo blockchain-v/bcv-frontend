@@ -2,11 +2,13 @@ export const contractMethodList = [
   {
     id: "REGISTER",
     displayText: "Register as new user",
+    actionText: "Register",
     infoText: "(register) imagine a longer text explanation here",
   },
   {
     id: "UNREGISTER",
     displayText: "Unregister current user",
+    actionText: "Unregister",
     infoText: "(unregister) imagine a longer text explanation here",
   },
   {

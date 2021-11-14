@@ -8,6 +8,8 @@ the state is managed using the Vuex store.
 
 import { contractMethodList } from "../constants/contractInterfaceConfig";
 import store from "../store/store.js";
+import { isNil as _isNil } from "lodash";
+import { getDefaultCallParams, VNFContract } from "./truffleService";
 
 export const performContractCall = async (methodId) => {
   console.log("registered call invocation for method id:", methodId);
@@ -41,19 +43,37 @@ export const performContractCall = async (methodId) => {
 
 const performContractCall_register = async () => {
   console.log("call for register");
-  const data = store.getters["contracts/getTest"];
-  console.log("state before call", data);
-
   const account = store.getters["contracts/getUserETHAccount"];
-  console.log("found account in store", account)
-  const accs = await window.web3.eth.getAccounts();
-  const acc = accs[0];
-  console.log("found accounts from window", acc, accs);
+  if (!_isNil(account)) {
+    const signedAddress = await window.web3.eth.sign(
+      window.web3.utils.sha3(account),
+      account
+    );
+    const registerRequest = VNFContract.methods.registerUser(signedAddress);
+    const registerResult = await registerRequest.send(
+      getDefaultCallParams(account)
+    );
+    // TODO: CLEANUP logs
+    console.log("registerUser", registerResult);
+  } else {
+    console.log("no user account to make call with, rejecting...");
+  }
 };
 
-function performContractCall_unregister() {
+const performContractCall_unregister = async () => {
   console.log("call for unregister");
-}
+  const account = store.getters["contracts/getUserETHAccount"];
+  if (!_isNil(account)) {
+    const unregisterRequest = VNFContract.methods.unregisterUser();
+    const unregisterResult = await unregisterRequest.send(
+      getDefaultCallParams(account)
+    );
+    // TODO: CLEANUP logs
+    console.log("unregisterUser", unregisterResult);
+  } else {
+    console.log("no user account to make call with, rejecting...");
+  }
+};
 
 function performContractCall_deployVNF() {
   console.log("call for deployVNF");
