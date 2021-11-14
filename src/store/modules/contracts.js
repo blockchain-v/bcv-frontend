@@ -6,6 +6,9 @@ Store module for managing contract call data globally
 const state = {
   userETHAccount: null,
   currentVNFDescriptorInput: null,
+  currentVNFToDelete: null,
+  // DEV only
+  currentVNFDetailsID: null,
 };
 
 // getters
@@ -16,6 +19,13 @@ const getters = {
   getCurrentVNFDescriptorInput() {
     return state.currentVNFDescriptorInput;
   },
+  getCurrentVNFToDelete() {
+    return state.currentVNFToDelete;
+  },
+  // DEV only
+  getCurrentVNFDetailsID() {
+    return state.currentVNFDetailsID;
+  },
 };
 
 // actions
@@ -25,6 +35,13 @@ const actions = {
   },
   setCurrentVNFDescriptorInput({ commit }, input) {
     commit("setCurrentVNFDescriptorInput", input);
+  },
+  setCurrentVNFToDelete({ commit }, input) {
+    commit("setCurrentVNFToDelete", input);
+  },
+  // DEV only
+  setCurrentVNFDetailsID({ commit }, id) {
+    commit("setCurrentVNFDetailsID", id);
   },
 };
 
@@ -37,8 +54,13 @@ const mutations = {
   },
   setCurrentVNFDescriptorInput(state, input) {
     state.currentVNFDescriptorInput = input;
-    console.log("set currentVNFDescriptorinput to", input, "in store");
-    // TODO: CLEANUP logs
+  },
+  setCurrentVNFToDelete(state, input) {
+    state.currentVNFToDelete = input;
+  },
+  // DEV only
+  setCurrentVNFDetailsID(state, id) {
+    state.currentVNFDetailsID = id;
   },
 };
 

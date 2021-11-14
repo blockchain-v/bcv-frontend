@@ -13,12 +13,14 @@
     <div v-else-if="methodId === 'DEPLOY_VNF'">
       <DeployVNF :method-specification="callMethodSpecification" />
     </div>
-    <div v-else-if="methodId === 'DELETE_VNF'">TODO: Delete VNF</div>
+    <div v-else-if="methodId === 'DELETE_VNF'">
+      <DeleteVNF :method-specification="callMethodSpecification" />
+    </div>
     <div v-else-if="methodId === 'DEV__GET_VNFS'">
       <DEV_getVNFs :method-specification="callMethodSpecification" />
     </div>
     <div v-else-if="methodId === 'DEV__GET_VNF_DETAILS'">
-      TODO: (DEV) GET VNF Details UI
+      <DEV_getVNFDetails :method-specification="callMethodSpecification" />
     </div>
     <div v-else>TODO: Error Page or smth.</div>
   </div>
@@ -34,10 +36,9 @@ TODO: investigate - v-for option with dynamic component resolution
 see if there is a way to dynamically instantiate a component, because currently
 they all only the 'method-specification'
 
-TODO: decide on variant
-Communication of data is performed with one of two options:
-  (a)   Event Propagation
-  (b)   Vuex Store & computed properties
+TODO: state persistance for input fields
+WHen e.g. mimizing one of the call-items, the input is cleared.
+implement mechanism to reinstate from store.
 
 TODO: account management
 So I'm thinking about the following:
@@ -54,7 +55,9 @@ So I'm thinking about the following:
 import RegisterUser from "./contractInterfaces/RegisterUser";
 import UnregisterUser from "./contractInterfaces/UnregisterUser";
 import DeployVNF from "./contractInterfaces/DeployVNF";
+import DeleteVNF from "./contractInterfaces/DeleteVNF";
 import DEV_getVNFs from "./contractInterfaces/DEV_getVNFs";
+import DEV_getVNFDetails from "./contractInterfaces/DEV_getVNFDetails";
 import HeaderText from "./atoms/HeaderText";
 import { contractMethodList } from "../constants/contractInterfaceConfig";
 import { isNil as _isNil, find as _find } from "lodash";
@@ -66,7 +69,9 @@ export default {
     RegisterUser,
     UnregisterUser,
     DeployVNF,
+    DeleteVNF,
     DEV_getVNFs,
+    DEV_getVNFDetails,
     // others
     HeaderText,
   },

@@ -34,6 +34,8 @@ export const contractMethodList = [
   {
     id: "DEV__GET_VNF_DETAILS",
     displayText: "(DEV only) Get Details of specified VNF",
+    buttonText: "Get VNF Details",
     infoText: "(DEV-getVNF Details) imagine a longer text explanation here",
+    inputPlaceholder: "Enter/paste ID of the VNF",
   },
 ];

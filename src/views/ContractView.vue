@@ -20,7 +20,9 @@
     </div>
 
     <div v-else-if="contractFound && ethereumAccountIsKnown" class="container">
-      <h1 class="title">Invoke Contract Calls</h1>
+      <h1 class="title has-subtext">Invoke Contract Calls</h1>
+      <p><b>using address:</b><br />{{ ethereumAccount }}</p>
+      <hr class="horizontal-divider" />
       <div
         class="contract-call-item-container"
         v-for="method in contractMethodList"
@@ -151,28 +153,6 @@ export default {
     // handleAccountChange(accounts) {
     //   console.log("account change emit result: ", accounts);
     // },
-    // ---------------- CONTRACT CALLS ---------------------------------------------------------------------------------
-    // async performContractCall_deleteVNF() {
-    //   const account = await this.getAccount();
-    //
-    //   if (this.vnfids.length > 0) {
-    //     const VNF_ID = this.vnfids[0]; // TODO CLEANUP
-    //     const deleteRequest = VNFContract.methods.deleteVNF(VNF_ID);
-    //     const deleteResult = await deleteRequest.send(
-    //       getDefaultCallParams(account)
-    //     );
-    //     this.vnfids.splice(0, 1);
-    //     console.log("result of VNF deletion call:", deleteResult);
-    //   } else {
-    //     console.log("rejected invocation of deletion call, no vnfids known");
-    //   }
-    //
-    //   // const deleteRequest = VNFContract.methods.deleteVNF(VNF_ID);
-    //   // const deleteResult = await deleteRequest.send(
-    //   //   getDefaultCallParams(account)
-    //   // );
-    //   // console.log("result of VNF deletion call:", deleteResult);
-    // },
   },
 };
 </script>
@@ -210,6 +190,15 @@ export default {
 
     .title {
       margin-bottom: 40px;
+      &.has-subtext {
+        margin-bottom: unset;
+      }
+    }
+
+    .horizontal-divider {
+      margin-bottom: 20px;
+      font-size: 10px;
+      background-color: $green-white;
     }
 
     .contract-call-item-container {

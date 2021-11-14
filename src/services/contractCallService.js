@@ -106,16 +106,33 @@ const performContractCall_deployVNF = async () => {
 
 const performContractCall_deleteVNF = async () => {
   console.log("call for deleteVNF");
+  const account = store.getters["contracts/getUserETHAccount"];
+  if (!_isNil(account)) {
+    const VNF_toDelete = store.getters["contracts/getCurrentVNFToDelete"];
+    const deleteVNFRequest = VNFContract.methods.deleteVNF(VNF_toDelete);
+    const deleteVNFResult = await deleteVNFRequest.send(
+      getDefaultCallParams(account)
+    );
+    // TODO: CLEANUP logs
+    console.log("unregisterUser", deleteVNFResult);
+  } else {
+    console.log("no user account to make call with, rejecting...");
+  }
 };
 
 const performContractCall_DEV_getVNFs = async () => {
   console.log("call for DEV_getVNFS");
-  const getVNFrequest = VNFContract.methods.getVnfs();
-  const getVNFresult = await getVNFrequest.call();
+  const getVNFRequest = VNFContract.methods.getVnfs();
+  const getVNFResult = await getVNFRequest.call();
   // TODO: CLEANUP logs
-  console.log("getVNFs", getVNFresult);
+  console.log("getVNFs", getVNFResult);
 };
 
 const performContractCall_DEV_getVNFDetails = async () => {
   console.log("call for DEV_getVNFDetails");
+  const VNF_ID = store.getters["contracts/getCurrentVNFDetailsID"];
+  const getVNFDetailsRequest = VNFContract.methods.getVnfDetails(VNF_ID);
+  const getVNFDetailsResult = await getVNFDetailsRequest.call();
+  // TODO: CLEANUP logs
+  console.log("getVNFDetails", getVNFDetailsResult);
 };
