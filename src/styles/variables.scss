@@ -1,0 +1,33 @@
+@import "~sass-rem";
+$rem-baseline: 16px;
+
+/*TODO: rem all the things in all the files*/
+
+// CONTRACT UIs SHARED VARIABLES
+// for the method-id specific UIs
+$method-specific-ui-margin: 30px 0 15px 0 ;
+
+
+// BUTTONS
+$button-padding: 5px 15px;
+
+// COLORS
+/*
+TODO: colors all come here
+ */
+// vue
+$vue-darkblue: #2c3e50;
+$vue-green: #42b983;
+// custom
+// NOTE: some duplicates for colors tied to "events" such as hover, active etc.
+$green-cadetblue: cadetblue;
+$green-aquamarine-medium: mediumaquamarine;
+$green-aquamarine: aquamarine;
+$green-hover: aquamarine;
+$green-spring: #07ffad;
+$green-active: #07ffad;
+$green-mint-tulip: #bdf3e0;
+$green-white: #f7fffd;
+$red: red;
+$red-salmon: darksalmon;
+
