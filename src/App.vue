@@ -8,12 +8,14 @@
 </template>
 
 <style lang="scss">
+@import "src/styles/global.scss";
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: $vue-darkblue;
 }
 
 #nav {
@@ -21,10 +23,10 @@
 
   a {
     font-weight: bold;
-    color: #2c3e50;
+    color: $vue-darkblue;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: $vue-green;
     }
   }
 }
