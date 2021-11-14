@@ -16,7 +16,8 @@
           </div>
 
           <div v-if="expandItemList[method.id]" class="simulated-details">
-            <button @click="performContractCall(method.id)">haHaa</button>
+            <!--            <button @click="performContractCall(method.id)">haHaa</button>-->
+            <ContractInterfaceResolver :method-id="method.id" />
           </div>
         </div>
       </div>
@@ -32,6 +33,7 @@
 <script>
 import { VNFContract, getDefaultCallParams } from "../services/truffleService";
 import { contractMethodList } from "../constants/contractInterfaceConfig";
+import ContractInterfaceResolver from "../components/ContractInterfaceResolver";
 import { isNil as _isNil } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 
@@ -43,6 +45,9 @@ TODOs:
 
 export default {
   name: "ContractInterface",
+  components: {
+    ContractInterfaceResolver,
+  },
   data() {
     return {
       contractMethodList: contractMethodList,
@@ -194,7 +199,7 @@ export default {
     .contract-call-item {
       font-size: 18px;
       cursor: pointer;
-      margin: 10px 30px;
+      margin: 10px 30px 50px;
       display: flex;
       align-items: center;
       flex-direction: column;
