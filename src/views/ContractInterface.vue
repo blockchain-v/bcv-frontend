@@ -115,14 +115,11 @@ export default {
       // TODO: not sure which signature method to use here yet. currently just signs
       // address with address (lmao?)
       // https://ethereum.stackexchange.com/a/25610
-      const msg = account;
       const signedAddress = await window.web3.eth.sign(
-        window.web3.utils.sha3(msg),
+        window.web3.utils.sha3(account),
         account
       );
-      const registerRequest = await VNFContract.methods.registerUser(
-        signedAddress
-      );
+      const registerRequest = VNFContract.methods.registerUser(signedAddress);
       const registerResult = await registerRequest.send(
         getDefaultCallParams(account)
       );

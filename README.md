@@ -32,9 +32,13 @@ truffle compile
 
 After successful compilation, run migration to deploy the contracts
 ```
-truffle migrate
+truffle migrate --reset
 ```
+The `--reset` flag will make sure the contracts are fully migrated even if previous
+versions are already present on the network.
 
-For local development simply open up Ganache with Quickstart.
+For local development simply open up Ganache with Quickstart. Alternatively, 
+create a workspace in Ganache and import the `truffle-config.js` for more detailed
+info within Ganache.
 
 // TODO: how to when deployed etc.
