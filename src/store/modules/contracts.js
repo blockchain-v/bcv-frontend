@@ -7,6 +7,7 @@ const state = {
   userETHAccount: null,
   currentVNFDescriptorInput: null,
   currentVNFToDelete: null,
+  deploymentStatus: null,
   // DEV only
   currentVNFDetailsID: null,
 };
@@ -21,6 +22,9 @@ const getters = {
   },
   getCurrentVNFToDelete() {
     return state.currentVNFToDelete;
+  },
+  getDeploymentStatus(){
+    return state.deploymentStatus;
   },
   // DEV only
   getCurrentVNFDetailsID() {
@@ -38,6 +42,9 @@ const actions = {
   },
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
+  },
+  setDeploymentStatus({commit}, deploymentStatus){
+    commit("setDeploymentStatus", deploymentStatus);
   },
   // DEV only
   setCurrentVNFDetailsID({ commit }, id) {
@@ -57,6 +64,9 @@ const mutations = {
   },
   setCurrentVNFToDelete(state, input) {
     state.currentVNFToDelete = input;
+  },
+  setDeploymentStatus(state, deploymentStatus){
+    state.deploymentStatus = deploymentStatus;
   },
   // DEV only
   setCurrentVNFDetailsID(state, id) {

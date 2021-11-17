@@ -31,4 +31,8 @@ function getDefaultCallParams(account) {
   };
 }
 
-export { VNFContract, getDefaultCallParams };
+function registerEventListener(eventType, callback, filter = {filter: {user: [window.web3.eth.defaultAccount]}}){
+  eventType(filter, callback);
+}
+
+export { VNFContract, getDefaultCallParams, registerEventListener };

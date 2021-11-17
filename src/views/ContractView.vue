@@ -1,9 +1,12 @@
 <template>
   <div class="contract-interface">
+    <div v-if="hasDeploymentStatus" class="container">
+      <p>Deployment of VNF with ID {{deploymentStatus.returnValues["vnfId"]}} {{ deploymentStatus.returnValues["success"] ? "succeeded" : "failed"}}</p>
+      <p>{{ deploymentStatus.returnValues["success"] ? deploymentStatus.returnValues["vnfIdEncrypted"] : ""}}</p>
+    </div>
     <div v-if="isLoading" class="loading-container">
       <PulseLoader />
     </div>
-
     <div v-else-if="!ethereumAccountIsKnown" class="container">
       <h1 class="title">No Ethereum Account Detected</h1>
       <p>Please use MetaMask to set up a connection with an account</p>
@@ -56,6 +59,7 @@
 
 <script>
 import { VNFContract } from "../services/truffleService";
+import { attachEventListener } from "../services/eventListenerService";
 import { contractMethodList } from "../constants/contractInterfaceConfig";
 import ContractInterfaceResolver from "../components/ContractInterfaceResolver";
 import { isNil as _isNil } from "lodash";
@@ -92,7 +96,6 @@ export default {
     // TODO: investigate some more, unable to make it work so far,
     //  https://ethereum.stackexchange.com/a/42810
     //  sticking with alternative below
-
     // NOTE: working, but polling :(
     let account = await this.getAccount().then(() => {
       if (_isNil(account)) {
@@ -110,6 +113,11 @@ export default {
         this.isLoading = false;
       }
     });
+
+    attachEventListener("DeploymentStatus", async (err, e) => {
+      await this.setDeploymentStatus(e);
+      console.log("DeploymentStatus", e.returnValues);
+    });
   },
   computed: {
     contractFound() {
@@ -121,6 +129,12 @@ export default {
     ethereumAccountIsKnown() {
       return !_isNil(this.ethereumAccount);
     },
+    deploymentStatus() {
+      return this.$store.state.contracts.deploymentStatus;
+    },
+    hasDeploymentStatus(){
+      return !_isNil(this.$store.state.contracts.deploymentStatus);
+    }
   },
   methods: {
     // ---------------- UI Helpers -------------------------------------------------------------------------------------
@@ -153,6 +167,9 @@ export default {
     // handleAccountChange(accounts) {
     //   console.log("account change emit result: ", accounts);
     // },
+    async setDeploymentStatus(e){
+      await this.$store.dispatch("contracts/setDeploymentStatus", e)
+    }
   },
 };
 </script>
