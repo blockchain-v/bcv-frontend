@@ -89,7 +89,8 @@ const performContractCall_deployVNF = async () => {
   const account = store.getters["contracts/getUserETHAccount"];
   if (!_isNil(account)) {
     // TODO: real VNFD-ids from backend
-    const VNFD_ID = uuidv4();
+    let VNFD_ID = uuidv4();
+    VNFD_ID = "638530e7-1120-41c1-8a03-149b66247d02";
     // TODO: let the user parameters, not VNFDs - that is a different call that goes to
     // the backend
     const parameters = store.getters["contracts/getCurrentVNFDescriptorInput"];

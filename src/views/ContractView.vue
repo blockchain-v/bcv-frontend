@@ -1,8 +1,25 @@
 <template>
   <div class="contract-interface">
     <div v-if="hasDeploymentStatus" class="container">
-      <p>Deployment of VNF with ID {{deploymentStatus.returnValues["vnfId"]}} {{ deploymentStatus.returnValues["success"] ? "succeeded" : "failed"}}</p>
-      <p>{{ deploymentStatus.returnValues["success"] ? deploymentStatus.returnValues["vnfIdEncrypted"] : ""}}</p>
+      <p>
+        Deployment of VNF with ID {{ deploymentStatus.returnValues["vnfId"] }}
+        {{ deploymentStatus.returnValues["success"] ? "succeeded" : "failed" }}
+      </p>
+      <p>
+        {{
+          deploymentStatus.returnValues["success"]
+            ? deploymentStatus.returnValues["vnfIdEncrypted"]
+            : ""
+        }}
+      </p>
+    </div>
+    <div v-if="hasRegistrationStatus" class="container">
+      <p>
+        Registration for user {{ registrationStatus.returnValues["user"] }}
+        {{
+          registrationStatus.returnValues["success"] ? "succeeded" : "failed"
+        }}
+      </p>
     </div>
     <div v-if="isLoading" class="loading-container">
       <PulseLoader />
@@ -72,6 +89,8 @@ TODO:
     - reject automatic connection
     - initiate via button
     - still yields errors
+  - unified/generic component for registration/deployment/... status messages
+    - also unified interface to store
  */
 
 export default {
@@ -118,6 +137,12 @@ export default {
       await this.setDeploymentStatus(e);
       console.log("DeploymentStatus", e.returnValues);
     });
+
+    attachEventListener("RegistrationStatus", async (err, e) => {
+      console.log("caught RegistrationStatus event");
+      await this.setRegistrationStatus(e);
+      console.log("RegistrationStatus", e.returnValues);
+    });
   },
   computed: {
     contractFound() {
@@ -129,12 +154,18 @@ export default {
     ethereumAccountIsKnown() {
       return !_isNil(this.ethereumAccount);
     },
+    registrationStatus() {
+      return this.$store.state.contracts.registrationStatus;
+    },
+    hasRegistrationStatus() {
+      return !_isNil(this.registrationStatus);
+    },
     deploymentStatus() {
       return this.$store.state.contracts.deploymentStatus;
     },
-    hasDeploymentStatus(){
+    hasDeploymentStatus() {
       return !_isNil(this.$store.state.contracts.deploymentStatus);
-    }
+    },
   },
   methods: {
     // ---------------- UI Helpers -------------------------------------------------------------------------------------
@@ -167,9 +198,12 @@ export default {
     // handleAccountChange(accounts) {
     //   console.log("account change emit result: ", accounts);
     // },
-    async setDeploymentStatus(e){
-      await this.$store.dispatch("contracts/setDeploymentStatus", e)
-    }
+    async setDeploymentStatus(e) {
+      await this.$store.dispatch("contracts/setDeploymentStatus", e);
+    },
+    async setRegistrationStatus(e) {
+      await this.$store.dispatch("contracts/setRegistrationStatus", e);
+    },
   },
 };
 </script>

@@ -8,9 +8,16 @@ const state = {
   currentVNFDescriptorInput: null,
   currentVNFToDelete: null,
   deploymentStatus: null,
+  registrationStatus: null,
   // DEV only
   currentVNFDetailsID: null,
 };
+
+/*
+TODO
+  - (potentially) unified act/mut/get for the eventStatuses, e.g. some map object as state
+  so setting can be done through the key for all statuses
+ */
 
 // getters
 const getters = {
@@ -23,8 +30,11 @@ const getters = {
   getCurrentVNFToDelete() {
     return state.currentVNFToDelete;
   },
-  getDeploymentStatus(){
+  getDeploymentStatus() {
     return state.deploymentStatus;
+  },
+  getRegistrationStatus() {
+    return state.registrationStatus;
   },
   // DEV only
   getCurrentVNFDetailsID() {
@@ -43,8 +53,11 @@ const actions = {
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
   },
-  setDeploymentStatus({commit}, deploymentStatus){
+  setDeploymentStatus({ commit }, deploymentStatus) {
     commit("setDeploymentStatus", deploymentStatus);
+  },
+  setRegistrationStatus({ commit }, registrationStatus) {
+    commit("setRegistrationStatus", registrationStatus);
   },
   // DEV only
   setCurrentVNFDetailsID({ commit }, id) {
@@ -65,8 +78,11 @@ const mutations = {
   setCurrentVNFToDelete(state, input) {
     state.currentVNFToDelete = input;
   },
-  setDeploymentStatus(state, deploymentStatus){
+  setDeploymentStatus(state, deploymentStatus) {
     state.deploymentStatus = deploymentStatus;
+  },
+  setRegistrationStatus(state, registrationStatus) {
+    state.registrationStatus = registrationStatus;
   },
   // DEV only
   setCurrentVNFDetailsID(state, id) {
