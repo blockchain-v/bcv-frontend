@@ -5,7 +5,11 @@
     </div>
 
     <div v-if="methodId === 'REGISTER'">
-      <RegisterUser :method-specification="callMethodSpecification" />
+      <RegisterUser
+        :method-specification="callMethodSpecification"
+        :propagate-events="propagateEvents"
+        @contract-call="propagateContractCallEvent"
+      />
     </div>
     <div v-else-if="methodId === 'UNREGISTER'">
       <UnregisterUser :method-specification="callMethodSpecification" />
@@ -80,6 +84,10 @@ export default {
       default: "",
       type: String,
     },
+    propagateEvents: {
+      default: false,
+      type: Boolean,
+    },
   },
   data() {
     return {
@@ -110,6 +118,13 @@ export default {
       return !_isNil(this.methodId)
         ? this.callMethodSpecification.infoText
         : null;
+    },
+  },
+  methods: {
+    propagateContractCallEvent(methodId) {
+      if (this.propagateEvents) {
+        this.$emit("contractCall", methodId);
+      }
     },
   },
 };

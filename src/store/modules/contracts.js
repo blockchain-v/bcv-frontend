@@ -5,6 +5,7 @@ Store module for managing contract call data globally
 // initial state
 const state = {
   userETHAccount: null,
+  userRegistered: false,
   currentVNFDescriptorInput: null,
   currentVNFToDelete: null,
   // DEV only
@@ -15,6 +16,9 @@ const state = {
 const getters = {
   getUserETHAccount() {
     return state.userETHAccount;
+  },
+  getUserRegistered() {
+    return state.userRegistered;
   },
   getCurrentVNFDescriptorInput() {
     return state.currentVNFDescriptorInput;
@@ -33,11 +37,23 @@ const actions = {
   setUserETHAccount({ commit }, account) {
     commit("setUserETHAccount", account);
   },
+  setUserRegistered({ commit }, bool) {
+    commit("setUserRegistered", bool);
+  },
   setCurrentVNFDescriptorInput({ commit }, input) {
     commit("setCurrentVNFDescriptorInput", input);
   },
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
+  },
+  // async getter via actions
+  getAccountStatus() {
+    return new Promise((resolve) => {
+      resolve({
+        ethAccount: state.userETHAccount,
+        userRegistered: state.userRegistered,
+      });
+    });
   },
   // DEV only
   setCurrentVNFDetailsID({ commit }, id) {
@@ -51,6 +67,9 @@ const mutations = {
     state.userETHAccount = account;
     console.log("set userETHAccount to", account, "in store");
     // TODO: CLEANUP logs
+  },
+  setUserRegistered(state, bool) {
+    state.userRegistered = bool;
   },
   setCurrentVNFDescriptorInput(state, input) {
     state.currentVNFDescriptorInput = input;
