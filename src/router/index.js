@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import store from "../store/store.js";
 import { isNil as _isNil } from "lodash";
 
@@ -14,7 +14,7 @@ const routes = [
   {
     path: "/",
     name: routeNames.ROOT,
-    component: () => import("../App.vue"),
+    component: () => import("../views/AppRoot.vue"),
   },
   {
     path: "/home",
@@ -53,44 +53,29 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 });
 
 // const routesToCheck = [
+// TODO: use in beforeEach guard
+//  -> send back to /home if user not registered
+//  -> (if also no eth account, then /home will push to /)
 //   routeNames.BACKEND_VIEW,
 //   routeNames.CONTRACT_VIEW,
 //   routeNames.ABOUT,
 // ];
 
 router.beforeEach(async (to, from, next) => {
-  // console.log(to)
-  // console.log(Object.values(routeNames))
-  // if (Object.values(routeNames).includes(to.name)) {
-  //   // if called a valid route
-  //   next();
-  // } else {
-  //   next("/");
-  // }
-  console.log(to);
-  next();
+  if (Object.values(routeNames).includes(to.name)) {
+    // if called a valid route
+    console.log("valid route", to.path);
+    next();
+  } else {
+    console.log("invalid route", to.path);
+    next("/");
+  }
 });
 
-// router.beforeEach(async (to, from, next) => {
-//   await store.dispatch("contracts/getAccountStatus").then((res) => {
-//     console.log("ETHacc", res.ethAccount);
-//     console.log("user resgistered", res.userRegistered);
-//
-//     if (_isNil(res.ethAccount) && !res.userRegistered) {
-//       // send to base (app-entry)
-//       next("/");
-//     } else if (!_isNil(res.ethAccount) && !res.userRegistered) {
-//       next("/home");
-//     } else {
-//       // resolve normally
-//       next();
-//     }
-//   });
-// });
 
 export default router;

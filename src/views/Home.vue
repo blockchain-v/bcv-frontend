@@ -1,16 +1,43 @@
 <template>
   <div class="home">
-    <div class="navigation"></div>
-    <router-link to="/contract-view">Contract Interface</router-link> |
-    <router-link to="/backend-view">Make API Calls</router-link> |
-    <router-link to="/about">About</router-link>
+    <div class="container">
+      <h1 class="title has-subtext">Register User with Contract</h1>
+      <p class="subtitle"><b>address to register:</b> {{ ethereumAccount }}</p>
+      <hr class="horizontal-divider" />
+      <ContractInterfaceInitiator
+        :resolver-index="methodGroupingKeys.register"
+        :expand-all-items="true"
+      />
+    </div>
+
+<!--    <button @click="handleClick"></button>-->
   </div>
 </template>
 
 <script>
+import ContractInterfaceInitiator from "../components/ContractInterfaceInitiator";
+import { methodGroupingKeys } from "../constants/contractInterfaceConfig";
+
 export default {
   name: "Home",
-  components: {},
+  components: {
+    ContractInterfaceInitiator,
+  },
+  data() {
+    return {
+      methodGroupingKeys,
+    };
+  },
+  computed: {
+    ethereumAccount() {
+      return this.$store.state.contracts.userETHAccount;
+    },
+  },
+  // methods: {
+  //   handleClick() {
+  //
+  //   }
+  // }
 };
 </script>
 
@@ -18,16 +45,31 @@ export default {
 @import "src/styles/global.scss";
 
 .home {
-  .navigation {
-    padding: 30px;
+  .container {
+    border: 2px solid $green-cadetblue;
+    margin: 40px 100px;
+    padding: 20px 50px;
 
-    a {
-      font-weight: bold;
-      color: $vue-darkblue;
+    &.error {
+      border: 2px solid $red;
+      background-color: $red-salmon;
+    }
 
-      &.router-link-exact-active {
-        color: $vue-green;
+    .subtitle {
+      font-size: 18px;
+    }
+
+    .title {
+      margin-bottom: 40px;
+      &.has-subtext {
+        margin-bottom: unset;
       }
+    }
+
+    .horizontal-divider {
+      margin-bottom: 20px;
+      font-size: 10px;
+      background-color: $green-white;
     }
   }
 }
