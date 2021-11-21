@@ -1,18 +1,34 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <div class="navigation"></div>
+    <router-link to="/contract-view">Contract Interface</router-link> |
+    <router-link to="/backend-view">Make API Calls</router-link> |
+    <router-link to="/about">About</router-link>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
 export default {
   name: "Home",
-  components: {
-    HelloWorld,
-  },
+  components: {},
 };
 </script>
+
+<style lang="scss">
+@import "src/styles/global.scss";
+
+.home {
+  .navigation {
+    padding: 30px;
+
+    a {
+      font-weight: bold;
+      color: $vue-darkblue;
+
+      &.router-link-exact-active {
+        color: $vue-green;
+      }
+    }
+  }
+}
+</style>

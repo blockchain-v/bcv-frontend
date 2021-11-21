@@ -5,6 +5,7 @@ Store module for managing contract call data globally
 // initial state
 const state = {
   userETHAccount: null,
+  userRegistered: false,
   currentVNFDescriptorInput: null,
   currentVNFToDelete: null,
   // DEV only
@@ -38,6 +39,15 @@ const actions = {
   },
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
+  },
+  // async getter via actions
+  getAccountStatus() {
+    return new Promise((resolve) => {
+      resolve({
+        ethAccount: state.userETHAccount,
+        userRegistered: state.userRegistered,
+      });
+    });
   },
   // DEV only
   setCurrentVNFDetailsID({ commit }, id) {
