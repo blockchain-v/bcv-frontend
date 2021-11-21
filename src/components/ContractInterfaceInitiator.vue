@@ -17,7 +17,11 @@
       </div>
 
       <div v-if="expandItemList[method.id]" class="details">
-        <ContractInterfaceResolver :method-id="method.id" />
+        <ContractInterfaceResolver
+          :method-id="method.id"
+          :propagate-events="propagateEventsForMethods.includes(method.id)"
+          @contractCall="propagateContractCallEvent"
+        />
       </div>
     </div>
   </div>
@@ -44,6 +48,17 @@ export default {
     expandAllItems: {
       type: Boolean,
       default: false,
+    },
+    propagateEventsForMethods: {
+      /*
+      allows for the specification of methodIDs for which any calls in the children
+      (ContractInterfaceResolver) and their respective interfaces an event specifying
+      the method should be propagated upwards to the parent of this component.
+      NOTE: on the Resolver level and lower so far only implemented for 'REGISTER',
+       but ez pasta if needed.
+      */
+      default: () => [],
+      type: Array,
     },
   },
   data() {
@@ -73,6 +88,11 @@ export default {
     },
     toggleItemExpand(methodId) {
       this.expandItemList[methodId] = !this.expandItemList[methodId];
+    },
+    propagateContractCallEvent(methodId) {
+      if (this.propagateEventsForMethods.includes(methodId)) {
+        this.$emit("contractCall", methodId);
+      }
     },
   },
 };

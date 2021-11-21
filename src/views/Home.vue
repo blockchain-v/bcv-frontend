@@ -1,22 +1,33 @@
 <template>
   <div class="home">
-    <div class="container">
-      <h1 class="title has-subtext">Register User with Contract</h1>
-      <p class="subtitle"><b>address to register:</b> {{ ethereumAccount }}</p>
+    <div v-if="true" class="container">
+      <h1 class="title has-subtext">User not yet registered!</h1>
+      <p class="subtitle"><b>current user address:</b> {{ ethereumAccount }}</p>
       <hr class="horizontal-divider" />
       <ContractInterfaceInitiator
         :resolver-index="methodGroupingKeys.register"
         :expand-all-items="true"
+        :propagate-events-for-methods="[methodIDs.REGISTER]"
+        @contractCall="handleContractCall"
       />
     </div>
-
-<!--    <button @click="handleClick"></button>-->
   </div>
 </template>
 
 <script>
 import ContractInterfaceInitiator from "../components/ContractInterfaceInitiator";
-import { methodGroupingKeys } from "../constants/contractInterfaceConfig";
+import {
+  methodGroupingKeys,
+  methodIDs,
+} from "../constants/contractInterfaceConfig";
+import { apiCall_challenge } from "../services/apiCallService";
+import { mapState } from "vuex";
+import { routeNames } from "../router";
+
+/*
+TODO
+  - also include title, subtitle (optional), hr (optional ?) in ContractInterfaceInitiator
+ */
 
 export default {
   name: "Home",
@@ -26,18 +37,51 @@ export default {
   data() {
     return {
       methodGroupingKeys,
+      methodIDs,
+      registrationCheckDone: false,
     };
   },
-  computed: {
-    ethereumAccount() {
-      return this.$store.state.contracts.userETHAccount;
+  async mounted() {
+    await this.checkUserRegistration().then(
+      () => (this.registrationCheckDone = true)
+    );
+  },
+  watch: {
+    userRegistered(newVal) {
+      if (newVal === true) {
+        this.$router.push({ name: routeNames.CONTRACT_VIEW });
+      }
     },
   },
-  // methods: {
-  //   handleClick() {
-  //
-  //   }
-  // }
+  computed: {
+    ...mapState("contracts", {
+      ethereumAccount: (state) => state.userETHAccount,
+      userRegistered: (state) => state.userRegistered,
+    }),
+    showUserNotRegistered() {
+      return this.registrationCheckDone && !this.userRegistered;
+    },
+  },
+  methods: {
+    async checkUserRegistration() {
+      this.$store.dispatch("appState/setIsLoading", true);
+      console.log(process.env);
+      const payload = {
+        content: "big content. massive even",
+      };
+      await apiCall_challenge(payload).then(async () => {
+        this.$store.dispatch("appState/setIsLoading", false);
+      });
+    },
+    handleContractCall(methodId) {
+      if (methodId === methodIDs.REGISTER) {
+        this.registrationCheckDone = false;
+        // TODO. good until here, but here would have to listen to event from smart contract
+        //  to trigger re-evaluation of user registration
+        this.checkUserRegistration();
+      }
+    },
+  },
 };
 </script>
 

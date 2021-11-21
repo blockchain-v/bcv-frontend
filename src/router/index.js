@@ -23,7 +23,7 @@ const routes = [
     beforeEnter: async (to, from, next) => {
       await store.dispatch("contracts/getAccountStatus").then((res) => {
         if (_isNil(res.ethAccount)) {
-          next("/");
+          next({ name: routeNames.ROOT });
         } else {
           // if account present, resolve normally
           next();
@@ -57,25 +57,31 @@ const router = createRouter({
   routes,
 });
 
-// const routesToCheck = [
-// TODO: use in beforeEach guard
-//  -> send back to /home if user not registered
-//  -> (if also no eth account, then /home will push to /)
-//   routeNames.BACKEND_VIEW,
-//   routeNames.CONTRACT_VIEW,
-//   routeNames.ABOUT,
-// ];
+const routesToGuard = [routeNames.BACKEND_VIEW, routeNames.CONTRACT_VIEW];
 
 router.beforeEach(async (to, from, next) => {
   if (Object.values(routeNames).includes(to.name)) {
     // if called a valid route
-    console.log("valid route", to.path);
-    next();
+    if (routesToGuard.includes(to.name)) {
+      await store.dispatch("contracts/getAccountStatus").then((res) => {
+        if (!res.userRegistered) {
+          /* 
+          send to /home if no user registered
+          -> if also no account present, /home will send to /
+           */
+          next({ name: routeNames.HOME });
+        } else {
+          next();
+        }
+      });
+    } else {
+      // let non-guarded routes pass
+      next();
+    }
   } else {
     console.log("invalid route", to.path);
-    next("/");
+    next({ name: routeNames.ROOT });
   }
 });
-
 
 export default router;

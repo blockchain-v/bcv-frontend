@@ -18,6 +18,10 @@ export default {
     methodSpecification: {
       type: Object,
     },
+    propagateEvents: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     methodId() {
@@ -29,6 +33,9 @@ export default {
   },
   methods: {
     initiateContractCall() {
+      if (this.propagateEvents) {
+        this.$emit("contractCall", this.methodId);
+      }
       performContractCall(this.methodId);
     },
   },

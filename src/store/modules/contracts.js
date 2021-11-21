@@ -17,6 +17,9 @@ const getters = {
   getUserETHAccount() {
     return state.userETHAccount;
   },
+  getUserRegistered() {
+    return state.userRegistered;
+  },
   getCurrentVNFDescriptorInput() {
     return state.currentVNFDescriptorInput;
   },
@@ -33,6 +36,9 @@ const getters = {
 const actions = {
   setUserETHAccount({ commit }, account) {
     commit("setUserETHAccount", account);
+  },
+  setUserRegistered({ commit }, bool) {
+    commit("setUserRegistered", bool);
   },
   setCurrentVNFDescriptorInput({ commit }, input) {
     commit("setCurrentVNFDescriptorInput", input);
@@ -61,6 +67,9 @@ const mutations = {
     state.userETHAccount = account;
     console.log("set userETHAccount to", account, "in store");
     // TODO: CLEANUP logs
+  },
+  setUserRegistered(state, bool) {
+    state.userRegistered = bool;
   },
   setCurrentVNFDescriptorInput(state, input) {
     state.currentVNFDescriptorInput = input;

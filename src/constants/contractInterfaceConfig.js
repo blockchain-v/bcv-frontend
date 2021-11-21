@@ -88,4 +88,4 @@ const contractMethodList = [
   },
 ];
 
-export { methodGroupingKeys, contractMethodList, methodGroupings };
+export { methodGroupingKeys, contractMethodList, methodGroupings, methodIDs };
