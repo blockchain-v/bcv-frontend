@@ -6,11 +6,15 @@
       :style="customStyle"
       :placeholder="placeholder"
     ></textarea>
+    <div v-if="formatJSON && !validJSON" class="warning-text">
+      {{ warningText }}
+    </div>
   </div>
 </template>
 
 <script>
 import { debounce as _debounce } from "lodash";
+import { uiTexts } from "../../constants/texts";
 
 export default {
   name: "MultilineInput",
@@ -27,6 +31,10 @@ export default {
       default: "",
       type: String,
     },
+    formatJSON: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     areaId() {
@@ -38,9 +46,35 @@ export default {
       };
     },
   },
+  data() {
+    return {
+      validJSON: true,
+      warningText: uiTexts.multilineInput.warningText,
+    };
+  },
   methods: {
-    handleInput: _debounce(function (event) {
+    handleInput(event) {
+      if (this.formatJSON) {
+        this.prettifyJSON();
+      }
+      this.propagateChange(event);
+    },
+    prettifyJSON: _debounce(function () {
       // NOTE: cannot use arrow function here, else we lose the .this context
+      const area = document.querySelector(`#${this.areaId}`);
+      try {
+        const parsed = JSON.parse(area.value);
+        const prettified = JSON.stringify(parsed, undefined, 4);
+        this.validJSON = true;
+        area.value = prettified;
+      } catch (e) {
+        console.log(
+          "JSON parsing error, ignoring. area input will remain unformatted..."
+        );
+        this.validJSON = false;
+      }
+    }, 500),
+    propagateChange: _debounce(function (event) {
       this.$emit("inputChange", event.target.value);
     }, 500),
   },
@@ -65,6 +99,11 @@ export default {
       outline: none !important;
       border: 2px solid $green-active;
     }
+  }
+
+  .warning-text {
+    color: $red;
+    font-size: 16px;
   }
 }
 </style>
