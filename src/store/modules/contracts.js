@@ -7,8 +7,7 @@ const state = {
   userETHAccount: null,
   currentVNFDescriptorInput: null,
   currentVNFToDelete: null,
-  deploymentStatus: null,
-  registrationStatus: null,
+  eventNotifications: [],
   // DEV only
   currentVNFDetailsID: null,
 };
@@ -30,11 +29,8 @@ const getters = {
   getCurrentVNFToDelete() {
     return state.currentVNFToDelete;
   },
-  getDeploymentStatus() {
-    return state.deploymentStatus;
-  },
-  getRegistrationStatus() {
-    return state.registrationStatus;
+  getEventNotifications(eventType){
+    return state.eventNotifications[eventType];
   },
   // DEV only
   getCurrentVNFDetailsID() {
@@ -53,11 +49,8 @@ const actions = {
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
   },
-  setDeploymentStatus({ commit }, deploymentStatus) {
-    commit("setDeploymentStatus", deploymentStatus);
-  },
-  setRegistrationStatus({ commit }, registrationStatus) {
-    commit("setRegistrationStatus", registrationStatus);
+  setEventNotifications( { commit }, {eventType, notification}){
+    commit("setEventNotifications", {eventType: eventType, notification: notification});
   },
   // DEV only
   setCurrentVNFDetailsID({ commit }, id) {
@@ -78,11 +71,8 @@ const mutations = {
   setCurrentVNFToDelete(state, input) {
     state.currentVNFToDelete = input;
   },
-  setDeploymentStatus(state, deploymentStatus) {
-    state.deploymentStatus = deploymentStatus;
-  },
-  setRegistrationStatus(state, registrationStatus) {
-    state.registrationStatus = registrationStatus;
+  setEventNotifications(state, {eventType, notification}) {
+    state.eventNotifications[eventType] = notification;
   },
   // DEV only
   setCurrentVNFDetailsID(state, id) {

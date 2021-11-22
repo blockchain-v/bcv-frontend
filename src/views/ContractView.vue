@@ -134,13 +134,13 @@ export default {
     });
 
     attachEventListener("DeploymentStatus", async (err, e) => {
-      await this.setDeploymentStatus(e);
+      await this.setEventNotification(e, "DeploymentStatus");
       console.log("DeploymentStatus", e.returnValues);
     });
 
     attachEventListener("RegistrationStatus", async (err, e) => {
       console.log("caught RegistrationStatus event");
-      await this.setRegistrationStatus(e);
+      await this.setEventNotification(e, "RegistrationStatus");
       console.log("RegistrationStatus", e.returnValues);
     });
   },
@@ -154,18 +154,18 @@ export default {
     ethereumAccountIsKnown() {
       return !_isNil(this.ethereumAccount);
     },
-    registrationStatus() {
-      return this.$store.state.contracts.registrationStatus;
+    deploymentStatus(){
+      return this.getEventNotification("DeploymentStatus");
     },
-    hasRegistrationStatus() {
-      return !_isNil(this.registrationStatus);
+    hasDeploymentStatus(){
+      return this.hasNotifications("DeploymentStatus");
     },
-    deploymentStatus() {
-      return this.$store.state.contracts.deploymentStatus;
+    registrationStatus(){
+      return this.getEventNotification("RegistrationStatus");
     },
-    hasDeploymentStatus() {
-      return !_isNil(this.$store.state.contracts.deploymentStatus);
-    },
+    hasRegistrationStatus(){
+      return this.hasNotifications("RegistrationStatus");
+    }
   },
   methods: {
     // ---------------- UI Helpers -------------------------------------------------------------------------------------
@@ -198,11 +198,17 @@ export default {
     // handleAccountChange(accounts) {
     //   console.log("account change emit result: ", accounts);
     // },
-    async setDeploymentStatus(e) {
-      await this.$store.dispatch("contracts/setDeploymentStatus", e);
+    async setEventNotification(e, eventType){
+      await this.$store.dispatch("contracts/setEventNotifications", {eventType: eventType, notification: e});
     },
-    async setRegistrationStatus(e) {
-      await this.$store.dispatch("contracts/setRegistrationStatus", e);
+
+    getEventNotification(eventType) {
+      return this.$store.state.contracts.eventNotifications[eventType];
+    },
+
+    hasNotifications(eventType) {
+      let notifications = this.$store.state.contracts.eventNotifications[eventType];
+      return !_isNil(notifications);
     },
   },
 };
