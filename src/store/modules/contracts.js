@@ -49,8 +49,8 @@ const actions = {
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
   },
-  setEventNotifications( { commit }, {eventType, notification}){
-    commit("setEventNotifications", {eventType: eventType, notification: notification});
+  setEventNotifications( { commit }, {eventType, notification, message}){
+    commit("setEventNotifications", {eventType: eventType, notification: notification, message: message});
   },
   // DEV only
   setCurrentVNFDetailsID({ commit }, id) {
@@ -71,8 +71,8 @@ const mutations = {
   setCurrentVNFToDelete(state, input) {
     state.currentVNFToDelete = input;
   },
-  setEventNotifications(state, {eventType, notification}) {
-    state.eventNotifications[eventType] = notification;
+  setEventNotifications(state, {eventType, notification, message}) {
+    state.eventNotifications[eventType] = {notification: notification, message: message};
   },
   // DEV only
   setCurrentVNFDetailsID(state, id) {

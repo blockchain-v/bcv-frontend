@@ -1,26 +1,6 @@
 <template>
   <div class="contract-interface">
-    <div v-if="hasDeploymentStatus" class="container">
-      <p>
-        Deployment of VNF with ID {{ deploymentStatus.returnValues["vnfId"] }}
-        {{ deploymentStatus.returnValues["success"] ? "succeeded" : "failed" }}
-      </p>
-      <p>
-        {{
-          deploymentStatus.returnValues["success"]
-            ? deploymentStatus.returnValues["vnfIdEncrypted"]
-            : ""
-        }}
-      </p>
-    </div>
-    <div v-if="hasRegistrationStatus" class="container">
-      <p>
-        Registration for user {{ registrationStatus.returnValues["user"] }}
-        {{
-          registrationStatus.returnValues["success"] ? "succeeded" : "failed"
-        }}
-      </p>
-    </div>
+    <event-notification v-for="(eventType,index) in eventTypes" v-bind:key="index" v-bind:eventType="eventType" />
     <div v-if="isLoading" class="loading-container">
       <PulseLoader />
     </div>
@@ -76,12 +56,13 @@
 
 <script>
 import { VNFContract } from "../services/truffleService";
-import { attachEventListener } from "../services/eventListenerService";
+import {  EventTypes } from "../services/eventListenerService";
 import { contractMethodList } from "../constants/contractInterfaceConfig";
 import ContractInterfaceResolver from "../components/ContractInterfaceResolver";
 import { isNil as _isNil } from "lodash";
 import CustomButton from "../components/atoms/CustomButton";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import EventNotification from '../components/atoms/EventNotification.vue';
 
 /*
 TODO:
@@ -99,6 +80,7 @@ export default {
     ContractInterfaceResolver,
     CustomButton,
     PulseLoader,
+    EventNotification,
   },
   data() {
     return {
@@ -106,6 +88,11 @@ export default {
       expandItemList: {},
       vnfids: [],
       isLoading: true,
+      eventTypes: [
+       EventTypes.DeploymentStatus,
+       EventTypes.RegistrationStatus,
+       EventTypes.UnregistrationStatus,
+      ]
     };
   },
   async created() {
@@ -132,17 +119,6 @@ export default {
         this.isLoading = false;
       }
     });
-
-    attachEventListener("DeploymentStatus", async (err, e) => {
-      await this.setEventNotification(e, "DeploymentStatus");
-      console.log("DeploymentStatus", e.returnValues);
-    });
-
-    attachEventListener("RegistrationStatus", async (err, e) => {
-      console.log("caught RegistrationStatus event");
-      await this.setEventNotification(e, "RegistrationStatus");
-      console.log("RegistrationStatus", e.returnValues);
-    });
   },
   computed: {
     contractFound() {
@@ -154,18 +130,6 @@ export default {
     ethereumAccountIsKnown() {
       return !_isNil(this.ethereumAccount);
     },
-    deploymentStatus(){
-      return this.getEventNotification("DeploymentStatus");
-    },
-    hasDeploymentStatus(){
-      return this.hasNotifications("DeploymentStatus");
-    },
-    registrationStatus(){
-      return this.getEventNotification("RegistrationStatus");
-    },
-    hasRegistrationStatus(){
-      return this.hasNotifications("RegistrationStatus");
-    }
   },
   methods: {
     // ---------------- UI Helpers -------------------------------------------------------------------------------------
@@ -198,18 +162,6 @@ export default {
     // handleAccountChange(accounts) {
     //   console.log("account change emit result: ", accounts);
     // },
-    async setEventNotification(e, eventType){
-      await this.$store.dispatch("contracts/setEventNotifications", {eventType: eventType, notification: e});
-    },
-
-    getEventNotification(eventType) {
-      return this.$store.state.contracts.eventNotifications[eventType];
-    },
-
-    hasNotifications(eventType) {
-      let notifications = this.$store.state.contracts.eventNotifications[eventType];
-      return !_isNil(notifications);
-    },
   },
 };
 </script>
