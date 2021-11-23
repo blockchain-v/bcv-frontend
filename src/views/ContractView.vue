@@ -1,6 +1,6 @@
 <template>
   <div class="contract-interface">
-    <event-notification v-for="(eventType,index) in eventTypes" v-bind:key="index" v-bind:eventType="eventType" />
+    <EventNotification v-for="(eventType,index) in eventTypes" v-bind:key="index" v-bind:eventType="eventType" />
     <div v-if="isLoading" class="loading-container">
       <PulseLoader />
     </div>
