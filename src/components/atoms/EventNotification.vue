@@ -1,11 +1,12 @@
 <template>
-    <div v-if="hasEventNotification && this.isVisible" class="container">
+    <div v-if="hasEventNotification && this.isVisible" class="container" v-bind:class="{'event-error': isErroneous}">
       <p>
         {{ eventMessage }}
       </p>
-      <CustomButton @button-click="this.isVisible = false" button-text="dismiss"/>
+      <div class="button-container">
+          <CustomButton @button-click="this.isVisible = false" button-text="dismiss"/>
+      </div>
     </div>
-    
 </template>
 
 <script>
@@ -50,6 +51,11 @@ export default {
     },
     eventMessage(){
         return this.getEventNotification(this.$props.eventType).message;
+    },
+    isErroneous(){
+        let hasError = !this.getEventNotification(this.$props.eventType).notification.returnValues["success"]
+        console.log("IsErroneous", hasError);
+        return hasError;
     }
   },
   methods: {
@@ -69,4 +75,18 @@ export default {
 
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import "src/styles/global.scss";
+
+.event-error {
+    color: red;
+}
+
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px 0 30px;
+}
+</style>
