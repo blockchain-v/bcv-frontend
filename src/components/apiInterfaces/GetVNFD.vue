@@ -16,7 +16,7 @@
 <script>
 import CustomButton from "../atoms/CustomButton";
 import TextInput from "../atoms/TextInput";
-import { FIELD_NAMES } from "../../store/modules/backend";
+import { BACKEND_STORE_FIELD_NAMES } from "../../constants/apiInterfaceConfig";
 import { apiCall_GET_vnfd } from "../../services/apiCallService";
 
 export default {
@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      inputFieldName: FIELD_NAMES.VNFDID,
+      inputFieldName: BACKEND_STORE_FIELD_NAMES.VNFDID,
     };
   },
   computed: {

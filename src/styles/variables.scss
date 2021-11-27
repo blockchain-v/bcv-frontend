@@ -5,12 +5,15 @@ $rem-baseline: 16px;
 
 // CONTRACT UIs SHARED VARIABLES
 // for the method-id specific UIs
-$method-specific-ui-margin: 30px 0 15px 0 ;
+$method-specific-ui-margin: 30px 0 15px 0;
 
 // API CALL UIs SHARED VARIABLES
 // for the call-id specific UIs
 $api-call-specific-ui-margin: $method-specific-ui-margin;
 
+// INPUT COMPONENTS
+$input-width: 50%;
+$text-area-width: $input-width;
 
 // BUTTONS
 $button-padding: 5px 15px;

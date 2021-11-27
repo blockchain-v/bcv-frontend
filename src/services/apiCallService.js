@@ -2,7 +2,7 @@ import axios from "axios";
 import { BACKEND_URL, DEFAULT_HEADERS, ENDPOINTS } from "../constants/http";
 import { apiCallIDs } from "../constants/apiInterfaceConfig";
 import store from "../store/store.js";
-import { FIELD_NAMES } from "../store/modules/backend";
+import { BACKEND_STORE_FIELD_NAMES } from "../constants/apiInterfaceConfig";
 import { isNil as _isNil } from "lodash";
 
 // --------------- HELPERS ---------------------------------------------------------------------------------------------
@@ -56,6 +56,11 @@ const apiCall_POST_vnfd = async (payload) => {
   try {
     await axios.post(url, data, config).then(async (response) => {
       console.log("response for url", url, response);
+      store.commit("backend/setApiCallData", {
+        callId: apiCallIDs.POST_VNFD,
+        data: response,
+        fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
+      });
     });
   } catch (e) {
     console.log("error whilst performing call to", url, "error:", e);
@@ -80,7 +85,7 @@ const apiCall_GET_vnfds = async () => {
       store.commit("backend/setApiCallData", {
         callId: apiCallIDs.GET_VNFDS,
         data: response,
-        fieldName: FIELD_NAMES.RESPONSE,
+        fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
     });
   } catch (e) {
@@ -106,7 +111,7 @@ const apiCall_GET_vnfd = async (vnfdId) => {
       store.commit("backend/setApiCallData", {
         callId: apiCallIDs.GET_VNFD,
         data: response,
-        fieldName: FIELD_NAMES.RESPONSE,
+        fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
     });
   } catch (e) {
@@ -132,7 +137,7 @@ const apiCall_GET_vnfs = async () => {
       store.commit("backend/setApiCallData", {
         callId: apiCallIDs.GET_VNFS,
         data: response,
-        fieldName: FIELD_NAMES.RESPONSE,
+        fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
     });
   } catch (e) {
@@ -158,7 +163,7 @@ const apiCall_GET_vnf = async (vnfId) => {
       store.commit("backend/setApiCallData", {
         callId: apiCallIDs.GET_VNF_INSTANCE,
         data: response,
-        fieldName: FIELD_NAMES.RESPONSE,
+        fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
     });
   } catch (e) {

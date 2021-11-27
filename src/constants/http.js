@@ -1,3 +1,5 @@
+import { apiCallIDs } from "./apiInterfaceConfig";
+
 const BACKEND_URL = process.env.VUE_APP_BACKEND_URL;
 
 const DEFAULT_HEADERS = {
@@ -10,4 +12,12 @@ const ENDPOINTS = {
   VNF: "tacker/vnfs",
 };
 
-export { BACKEND_URL, DEFAULT_HEADERS, ENDPOINTS };
+const POST_FIELDNAMES = {
+  [apiCallIDs.POST_VNFD]: {
+    ATTRIBUTES: "attributes",
+    NAME: "name",
+    DESCRIPTION: "description",
+  },
+};
+
+export { BACKEND_URL, DEFAULT_HEADERS, ENDPOINTS, POST_FIELDNAMES };

@@ -1,3 +1,12 @@
+const BACKEND_STORE_FIELD_NAMES = {
+  RESPONSE: "response",
+  VNFDID: "vnfdId",
+  VNFID: "vnfId",
+  ATTRIBUTES: "attributes",
+  NAME: "name",
+  DESCRIPTION: "description",
+};
+
 const apiCallIDs = {
   // VNF Descriptors
   GET_VNFDS: "GET_VNFDS",
@@ -18,9 +27,20 @@ const apiCallList = [
   },
   {
     id: apiCallIDs.POST_VNFD,
-    displayText: "Todo",
-    actionText: "Todo",
-    infoText: "Todo long Todo",
+    displayText: "Create new VNFD",
+    actionText: "Create VNFD",
+    infoText:
+      "Create a new VNFD, which is then available as a template for VNF deployments",
+    inputLabels: {
+      [BACKEND_STORE_FIELD_NAMES.NAME]: "Name",
+      [BACKEND_STORE_FIELD_NAMES.DESCRIPTION]: "Description",
+      [BACKEND_STORE_FIELD_NAMES.ATTRIBUTES]: "Attributes",
+    },
+    inputPlaceholder: {
+      [BACKEND_STORE_FIELD_NAMES.NAME]: "Enter a name",
+      [BACKEND_STORE_FIELD_NAMES.DESCRIPTION]: "Enter a description",
+      [BACKEND_STORE_FIELD_NAMES.ATTRIBUTES]: "Enter/Paste the attributes",
+    },
   },
   {
     id: apiCallIDs.GET_VNFD,
@@ -50,4 +70,4 @@ const apiCallList = [
   },
 ];
 
-export { apiCallList, apiCallIDs };
+export { apiCallList, apiCallIDs, BACKEND_STORE_FIELD_NAMES };
