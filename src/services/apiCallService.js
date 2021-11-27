@@ -11,15 +11,15 @@ const apiCall_challenge = async (payload) => {
   try {
     await axios.post(url, data, config).then(async (response) => {
       console.log("response:", response);
-      // TODO: set token
-      // TODO: set isRegistered to store if correct status
       if (response.status === 200) {
-        console.log("i just lied - TODO: actual user register check");
+        // TODO: maybe set the token to localStorage/sessionStorage so it can also be checked for?
+        //  -> avoids having to resign upon refresh of the page -> discuss
+        await store.dispatch("appState/setBearerToken", response.data.token);
         await store.dispatch("contracts/setUserRegistered", true);
       }
     });
   } catch (e) {
-    console.log("error whilst performing call to", url);
+    console.log("error whilst performing call to", url, "error:", e);
   }
 };
 
