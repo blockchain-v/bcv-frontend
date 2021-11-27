@@ -31,21 +31,22 @@ const apiCallList = [
   },
   {
     id: apiCallIDs.DELETE_VNFD,
-    displayText: "Todo",
+    displayText: "Delete VNFD (pending - DEV only)",
     actionText: "Todo",
     infoText: "Todo long Todo",
   },
   {
     id: apiCallIDs.GET_VNFS,
-    displayText: "Todo",
-    actionText: "Todo",
-    infoText: "Todo long Todo",
+    displayText: "Get VNF List",
+    actionText: "Get VNFs",
+    infoText: "Get a list of your current VNFs",
   },
   {
     id: apiCallIDs.GET_VNF_INSTANCE,
-    displayText: "Todo",
-    actionText: "Todo",
-    infoText: "Todo long Todo",
+    displayText: "Get VNF",
+    actionText: "Get specific VNF",
+    infoText: "Get information about a specific VNF Descriptor",
+    inputPlaceholder: "VNF ID",
   },
 ];
 

@@ -115,9 +115,63 @@ const apiCall_GET_vnfd = async (vnfdId) => {
   store.commit("appState/setIsLoading", false);
 };
 
+const apiCall_GET_vnfs = async () => {
+  store.commit("appState/setIsLoading", true);
+  const bearerToken = await store.getters["appState/getBearerToken"];
+  if (_isNil(bearerToken)) {
+    console.log("no bearertoken, rejecting...");
+    return;
+  }
+  const url = `${BACKEND_URL}/${ENDPOINTS.VNF}`;
+  const config = {
+    headers: buildHeaderWithAuth(bearerToken),
+  };
+  try {
+    await axios.get(url, config).then(async (response) => {
+      console.log("response for url", url, response); // TODO: CLEANUP logs
+      store.commit("backend/setApiCallData", {
+        callId: apiCallIDs.GET_VNFS,
+        data: response,
+        fieldName: FIELD_NAMES.RESPONSE,
+      });
+    });
+  } catch (e) {
+    console.log("error whilst performing call to", url, "error:", e);
+  }
+  store.commit("appState/setIsLoading", false);
+};
+
+const apiCall_GET_vnf = async (vnfId) => {
+  store.commit("appState/setIsLoading", true);
+  const bearerToken = await store.getters["appState/getBearerToken"];
+  if (_isNil(bearerToken)) {
+    console.log("no bearertoken, rejecting...");
+    return;
+  }
+  const url = `${BACKEND_URL}/${ENDPOINTS.VNF}/${vnfId}`;
+  const config = {
+    headers: buildHeaderWithAuth(bearerToken),
+  };
+  try {
+    await axios.get(url, config).then(async (response) => {
+      console.log("response for url", url, response); // TODO: CLEANUP logs
+      store.commit("backend/setApiCallData", {
+        callId: apiCallIDs.GET_VNF_INSTANCE,
+        data: response,
+        fieldName: FIELD_NAMES.RESPONSE,
+      });
+    });
+  } catch (e) {
+    console.log("error whilst performing call to", url, "error:", e);
+  }
+  store.commit("appState/setIsLoading", false);
+};
+
 export {
   apiCall_challenge,
   apiCall_GET_vnfds,
   apiCall_POST_vnfd,
   apiCall_GET_vnfd,
+  apiCall_GET_vnfs,
+  apiCall_GET_vnf,
 };

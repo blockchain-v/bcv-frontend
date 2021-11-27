@@ -24,6 +24,13 @@ const state = {
     [FIELD_NAMES.VNFDID]: null,
     [FIELD_NAMES.RESPONSE]: null,
   },
+  [apiCallIDs.GET_VNFS]: {
+    [FIELD_NAMES.RESPONSE]: null,
+  },
+  [apiCallIDs.GET_VNF_INSTANCE]: {
+    [FIELD_NAMES.VNFID]: null,
+    [FIELD_NAMES.RESPONSE]: null,
+  },
 };
 
 // getters

@@ -11,9 +11,13 @@
       <GetVNFD :interface-specification="apiCallUISpecification" />
     </div>
     <div v-else-if="apiCallId === apiCallIDs.POST_VNFD">TODO</div>
-    <div v-else-if="apiCallId === apiCallIDs.DELETE_VNFD">TODO</div>
-    <div v-else-if="apiCallId === apiCallIDs.GET_VNFS">TODO</div>
-    <div v-else-if="apiCallId === apiCallIDs.GET_VNF_INSTANCE">TODO</div>
+    <div v-else-if="apiCallId === apiCallIDs.DELETE_VNFD">TODO (maybe)</div>
+    <div v-else-if="apiCallId === apiCallIDs.GET_VNFS">
+      <GetVNFs :interface-specification="apiCallUISpecification" />
+    </div>
+    <div v-else-if="apiCallId === apiCallIDs.GET_VNF_INSTANCE">
+      <GetVNF :interface-specification="apiCallUISpecification" />
+    </div>
     <!--    TODO-->
     <div v-else>TODO: Error Page or smth.</div>
   </div>
@@ -23,6 +27,8 @@
 import HeaderText from "./atoms/HeaderText";
 import GetVNFDs from "./apiInterfaces/GetVNFDs";
 import GetVNFD from "./apiInterfaces/GetVNFD";
+import GetVNFs from "./apiInterfaces/GetVNFs";
+import GetVNF from "./apiInterfaces/GetVNF";
 import { apiCallList, apiCallIDs } from "../constants/apiInterfaceConfig";
 import { isNil as _isNil, find as _find } from "lodash";
 
@@ -32,6 +38,8 @@ export default {
     // call UIs
     GetVNFDs,
     GetVNFD,
+    GetVNFs,
+    GetVNF,
     // others
     HeaderText,
   },
