@@ -36,6 +36,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    storeAsJSON: {
+      type: Boolean,
+      required: true,
+    },
     label: {
       default: null,
       type: String,
@@ -83,7 +87,11 @@ export default {
       }
     }, 500),
     propagateChange: _debounce(function (event) {
-      this.$emit("inputChange", event.target.value);
+      let value = event.target.value;
+      if (this.storeAsJSON) {
+        value = JSON.parse(event.target.value);
+      }
+      this.$emit("inputChange", value);
     }, 500),
   },
 };

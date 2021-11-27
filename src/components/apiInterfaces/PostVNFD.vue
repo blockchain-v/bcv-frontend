@@ -23,6 +23,7 @@
         :placeholder="placeholderTexts[fieldName_attributes]"
         @input-change="handleInputChange($event, fieldName_attributes)"
         :format-j-s-o-n="true"
+        :store-as-j-s-o-n="true"
       />
     </div>
     <div class="button-container">
