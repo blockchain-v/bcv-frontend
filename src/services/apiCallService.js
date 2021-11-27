@@ -51,7 +51,7 @@ const apiCall_POST_vnfd = async (payload) => {
   }
 };
 
-const apiCall_GET_vnfd = async () => {
+const apiCall_GET_vnfds = async () => {
   const bearerToken = await store.getters["appState/getBearerToken"];
   if (_isNil(bearerToken)) {
     console.log("no bearertoken, rejecting...");
@@ -70,4 +70,4 @@ const apiCall_GET_vnfd = async () => {
   }
 };
 
-export { apiCall_challenge, apiCall_GET_vnfd, apiCall_POST_vnfd };
+export { apiCall_challenge, apiCall_GET_vnfds, apiCall_POST_vnfd };

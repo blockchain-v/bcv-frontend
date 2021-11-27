@@ -4,28 +4,29 @@
       <HeaderText :text="headerText" />
     </div>
 
-    <div v-if="methodId === 'REGISTER'">
+    <div v-if="methodId === methodIDs.REGISTER">
       <RegisterUser
         :method-specification="callMethodSpecification"
         :propagate-events="propagateEvents"
         @contract-call="propagateContractCallEvent"
       />
     </div>
-    <div v-else-if="methodId === 'UNREGISTER'">
+    <div v-else-if="methodId === methodIDs.UNREGISTER">
       <UnregisterUser :method-specification="callMethodSpecification" />
     </div>
-    <div v-else-if="methodId === 'DEPLOY_VNF'">
+    <div v-else-if="methodId === methodIDs.DEPLOY_VNF">
       <DeployVNF :method-specification="callMethodSpecification" />
     </div>
-    <div v-else-if="methodId === 'DELETE_VNF'">
+    <div v-else-if="methodId === methodIDs.DELETE_VNF">
       <DeleteVNF :method-specification="callMethodSpecification" />
     </div>
-    <div v-else-if="methodId === 'DEV__GET_VNFS'">
+    <div v-else-if="methodId === methodIDs.DEV__GET_VNFS">
       <DEV_getVNFs :method-specification="callMethodSpecification" />
     </div>
-    <div v-else-if="methodId === 'DEV__GET_VNF_DETAILS'">
+    <div v-else-if="methodId === methodIDs.DEV__GET_VNF_DETAILS">
       <DEV_getVNFDetails :method-specification="callMethodSpecification" />
     </div>
+    <!--    TODO-->
     <div v-else>TODO: Error Page or smth.</div>
   </div>
 </template>
@@ -63,7 +64,10 @@ import DeleteVNF from "./contractInterfaces/DeleteVNF";
 import DEV_getVNFs from "./contractInterfaces/DEV_getVNFs";
 import DEV_getVNFDetails from "./contractInterfaces/DEV_getVNFDetails";
 import HeaderText from "./atoms/HeaderText";
-import { contractMethodList } from "../constants/contractInterfaceConfig";
+import {
+  contractMethodList,
+  methodIDs,
+} from "../constants/contractInterfaceConfig";
 import { isNil as _isNil, find as _find } from "lodash";
 
 export default {
@@ -81,7 +85,7 @@ export default {
   },
   props: {
     methodId: {
-      default: "",
+      default: null,
       type: String,
     },
     propagateEvents: {
@@ -91,7 +95,8 @@ export default {
   },
   data() {
     return {
-      contractMethodList: contractMethodList,
+      contractMethodList,
+      methodIDs,
     };
   },
   computed: {

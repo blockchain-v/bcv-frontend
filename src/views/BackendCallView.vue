@@ -3,21 +3,25 @@
     <div class="container">
       <h1 class="title">Perform API calls</h1>
       <hr class="horizontal-divider" />
+      <ApiInterfaceInitiator />
     </div>
   </div>
 </template>
 
 <script>
-import { apiCall_GET_vnfd } from "../services/apiCallService";
+import ApiInterfaceInitiator from "../components/ApiInterfaceInitiator";
 
 export default {
   name: "BackendCallView.vue",
-  components: {},
-  methods: {
-    handleClick() {
-      apiCall_GET_vnfd();
-    },
+  components: {
+    ApiInterfaceInitiator,
   },
+  props: {},
+  data() {
+    return {};
+  },
+  computed: {},
+  methods: {},
 };
 </script>
 
