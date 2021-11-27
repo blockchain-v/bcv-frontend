@@ -1,11 +1,11 @@
 <template>
   <div class="home">
-    <EventNotification
-      v-bind:eventType="registrationStatusEvent"
-    />
-    <div v-if="true" class="container">
-      <h1 class="title has-subtext">User not yet registered!</h1>
-      <p class="subtitle"><b>current user address:</b> {{ ethereumAccount }}</p>
+    <EventNotification v-bind:eventType="registrationStatusEvent" />
+    <div v-if="showUserNotRegistered" class="container">
+      <h1 class="title has-subtext">{{ texts.userNotRegistered.title }}</h1>
+      <p class="subtitle">
+        <b>{{ texts.currentUserAddress }}</b> {{ ethereumAccount }}
+      </p>
       <hr class="horizontal-divider" />
       <ContractInterfaceInitiator
         :resolver-index="methodGroupingKeys.register"
@@ -14,12 +14,19 @@
         @contractCall="handleContractCall"
       />
     </div>
+    <div v-else class="container">
+      <h1 class="title has-subtext">{{ texts.userCheckRequired.title }}</h1>
+      <p class="subtitle" v-html="texts.userCheckRequired.explanation"></p>
+      <p class="subtitle">
+        {{ texts.currentUserAddress }}<b>{{ ethereumAccount }}</b>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
 import ContractInterfaceInitiator from "../components/ContractInterfaceInitiator";
-import EventNotification from '../components/atoms/EventNotification.vue';
+import EventNotification from "../components/atoms/EventNotification.vue";
 import { EventTypes } from "../services/eventListenerService";
 import {
   methodGroupingKeys,
@@ -28,6 +35,7 @@ import {
 import { apiCall_challenge } from "../services/apiCallService";
 import { mapState } from "vuex";
 import { routeNames } from "../router";
+import { uiTexts } from "../constants/texts";
 
 /*
 TODO
@@ -45,7 +53,8 @@ export default {
       methodGroupingKeys,
       methodIDs,
       registrationCheckDone: false,
-      registrationStatusEvent: EventTypes.RegistrationStatus
+      registrationStatusEvent: EventTypes.RegistrationStatus,
+      texts: uiTexts.home,
     };
   },
   async mounted() {
@@ -72,10 +81,20 @@ export default {
   methods: {
     async checkUserRegistration() {
       this.$store.dispatch("appState/setIsLoading", true);
-      console.log(process.env);
+      // TODO: actual - for now just sign own account address - challenge will have to come
+      // from backend
+      const account = this.$store.getters["contracts/getUserETHAccount"];
+      const signedValue = await window.web3.eth.sign(
+        window.web3.utils.sha3(account),
+        account
+      );
+
       const payload = {
-        content: "big content. massive even",
+        signedValue: signedValue,
+        value: account,
+        address: account,
       };
+
       await apiCall_challenge(payload).then(async () => {
         this.$store.dispatch("appState/setIsLoading", false);
       });

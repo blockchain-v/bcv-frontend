@@ -9,7 +9,7 @@
       <h1 class="title has-subtext">Invoke Contract Calls</h1>
       <p class="subtitle"><b>using address:</b><br />{{ ethereumAccount }}</p>
       <hr class="horizontal-divider" />
-      <ContractInterfaceInitiator :resolver-index="methodGroupingKeys.main" />
+      <ContractInterfaceInitiator :resolver-index="methodGroupingKeys.all" />
     </div>
 
     <div v-else class="container contract-not-found">
@@ -24,9 +24,8 @@ import { VNFContract } from "../services/truffleService";
 import { EventTypes } from "../services/eventListenerService";
 import { methodGroupingKeys } from "../constants/contractInterfaceConfig";
 import ContractInterfaceInitiator from "../components/ContractInterfaceInitiator";
-import EventNotification from '../components/atoms/EventNotification.vue';
+import EventNotification from "../components/atoms/EventNotification.vue";
 import { isNil as _isNil } from "lodash";
-
 
 /*
 TODO:

@@ -1,19 +1,20 @@
 <template>
   <div class="backend-interface">
-    <div class="loading-container">
-      <PulseLoader />
+    <div class="container">
+      <h1 class="title">Perform API calls</h1>
+      <hr class="horizontal-divider" />
+      <ApiInterfaceInitiator />
     </div>
-    <div class="container">ajajajaja</div>
   </div>
 </template>
 
 <script>
-import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import ApiInterfaceInitiator from "../components/ApiInterfaceInitiator";
 
 export default {
   name: "BackendCallView.vue",
   components: {
-    PulseLoader,
+    ApiInterfaceInitiator,
   },
 };
 </script>

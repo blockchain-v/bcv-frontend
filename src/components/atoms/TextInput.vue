@@ -1,11 +1,12 @@
 <template>
   <div class="multiline-input">
+    <p class="label" v-if="hasLabel">{{ label }}</p>
     <input :id="inputId" @input="handleInput" :placeholder="placeholder" />
   </div>
 </template>
 
 <script>
-import { debounce as _debounce } from "lodash";
+import { debounce as _debounce, isNil as _isNil } from "lodash";
 
 export default {
   name: "MultilineInput",
@@ -18,10 +19,17 @@ export default {
       default: "",
       type: String,
     },
+    label: {
+      default: null,
+      type: String,
+    },
   },
   computed: {
     inputId() {
       return `${this.id}-text-input`;
+    },
+    hasLabel() {
+      return !_isNil(this.label);
     },
   },
   methods: {
@@ -39,11 +47,17 @@ export default {
 .multiline-input {
   width: 100%;
 
+  .label {
+    position: relative;
+    display: flex;
+    left: calc((100% - #{$input-width}) / 2);
+  }
+
   input {
     border: 2px solid $green-aquamarine;
     border-radius: 10px;
     padding: 20px 20px;
-    width: 50%;
+    width: $input-width;
     font-size: 16px;
 
     &:focus {

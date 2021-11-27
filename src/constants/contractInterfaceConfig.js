@@ -1,7 +1,7 @@
 const methodIDs = {
   REGISTER: "REGISTER",
   UNREGISTER: "UNREGISTER",
-  DEPLOY_NF: "DEPLOY_VNF",
+  DEPLOY_VNF: "DEPLOY_VNF",
   DELETE_VNF: "DELETE_VNF",
   DEV__GET_VNFS: "DEV__GET_VNFS",
   DEV__GET_VNF_DETAILS: "DEV__GET_VNF_DETAILS",
@@ -56,8 +56,8 @@ const contractMethodList = [
     infoText: "(unregister) imagine a longer text explanation here",
   },
   {
-    id: methodIDs.DEPLOY_NF,
-    groupings: getGroupingsPerMethod(methodIDs.DEPLOY_NF),
+    id: methodIDs.DEPLOY_VNF,
+    groupings: getGroupingsPerMethod(methodIDs.DEPLOY_VNF),
     displayText: "Request VNF deployment",
     buttonText: "Deploy VNF",
     infoText: "(deployVNF) imagine a longer text explanation here",

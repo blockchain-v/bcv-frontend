@@ -1,5 +1,6 @@
 <template>
   <div class="multiline-input">
+    <p class="label" v-if="hasLabel">{{ label }}</p>
     <textarea
       :id="areaId"
       @input="handleInput"
@@ -13,7 +14,7 @@
 </template>
 
 <script>
-import { debounce as _debounce } from "lodash";
+import { debounce as _debounce, isNil as _isNil } from "lodash";
 import { uiTexts } from "../../constants/texts";
 
 export default {
@@ -35,6 +36,20 @@ export default {
       type: Boolean,
       default: false,
     },
+    storeAsJSON: {
+      type: Boolean,
+      required: true,
+    },
+    label: {
+      default: null,
+      type: String,
+    },
+  },
+  data() {
+    return {
+      validJSON: true,
+      warningText: uiTexts.multilineInput.warningText,
+    };
   },
   computed: {
     areaId() {
@@ -45,12 +60,9 @@ export default {
         height: `${this.height}px`,
       };
     },
-  },
-  data() {
-    return {
-      validJSON: true,
-      warningText: uiTexts.multilineInput.warningText,
-    };
+    hasLabel() {
+      return !_isNil(this.label);
+    },
   },
   methods: {
     handleInput(event) {
@@ -75,7 +87,11 @@ export default {
       }
     }, 500),
     propagateChange: _debounce(function (event) {
-      this.$emit("inputChange", event.target.value);
+      let value = event.target.value;
+      if (this.storeAsJSON) {
+        value = JSON.parse(event.target.value);
+      }
+      this.$emit("inputChange", value);
     }, 500),
   },
 };
@@ -87,11 +103,17 @@ export default {
 .multiline-input {
   width: 100%;
 
+  .label {
+    position: relative;
+    display: flex;
+    left: calc((100% - #{$text-area-width}) / 2);
+  }
+
   textarea {
     border: 2px solid $green-aquamarine;
     border-radius: 10px;
     padding: 20px 20px;
-    width: 50%;
+    width: $text-area-width;
     height: 200px;
     font-size: 16px;
 
