@@ -12,9 +12,9 @@ const apiCallIDs = {
 const apiCallList = [
   {
     id: apiCallIDs.GET_VNFDS,
-    displayText: "Todo",
-    actionText: "Todo",
-    infoText: "Todo long Todo",
+    displayText: "Get VNFD List",
+    actionText: "Get VNFDs",
+    infoText: "Get a list of all currently existing VNF Descriptors",
   },
   {
     id: apiCallIDs.POST_VNFD,

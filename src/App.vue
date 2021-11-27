@@ -69,6 +69,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: $white;
+    opacity: 0.6;
   }
 }
 </style>

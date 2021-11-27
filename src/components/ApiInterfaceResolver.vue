@@ -4,7 +4,9 @@
       <HeaderText :text="headerText" />
     </div>
 
-    <div v-if="apiCallId === apiCallIDs.GET_VNFDS">TODO</div>
+    <div v-if="apiCallId === apiCallIDs.GET_VNFDS">
+      <GetVNFDs :interface-specification="apiCallUISpecification" />
+    </div>
     <div v-else-if="apiCallId === apiCallIDs.GET_VNFD">TODO</div>
     <div v-else-if="apiCallId === apiCallIDs.POST_VNFD">TODO</div>
     <div v-else-if="apiCallId === apiCallIDs.DELETE_VNFD">TODO</div>
@@ -17,12 +19,16 @@
 
 <script>
 import HeaderText from "./atoms/HeaderText";
+import GetVNFDs from "./apiInterfaces/GetVNFDs";
 import { apiCallList, apiCallIDs } from "../constants/apiInterfaceConfig";
 import { isNil as _isNil, find as _find } from "lodash";
 
 export default {
   name: "ApiInterfaceResolver",
   components: {
+    // call UIs
+    GetVNFDs,
+    // others
     HeaderText,
   },
   props: {

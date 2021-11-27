@@ -7,6 +7,10 @@ $rem-baseline: 16px;
 // for the method-id specific UIs
 $method-specific-ui-margin: 30px 0 15px 0 ;
 
+// API CALL UIs SHARED VARIABLES
+// for the call-id specific UIs
+$api-call-specific-ui-margin: $method-specific-ui-margin;
+
 
 // BUTTONS
 $button-padding: 5px 15px;
@@ -28,6 +32,7 @@ $green-spring: #07ffad;
 $green-active: #07ffad;
 $green-mint-tulip: #bdf3e0;
 $green-white: #f7fffd;
+$white: white;
 $red: red;
 $red-salmon: darksalmon;
 

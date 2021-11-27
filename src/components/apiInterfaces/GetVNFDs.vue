@@ -29,4 +29,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+@import "src/styles/global.scss";
+
+.get-vnfds-ui {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: $api-call-specific-ui-margin;
+}
+</style>

@@ -10,6 +10,12 @@ const buildHeaderWithAuth = (bearerToken) => {
   };
 };
 
+/*
+TODO:
+  large parts of the calls are generic, there surely is a way to generalize and reduce
+  duplicate code
+ */
+
 const apiCall_challenge = async (payload) => {
   const url = `${BACKEND_URL}/${ENDPOINTS.TOKEN}`;
   const data = JSON.stringify(payload);
@@ -32,6 +38,7 @@ const apiCall_challenge = async (payload) => {
 };
 
 const apiCall_POST_vnfd = async (payload) => {
+  store.commit("appState/setIsLoading", true);
   const bearerToken = await store.getters["appState/getBearerToken"];
   if (_isNil(bearerToken)) {
     console.log("no bearertoken, rejecting...");
@@ -49,9 +56,11 @@ const apiCall_POST_vnfd = async (payload) => {
   } catch (e) {
     console.log("error whilst performing call to", url, "error:", e);
   }
+  store.commit("appState/setIsLoading", false);
 };
 
 const apiCall_GET_vnfds = async () => {
+  store.commit("appState/setIsLoading", true);
   const bearerToken = await store.getters["appState/getBearerToken"];
   if (_isNil(bearerToken)) {
     console.log("no bearertoken, rejecting...");
@@ -68,6 +77,7 @@ const apiCall_GET_vnfds = async () => {
   } catch (e) {
     console.log("error whilst performing call to", url, "error:", e);
   }
+  store.commit("appState/setIsLoading", false);
 };
 
 export { apiCall_challenge, apiCall_GET_vnfds, apiCall_POST_vnfd };
