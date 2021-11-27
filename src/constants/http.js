@@ -5,7 +5,7 @@ const DEFAULT_HEADERS = {
 };
 
 const ENDPOINTS = {
-  TOKEN: "challenge",
+  TOKEN: "token",
 };
 
 export { BACKEND_URL, DEFAULT_HEADERS, ENDPOINTS };

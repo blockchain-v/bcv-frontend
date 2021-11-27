@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <EventNotification
+      v-bind:eventType="registrationStatusEvent"
+    />
     <div v-if="true" class="container">
       <h1 class="title has-subtext">User not yet registered!</h1>
       <p class="subtitle"><b>current user address:</b> {{ ethereumAccount }}</p>
@@ -16,6 +19,8 @@
 
 <script>
 import ContractInterfaceInitiator from "../components/ContractInterfaceInitiator";
+import EventNotification from '../components/atoms/EventNotification.vue';
+import { EventTypes } from "../services/eventListenerService";
 import {
   methodGroupingKeys,
   methodIDs,
@@ -33,12 +38,14 @@ export default {
   name: "Home",
   components: {
     ContractInterfaceInitiator,
+    EventNotification,
   },
   data() {
     return {
       methodGroupingKeys,
       methodIDs,
       registrationCheckDone: false,
+      registrationStatusEvent: EventTypes.RegistrationStatus
     };
   },
   async mounted() {

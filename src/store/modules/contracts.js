@@ -8,9 +8,16 @@ const state = {
   userRegistered: false,
   currentVNFDescriptorInput: null,
   currentVNFToDelete: null,
+  eventNotifications: [],
   // DEV only
   currentVNFDetailsID: null,
 };
+
+/*
+TODO
+  - (potentially) unified act/mut/get for the eventStatuses, e.g. some map object as state
+  so setting can be done through the key for all statuses
+ */
 
 // getters
 const getters = {
@@ -25,6 +32,9 @@ const getters = {
   },
   getCurrentVNFToDelete() {
     return state.currentVNFToDelete;
+  },
+  getEventNotifications(eventType){
+    return state.eventNotifications[eventType];
   },
   // DEV only
   getCurrentVNFDetailsID() {
@@ -45,6 +55,9 @@ const actions = {
   },
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
+  },
+  setEventNotifications( { commit }, {eventType, notification, message}){
+    commit("setEventNotifications", {eventType: eventType, notification: notification, message: message});
   },
   // async getter via actions
   getAccountStatus() {
@@ -76,6 +89,9 @@ const mutations = {
   },
   setCurrentVNFToDelete(state, input) {
     state.currentVNFToDelete = input;
+  },
+  setEventNotifications(state, {eventType, notification, message}) {
+    state.eventNotifications[eventType] = {notification: notification, message: message};
   },
   // DEV only
   setCurrentVNFDetailsID(state, id) {

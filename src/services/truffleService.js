@@ -3,7 +3,7 @@ contains variables related to web3.js and connectivity
  */
 
 import Web3 from "web3";
-import vnfContractData from "../truffle/build/contracts/VNFDeployment";
+import vnfContractData from "../../../bcv-contract/src/build/contracts/VNFDeployment.json";
 import { defaultContractCallParams } from "../constants/truffle";
 
 console.log("vnfContractData in truffleService:", vnfContractData); // TODO: CLEANUP
@@ -31,4 +31,12 @@ function getDefaultCallParams(account) {
   };
 }
 
-export { VNFContract, getDefaultCallParams };
+function registerEventListener(
+  eventType,
+  callback,
+  filter = { filter: { user: [window.web3.eth.defaultAccount] } }
+) {
+  eventType(filter, callback);
+}
+
+export { VNFContract, getDefaultCallParams, registerEventListener };

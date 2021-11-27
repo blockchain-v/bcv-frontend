@@ -1,3 +1,3 @@
 export const defaultContractCallParams = {
-  GAS_LIMIT: "500000",
+  GAS_LIMIT: "5000000",
 };
