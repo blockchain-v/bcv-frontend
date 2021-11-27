@@ -6,6 +6,8 @@ const DEFAULT_HEADERS = {
 
 const ENDPOINTS = {
   TOKEN: "token",
+  VNFD: "tacker/vnfds",
+  VNF: "tacker/vnfs",
 };
 
 export { BACKEND_URL, DEFAULT_HEADERS, ENDPOINTS };

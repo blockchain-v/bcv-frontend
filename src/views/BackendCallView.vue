@@ -1,19 +1,22 @@
 <template>
   <div class="backend-interface">
-    <div class="loading-container">
-      <PulseLoader />
+    <div class="container">
+      <h1 class="title">Perform API calls</h1>
+      <hr class="horizontal-divider" />
     </div>
-    <div class="container">ajajajaja</div>
   </div>
 </template>
 
 <script>
-import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import { apiCall_GET_vnfd } from "../services/apiCallService";
 
 export default {
   name: "BackendCallView.vue",
-  components: {
-    PulseLoader,
+  components: {},
+  methods: {
+    handleClick() {
+      apiCall_GET_vnfd();
+    },
   },
 };
 </script>
