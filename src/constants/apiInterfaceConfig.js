@@ -24,9 +24,10 @@ const apiCallList = [
   },
   {
     id: apiCallIDs.GET_VNFD,
-    displayText: "Todo",
-    actionText: "Todo",
-    infoText: "Todo long Todo",
+    displayText: "Get VNFD",
+    actionText: "Get specific VNFD",
+    infoText: "Get information about a specific VNF Descriptor",
+    inputPlaceholder: "VNFD ID",
   },
   {
     id: apiCallIDs.DELETE_VNFD,

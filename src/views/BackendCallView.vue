@@ -16,12 +16,6 @@ export default {
   components: {
     ApiInterfaceInitiator,
   },
-  props: {},
-  data() {
-    return {};
-  },
-  computed: {},
-  methods: {},
 };
 </script>
 
