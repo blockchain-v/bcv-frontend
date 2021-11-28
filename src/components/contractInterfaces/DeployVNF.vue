@@ -6,7 +6,7 @@
         :placeholder="placeholderText"
         @input-change="handleInputChange"
         :format-j-s-o-n="true"
-        :store-as-j-s-o-n="true"
+        :store-as-j-s-o-n="false"
       />
     </div>
     <div class="button-container">
