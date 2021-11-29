@@ -21,6 +21,13 @@ const uiTexts = {
         "<p>If you did not get a notification from MetaMask asking you for<br>" +
         "a signature or accidentally closed it, refresh the page</p>",
     },
+    waitingForRegistrationEvent: {
+      title: "Waiting for Smart Contract feedback",
+      explanation:
+        "<p>System is waiting for feedback from the Smart Contract on whether <br>" +
+        "the user registration process was successful.<br>" +
+        "This may take a few moments</p>",
+    },
   },
 };
 

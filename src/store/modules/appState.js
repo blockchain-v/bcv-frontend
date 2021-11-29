@@ -5,6 +5,7 @@ Store module for managing app state data globally
 // initial state
 const state = {
   isLoading: false,
+  waitingForContractFeedback: false,
   bearerToken: null,
   nonce: null,
 };
@@ -19,6 +20,9 @@ const getters = {
   },
   getNonce() {
     return state.nonce;
+  },
+  getWaitingForContractFeedback() {
+    return state.waitingForContractFeedback;
   },
 };
 
@@ -35,6 +39,9 @@ const actions = {
       resolve(commit("setNonce", nonce));
     });
   },
+  setWaitingForContractFeedback({ commit }, value) {
+    commit("setWaitingForContractFeedback", value);
+  },
 };
 
 // mutations
@@ -47,6 +54,9 @@ const mutations = {
   },
   setNonce(state, nonce) {
     state.nonce = nonce;
+  },
+  setWaitingForContractFeedback(state, value) {
+    state.waitingForContractFeedback = value;
   },
 };
 

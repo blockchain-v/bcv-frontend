@@ -1,4 +1,5 @@
 import { registerEventListener, VNFContract } from "./truffleService";
+import store from "../store/store.js";
 
 export const attachEventListener = (eventType, callback) => {
   let e;
@@ -12,18 +13,20 @@ export const attachEventListener = (eventType, callback) => {
     case EventTypes.UnregistrationStatus:
       e = VNFContract.events.DeletionStatus;
       break;
-
   }
 
   registerEventListener(e, callback);
 };
 
 export const getEventMessage = (eventType, parameters) => {
-  return parameters["success"] ? getEventMessageSuccess(eventType, parameters) : getEventMessageFailure(eventType, parameters);
-}
+  store.commit("appState/setWaitingForContractFeedback", false);
+  return parameters["success"]
+    ? getEventMessageSuccess(eventType, parameters)
+    : getEventMessageFailure(eventType, parameters);
+};
 
 const getEventMessageSuccess = (eventType, parameters) => {
-  switch(eventType) {
+  switch (eventType) {
     case EventTypes.DeploymentStatus:
       return `Deployment of VNF with ID ${parameters["vnfId"]} succeeded.`;
     case EventTypes.RegistrationStatus:
@@ -34,18 +37,18 @@ const getEventMessageSuccess = (eventType, parameters) => {
 };
 
 const getEventMessageFailure = (eventType, parameters) => {
-  switch(eventType) {
+  switch (eventType) {
     case EventTypes.DeploymentStatus:
       return `Deployment of VNF with deployment ID ${parameters["deploymentId"]} failed.`;
     case EventTypes.RegistrationStatus:
       return `Registration of user ${parameters["user"]} failed.`;
     case EventTypes.UnregistrationStatus:
-      return `Unregistration succeeded.`
+      return `Unregistration succeeded.`;
   }
 };
 
 export const EventTypes = {
   RegistrationStatus: 0,
   UnregistrationStatus: 1,
-  DeploymentStatus: 2
+  DeploymentStatus: 2,
 };

@@ -1,7 +1,18 @@
 <template>
   <div class="home">
     <EventNotification v-bind:eventType="registrationStatusEvent" />
-    <div v-if="showUserNotRegistered" class="container">
+
+    <div v-if="showWaitForRegistrationEvent" class="container">
+      <h1 class="title has-subtext">
+        {{ texts.waitingForRegistrationEvent.title }}
+      </h1>
+      <p
+        class="subtitle"
+        v-html="texts.waitingForRegistrationEvent.explanation"
+      ></p>
+    </div>
+
+    <div v-else-if="showUserNotRegistered" class="container">
       <h1 class="title has-subtext">{{ texts.userNotRegistered.title }}</h1>
       <p class="subtitle">
         <b>{{ texts.currentUserAddress }}</b> {{ ethereumAccount }}
@@ -14,6 +25,7 @@
         @contractCall="handleContractCall"
       />
     </div>
+
     <div v-else class="container">
       <h1 class="title has-subtext">{{ texts.userCheckRequired.title }}</h1>
       <p class="subtitle" v-html="texts.userCheckRequired.explanation"></p>
@@ -40,7 +52,7 @@ import {
 import { mapState } from "vuex";
 import { routeNames } from "../router";
 import { uiTexts } from "../constants/texts";
-import { isNil as _isNil } from "lodash";
+import { isNil as _isNil, find as _find } from "lodash";
 
 export default {
   name: "Home",
@@ -55,6 +67,7 @@ export default {
       registrationCheckDone: false,
       registrationStatusEvent: EventTypes.RegistrationStatus,
       texts: uiTexts.home,
+      eventWatcherActive: false,
     };
   },
   mounted() {
@@ -72,17 +85,43 @@ export default {
         this.concludeUserRegistrationCheck();
       }
     },
+    registeredNotification(newVal, oldVal) {
+      if (
+        this.eventWatcherActive &&
+        !_isNil(newVal) &&
+        newVal.notification.transactionHash !==
+          oldVal?.notification?.transactionHash
+      ) {
+        this.registrationCheckDone = false;
+        // also compare transactionHashes so sequential userRegister events are still treated
+        // if incoming event detected that fulfils criteria, re-run authentication-flow for token
+        this.initiateUserRegistrationCheck();
+      }
+    },
   },
   computed: {
     ...mapState("contracts", {
       ethereumAccount: (state) => state.userETHAccount,
       userRegistered: (state) => state.userRegistered,
+      eventNotifications: (state) => state.eventNotifications,
     }),
     ...mapState("appState", {
       nonce: (state) => state.nonce,
+      waitingForContractFeedback: (state) => state.waitingForContractFeedback,
     }),
     showUserNotRegistered() {
       return this.registrationCheckDone && !this.userRegistered;
+    },
+    showWaitForRegistrationEvent() {
+      return this.waitingForContractFeedback;
+    },
+    registeredNotification() {
+      if (this.eventNotifications.length === 0) {
+        return null;
+      }
+      return _find(this.eventNotifications, (en) => {
+        return en.notification.event === "RegistrationStatus";
+      });
     },
   },
   methods: {
@@ -93,6 +132,7 @@ export default {
       await apiCall_PUT_token(account);
     },
     async initiateUserRegistrationCheck() {
+      this.eventWatcherActive = false;
       this.$store.dispatch("appState/setIsLoading", true);
       const account = this.$store.getters["contracts/getUserETHAccount"];
       // get a nonce from the backend
@@ -115,14 +155,8 @@ export default {
     },
     handleContractCall(methodId) {
       if (methodId === methodIDs.REGISTER) {
-        this.registrationCheckDone = false;
-        // TODO. good until here, but here would have to listen to event from smart contract
-        //  to trigger re-evaluation of user registration
-        // _> watcher on the notification slot in store for register
-        // -> triggers checkUserRegistration or just performTokenCheck IF watcherActivated
-        //  -> is boolean which is set here, once we now the register has been initiated
-        //  -> set to false once the check has been done again in the watcher
-        this.initiateUserRegistrationCheck();
+        // activate event Watcher, so it reacts to incoming user registration events
+        this.eventWatcherActive = true;
       }
     },
   },

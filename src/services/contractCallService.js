@@ -18,6 +18,7 @@ export const performContractCall = async (methodId) => {
     case contractMethodList[0].id:
       // Register
       await performContractCall_register();
+      store.commit("appState/setWaitingForContractFeedback", true);
       break;
     case contractMethodList[1].id:
       // Unregister
