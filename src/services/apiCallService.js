@@ -20,20 +20,57 @@ TODO:
  */
 
 // --------------- API CALLS -------------------------------------------------------------------------------------------
-const apiCall_challenge = async (payload) => {
+// AUTHENTICATION
+const apiCall_POST_token = (payload) => {
   const url = `${BACKEND_URL}/${ENDPOINTS.TOKEN}`;
-  const data = JSON.stringify(payload);
+  const data = JSON.stringify({
+    [BACKEND_STORE_FIELD_NAMES.NONCE]: payload[0],
+    [BACKEND_STORE_FIELD_NAMES.SIGNED_NONCE]: payload[1],
+    [BACKEND_STORE_FIELD_NAMES.ADDRESS]: payload[2],
+  });
+  const config = {
+    headers: DEFAULT_HEADERS,
+  };
+  axios
+    .post(url, data, config)
+    .then(async (response) => {
+      console.log("response for url", url, response);
+      if (response.status === 200 || response.status === 204) {
+        // TODO: maybe set the token to localStorage/sessionStorage so it can also be checked for?
+        //  -> avoids having to resign upon refresh of the page -> discuss
+        await store.dispatch("appState/setBearerToken", response.data.token);
+        await store.dispatch(
+          "contracts/setUserRegistered",
+          response.data.isRegistered
+        );
+      }
+    })
+    .catch(async (error) => {
+      console.log(
+        "error whilst performing call to",
+        url,
+        "error:",
+        error.response
+      );
+      if (error.response.status === 401) {
+        await store.dispatch("contracts/setUserRegistered", false);
+      }
+    });
+};
+
+const apiCall_PUT_token = async (address) => {
+  const url = `${BACKEND_URL}/${ENDPOINTS.TOKEN}`;
+  const data = JSON.stringify({
+    [BACKEND_STORE_FIELD_NAMES.ADDRESS]: address,
+  });
   const config = {
     headers: DEFAULT_HEADERS,
   };
   try {
-    await axios.post(url, data, config).then(async (response) => {
+    axios.put(url, data, config).then(async (response) => {
       console.log("response for url", url, response);
       if (response.status === 200) {
-        // TODO: maybe set the token to localStorage/sessionStorage so it can also be checked for?
-        //  -> avoids having to resign upon refresh of the page -> discuss
-        await store.dispatch("appState/setBearerToken", response.data.token);
-        await store.dispatch("contracts/setUserRegistered", true);
+        store.commit("appState/setNonce", response.data.nonce);
       }
     });
   } catch (e) {
@@ -41,6 +78,7 @@ const apiCall_challenge = async (payload) => {
   }
 };
 
+// DATA CALLS
 const apiCall_POST_vnfd = async (payload) => {
   store.commit("appState/setIsLoading", true);
   const bearerToken = await store.getters["appState/getBearerToken"];
@@ -173,7 +211,8 @@ const apiCall_GET_vnf = async (vnfId) => {
 };
 
 export {
-  apiCall_challenge,
+  apiCall_POST_token,
+  apiCall_PUT_token,
   apiCall_GET_vnfds,
   apiCall_POST_vnfd,
   apiCall_GET_vnfd,

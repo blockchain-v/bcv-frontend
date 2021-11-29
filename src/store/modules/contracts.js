@@ -33,7 +33,7 @@ const getters = {
   getCurrentVNFToDelete() {
     return state.currentVNFToDelete;
   },
-  getEventNotifications(eventType){
+  getEventNotifications(eventType) {
     return state.eventNotifications[eventType];
   },
   // DEV only
@@ -56,8 +56,12 @@ const actions = {
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
   },
-  setEventNotifications( { commit }, {eventType, notification, message}){
-    commit("setEventNotifications", {eventType: eventType, notification: notification, message: message});
+  setEventNotifications({ commit }, { eventType, notification, message }) {
+    commit("setEventNotifications", {
+      eventType: eventType,
+      notification: notification,
+      message: message,
+    });
   },
   // async getter via actions
   getAccountStatus() {
@@ -90,8 +94,11 @@ const mutations = {
   setCurrentVNFToDelete(state, input) {
     state.currentVNFToDelete = input;
   },
-  setEventNotifications(state, {eventType, notification, message}) {
-    state.eventNotifications[eventType] = {notification: notification, message: message};
+  setEventNotifications(state, { eventType, notification, message }) {
+    state.eventNotifications[eventType] = {
+      notification: notification,
+      message: message,
+    };
   },
   // DEV only
   setCurrentVNFDetailsID(state, id) {

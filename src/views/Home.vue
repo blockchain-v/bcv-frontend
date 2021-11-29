@@ -20,6 +20,7 @@
       <p class="subtitle">
         {{ texts.currentUserAddress }}<b>{{ ethereumAccount }}</b>
       </p>
+      <p class="subtitle" v-html="texts.userCheckRequired.hint"></p>
     </div>
   </div>
 </template>
@@ -32,15 +33,14 @@ import {
   methodGroupingKeys,
   methodIDs,
 } from "../constants/contractInterfaceConfig";
-import { apiCall_challenge } from "../services/apiCallService";
+import {
+  apiCall_PUT_token,
+  apiCall_POST_token,
+} from "../services/apiCallService";
 import { mapState } from "vuex";
 import { routeNames } from "../router";
 import { uiTexts } from "../constants/texts";
-
-/*
-TODO
-  - also include title, subtitle (optional), hr (optional ?) in ContractInterfaceInitiator
- */
+import { isNil as _isNil } from "lodash";
 
 export default {
   name: "Home",
@@ -57,15 +57,19 @@ export default {
       texts: uiTexts.home,
     };
   },
-  async mounted() {
-    await this.checkUserRegistration().then(
-      () => (this.registrationCheckDone = true)
-    );
+  mounted() {
+    this.initiateUserRegistrationCheck();
   },
   watch: {
     userRegistered(newVal) {
       if (newVal === true) {
         this.$router.push({ name: routeNames.CONTRACT_VIEW });
+      }
+    },
+    nonce(newVal, oldVal) {
+      if (newVal !== oldVal && !_isNil(newVal)) {
+        // a new nonce has been set to store -> execute signature and backend token fetch
+        this.concludeUserRegistrationCheck();
       }
     },
   },
@@ -74,37 +78,51 @@ export default {
       ethereumAccount: (state) => state.userETHAccount,
       userRegistered: (state) => state.userRegistered,
     }),
+    ...mapState("appState", {
+      nonce: (state) => state.nonce,
+    }),
     showUserNotRegistered() {
       return this.registrationCheckDone && !this.userRegistered;
     },
   },
   methods: {
-    async checkUserRegistration() {
+    async performTokenCheck(payload) {
+      await apiCall_POST_token(payload);
+    },
+    async getNonce(account) {
+      await apiCall_PUT_token(account);
+    },
+    async initiateUserRegistrationCheck() {
       this.$store.dispatch("appState/setIsLoading", true);
-      // TODO: actual - for now just sign own account address - challenge will have to come
-      // from backend
       const account = this.$store.getters["contracts/getUserETHAccount"];
+      // get a nonce from the backend
+      await this.getNonce(account);
+      this.$store.dispatch("appState/setIsLoading", false);
+    },
+    async concludeUserRegistrationCheck() {
+      const account = this.$store.getters["contracts/getUserETHAccount"];
+      const nonce = this.nonce;
+      // sign nonce
       const signedValue = await window.web3.eth.sign(
-        window.web3.utils.sha3(account),
+        window.web3.utils.sha3(nonce),
         account
       );
-
-      const payload = {
-        signedValue: signedValue,
-        value: account,
-        address: account,
-      };
-
-      await apiCall_challenge(payload).then(async () => {
-        this.$store.dispatch("appState/setIsLoading", false);
-      });
+      this.$store.dispatch("appState/setIsLoading", true);
+      const payload = [nonce, signedValue, account];
+      await this.performTokenCheck(payload);
+      this.$store.dispatch("appState/setIsLoading", false);
+      this.registrationCheckDone = true;
     },
     handleContractCall(methodId) {
       if (methodId === methodIDs.REGISTER) {
         this.registrationCheckDone = false;
         // TODO. good until here, but here would have to listen to event from smart contract
         //  to trigger re-evaluation of user registration
-        this.checkUserRegistration();
+        // _> watcher on the notification slot in store for register
+        // -> triggers checkUserRegistration or just performTokenCheck IF watcherActivated
+        //  -> is boolean which is set here, once we now the register has been initiated
+        //  -> set to false once the check has been done again in the watcher
+        this.initiateUserRegistrationCheck();
       }
     },
   },

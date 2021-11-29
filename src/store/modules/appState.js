@@ -6,6 +6,7 @@ Store module for managing app state data globally
 const state = {
   isLoading: false,
   bearerToken: null,
+  nonce: null,
 };
 
 // getters
@@ -15,6 +16,9 @@ const getters = {
   },
   getBearerToken() {
     return state.bearerToken;
+  },
+  getNonce() {
+    return state.nonce;
   },
 };
 
@@ -26,6 +30,11 @@ const actions = {
   setBearerToken({ commit }, token) {
     commit("setBearerToken", token);
   },
+  setNonce({ commit }, nonce) {
+    return new Promise((resolve) => {
+      resolve(commit("setNonce", nonce));
+    });
+  },
 };
 
 // mutations
@@ -35,6 +44,9 @@ const mutations = {
   },
   setBearerToken(state, token) {
     state.bearerToken = token;
+  },
+  setNonce(state, nonce) {
+    state.nonce = nonce;
   },
 };
 
