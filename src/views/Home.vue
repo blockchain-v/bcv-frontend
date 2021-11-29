@@ -12,7 +12,16 @@
       ></p>
     </div>
 
-    <div v-else-if="showUserNotRegistered" class="container">
+    <div v-else-if="showUserActionRequired" class="container">
+      <h1 class="title has-subtext">{{ texts.userCheckRequired.title }}</h1>
+      <p class="subtitle" v-html="texts.userCheckRequired.explanation"></p>
+      <p class="subtitle">
+        {{ texts.currentUserAddress }}<b>{{ ethereumAccount }}</b>
+      </p>
+      <p class="subtitle" v-html="texts.userCheckRequired.hint"></p>
+    </div>
+
+    <div v-else class="container">
       <h1 class="title has-subtext">{{ texts.userNotRegistered.title }}</h1>
       <p class="subtitle">
         <b>{{ texts.currentUserAddress }}</b> {{ ethereumAccount }}
@@ -24,15 +33,6 @@
         :propagate-events-for-methods="[methodIDs.REGISTER]"
         @contractCall="handleContractCall"
       />
-    </div>
-
-    <div v-else class="container">
-      <h1 class="title has-subtext">{{ texts.userCheckRequired.title }}</h1>
-      <p class="subtitle" v-html="texts.userCheckRequired.explanation"></p>
-      <p class="subtitle">
-        {{ texts.currentUserAddress }}<b>{{ ethereumAccount }}</b>
-      </p>
-      <p class="subtitle" v-html="texts.userCheckRequired.hint"></p>
     </div>
   </div>
 </template>
@@ -114,6 +114,9 @@ export default {
     },
     showWaitForRegistrationEvent() {
       return this.waitingForContractFeedback;
+    },
+    showUserActionRequired() {
+      return !this.registrationCheckDone;
     },
     registeredNotification() {
       if (this.eventNotifications.length === 0) {
