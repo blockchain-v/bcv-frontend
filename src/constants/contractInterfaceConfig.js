@@ -16,6 +16,12 @@ const methodGroupings = {
     }
     return filtered;
   }, []),
+  prod_main: [
+    methodIDs.REGISTER,
+    methodIDs.UNREGISTER,
+    methodIDs.DEPLOY_VNF,
+    methodIDs.DELETE_VNF,
+  ],
 };
 
 // lmao :D :D :D
