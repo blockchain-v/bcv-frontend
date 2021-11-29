@@ -39,10 +39,11 @@ const apiCall_POST_token = (payload) => {
         // TODO: maybe set the token to localStorage/sessionStorage so it can also be checked for?
         //  -> avoids having to resign upon refresh of the page -> discuss
         await store.dispatch("appState/setBearerToken", response.data.token);
-        await store.dispatch(
-          "contracts/setUserRegistered",
-          response.data.isRegistered
-        );
+        store
+          .dispatch("contracts/setUserRegistered", response.data.isRegistered)
+          .then(() => {
+            store.commit("appState/setRegistrationCheckDone", true);
+          });
       }
     })
     .catch(async (error) => {
@@ -53,7 +54,9 @@ const apiCall_POST_token = (payload) => {
         error.response
       );
       if (error.response.status === 401) {
-        await store.dispatch("contracts/setUserRegistered", false);
+        store.dispatch("contracts/setUserRegistered", false).then(() => {
+          store.commit("appState/setRegistrationCheckDone", true);
+        });
       }
     });
 };

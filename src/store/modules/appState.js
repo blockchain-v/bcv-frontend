@@ -6,6 +6,7 @@ Store module for managing app state data globally
 const state = {
   isLoading: false,
   waitingForContractFeedback: false,
+  registrationCheckDone: false,
   bearerToken: null,
   nonce: null,
 };
@@ -24,6 +25,9 @@ const getters = {
   getWaitingForContractFeedback() {
     return state.waitingForContractFeedback;
   },
+  getRegistrationCheckDone() {
+    return state.registrationCheckDone;
+  }
 };
 
 // actions
@@ -42,6 +46,9 @@ const actions = {
   setWaitingForContractFeedback({ commit }, value) {
     commit("setWaitingForContractFeedback", value);
   },
+  setRegistrationCheckDone({commit}, value) {
+    commit("setRegistrationCheckDone", value);
+  }
 };
 
 // mutations
@@ -58,6 +65,9 @@ const mutations = {
   setWaitingForContractFeedback(state, value) {
     state.waitingForContractFeedback = value;
   },
+  setRegistrationCheckDone(state, value) {
+    state.registrationCheckDone = value
+  }
 };
 
 export default {

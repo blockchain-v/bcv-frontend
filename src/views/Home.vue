@@ -64,7 +64,6 @@ export default {
     return {
       methodGroupingKeys,
       methodIDs,
-      registrationCheckDone: false,
       registrationStatusEvent: EventTypes.RegistrationStatus,
       texts: uiTexts.home,
       eventWatcherActive: false,
@@ -92,7 +91,7 @@ export default {
         newVal.notification.transactionHash !==
           oldVal?.notification?.transactionHash
       ) {
-        this.registrationCheckDone = false;
+        this.$store.commit("appState/setRegistrationCheckDone", false)
         // also compare transactionHashes so sequential userRegister events are still treated
         // if incoming event detected that fulfils criteria, re-run authentication-flow for token
         this.initiateUserRegistrationCheck();
@@ -108,6 +107,7 @@ export default {
     ...mapState("appState", {
       nonce: (state) => state.nonce,
       waitingForContractFeedback: (state) => state.waitingForContractFeedback,
+      registrationCheckDone: (state) => state.registrationCheckDone,
     }),
     showUserNotRegistered() {
       return this.registrationCheckDone && !this.userRegistered;
@@ -154,7 +154,6 @@ export default {
       const payload = [nonce, signedValue, account];
       await this.performTokenCheck(payload);
       this.$store.dispatch("appState/setIsLoading", false);
-      this.registrationCheckDone = true;
     },
     handleContractCall(methodId) {
       if (methodId === methodIDs.REGISTER) {
