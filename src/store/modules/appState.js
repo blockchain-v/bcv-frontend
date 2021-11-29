@@ -5,7 +5,10 @@ Store module for managing app state data globally
 // initial state
 const state = {
   isLoading: false,
+  waitingForContractFeedback: false,
+  registrationCheckDone: false,
   bearerToken: null,
+  nonce: null,
 };
 
 // getters
@@ -16,6 +19,15 @@ const getters = {
   getBearerToken() {
     return state.bearerToken;
   },
+  getNonce() {
+    return state.nonce;
+  },
+  getWaitingForContractFeedback() {
+    return state.waitingForContractFeedback;
+  },
+  getRegistrationCheckDone() {
+    return state.registrationCheckDone;
+  }
 };
 
 // actions
@@ -26,6 +38,17 @@ const actions = {
   setBearerToken({ commit }, token) {
     commit("setBearerToken", token);
   },
+  setNonce({ commit }, nonce) {
+    return new Promise((resolve) => {
+      resolve(commit("setNonce", nonce));
+    });
+  },
+  setWaitingForContractFeedback({ commit }, value) {
+    commit("setWaitingForContractFeedback", value);
+  },
+  setRegistrationCheckDone({commit}, value) {
+    commit("setRegistrationCheckDone", value);
+  }
 };
 
 // mutations
@@ -36,6 +59,15 @@ const mutations = {
   setBearerToken(state, token) {
     state.bearerToken = token;
   },
+  setNonce(state, nonce) {
+    state.nonce = nonce;
+  },
+  setWaitingForContractFeedback(state, value) {
+    state.waitingForContractFeedback = value;
+  },
+  setRegistrationCheckDone(state, value) {
+    state.registrationCheckDone = value
+  }
 };
 
 export default {

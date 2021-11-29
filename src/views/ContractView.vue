@@ -9,7 +9,7 @@
       <h1 class="title has-subtext">Invoke Contract Calls</h1>
       <p class="subtitle"><b>using address:</b><br />{{ ethereumAccount }}</p>
       <hr class="horizontal-divider" />
-      <ContractInterfaceInitiator :resolver-index="methodGroupingKeys.all" />
+      <ContractInterfaceInitiator :resolver-index="methodGroupingKeys.prod_main" />
     </div>
 
     <div v-else class="container contract-not-found">

@@ -5,6 +5,9 @@ const BACKEND_STORE_FIELD_NAMES = {
   ATTRIBUTES: "attributes",
   NAME: "name",
   DESCRIPTION: "description",
+  ADDRESS: "address",
+  NONCE: "nonce",
+  SIGNED_NONCE: "signedNonce",
 };
 
 const apiCallIDs = {
