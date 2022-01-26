@@ -71,13 +71,13 @@ export default {
     });
     this.$store.dispatch("appState/setIsLoading", false);
   },
-  async mounted() {
+  mounted() {
     /*
     catch case where you have an account, but manipulate the URL to be invalid
     -> pushes back to app, would be stuck here
     -> hence re-evaluate account
     */
-    await this.$store.dispatch("contracts/getAccountStatus").then((res) => {
+    this.$store.dispatch("contracts/getAccountStatus").then((res) => {
       if (!_isNil(res.ethAccount)) {
         this.navigateToHome();
       }
