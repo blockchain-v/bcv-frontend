@@ -6,25 +6,25 @@
 
     <div v-if="methodId === methodIDs.REGISTER">
       <RegisterUser
-        :method-specification="callMethodSpecification"
+        :interface-specification="callMethodSpecification"
         :propagate-events="propagateEvents"
         @contract-call="propagateContractCallEvent"
       />
     </div>
     <div v-else-if="methodId === methodIDs.UNREGISTER">
-      <UnregisterUser :method-specification="callMethodSpecification" />
+      <UnregisterUser :interface-specification="callMethodSpecification" />
     </div>
     <div v-else-if="methodId === methodIDs.DEPLOY_VNF">
-      <DeployVNF :method-specification="callMethodSpecification" />
+      <DeployVNF :interface-specification="callMethodSpecification" />
     </div>
     <div v-else-if="methodId === methodIDs.DELETE_VNF">
-      <DeleteVNF :method-specification="callMethodSpecification" />
+      <DeleteVNF :interface-specification="callMethodSpecification" />
     </div>
     <div v-else-if="methodId === methodIDs.DEV__GET_VNFS">
-      <DEV_getVNFs :method-specification="callMethodSpecification" />
+      <DEV_getVNFs :interface-specification="callMethodSpecification" />
     </div>
     <div v-else-if="methodId === methodIDs.DEV__GET_VNF_DETAILS">
-      <DEV_getVNFDetails :method-specification="callMethodSpecification" />
+      <DEV_getVNFDetails :interface-specification="callMethodSpecification" />
     </div>
     <!--    TODO-->
     <div v-else>TODO: Error Page or smth.</div>

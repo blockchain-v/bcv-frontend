@@ -13,6 +13,8 @@ export const routeNames = {
   VNFD: "VNFD",
 };
 
+// TODO: delete unused routes
+
 const routes = [
   {
     path: "/about",

@@ -1,20 +1,37 @@
 <template>
   <div class="user-view">
     <div class="container">
+      <EventNotification
+        v-for="(eventType, index) in eventTypes"
+        v-bind:key="index"
+        v-bind:eventType="eventType"
+      />
       <h1 class="title">User Options</h1>
       <hr class="horizontal-divider" />
-      <UnregisterUser />
+      <InterfaceInitiator />
     </div>
   </div>
 </template>
 
 <script>
-import UnregisterUser from "../components/contractInterfaces/UnregisterUser";
+import InterfaceInitiator from "../components/InterfaceInitiator";
+import { EventTypes } from "../services/eventListenerService";
+import EventNotification from "../components/atoms/EventNotification.vue";
 
 export default {
   name: "UserView",
   components: {
-    UnregisterUser,
+    InterfaceInitiator,
+    EventNotification,
+  },
+  data() {
+    return {
+      eventTypes: [
+        EventTypes.DeploymentStatus,
+        EventTypes.RegistrationStatus,
+        EventTypes.UnregistrationStatus,
+      ],
+    };
   },
 };
 </script>

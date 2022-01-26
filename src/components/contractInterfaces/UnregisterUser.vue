@@ -16,7 +16,7 @@ export default {
   name: "UnregisterUser",
   components: { CustomButton },
   props: {
-    methodSpecification: {
+    interfaceSpecification: {
       type: Object,
     },
   },

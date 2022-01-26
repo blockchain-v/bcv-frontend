@@ -66,7 +66,7 @@ export default {
       methodIDs,
       registrationStatusEvent: EventTypes.RegistrationStatus,
       texts: uiTexts.home,
-      eventWatcherActive: false,
+      eventWatcherActive: true, // TODO: clean up all the eventWathcerActive stuff -> not needed
     };
   },
   mounted() {
@@ -75,7 +75,7 @@ export default {
   watch: {
     userRegistered(newVal) {
       if (newVal === true) {
-        this.$router.push({ name: routeNames.CONTRACT_VIEW });
+        this.$router.push({ name: routeNames.USER });
       }
     },
     nonce(newVal, oldVal) {
@@ -135,7 +135,7 @@ export default {
       await apiCall_PUT_token(account);
     },
     async initiateUserRegistrationCheck() {
-      this.eventWatcherActive = false;
+      // this.eventWatcherActive = false;
       this.$store.dispatch("appState/setIsLoading", true);
       const account = this.$store.getters["contracts/getUserETHAccount"];
       // get a nonce from the backend
@@ -156,10 +156,11 @@ export default {
       this.$store.dispatch("appState/setIsLoading", false);
     },
     handleContractCall(methodId) {
-      if (methodId === methodIDs.REGISTER) {
-        // activate event Watcher, so it reacts to incoming user registration events
-        this.eventWatcherActive = true;
-      }
+      // if (methodId === methodIDs.REGISTER) {
+      //   // activate event Watcher, so it reacts to incoming user registration events
+      //   this.eventWatcherActive = true;
+      // }
+      console.log(methodId)
     },
   },
 };

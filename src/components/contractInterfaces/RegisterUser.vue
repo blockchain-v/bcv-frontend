@@ -15,7 +15,7 @@ export default {
   name: "RegisterUser",
   components: { CustomButton },
   props: {
-    methodSpecification: {
+    interfaceSpecification: {
       type: Object,
     },
     propagateEvents: {
@@ -25,10 +25,10 @@ export default {
   },
   computed: {
     methodId() {
-      return this.methodSpecification.id;
+      return this.interfaceSpecification.id;
     },
     buttonText() {
-      return this.methodSpecification.actionText;
+      return this.interfaceSpecification.actionText;
     },
   },
   methods: {

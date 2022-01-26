@@ -1,8 +1,6 @@
 <template>
   <div id="app">
     <div v-if="showNavigation" class="navigation">
-      <!--      <router-link to="/contract-view">Contract Interface</router-link> |-->
-      <!--      <router-link to="/backend-view">Make API Calls</router-link> |-->
       <div class="nav-items">
         <router-link to="/vnf">VNF</router-link> |
         <router-link to="/vnfd">VNFD</router-link>
