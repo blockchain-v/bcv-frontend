@@ -11,7 +11,7 @@ export const attachEventListener = (eventType, callback) => {
       e = VNFContract.events.RegistrationStatus;
       break;
     case EventTypes.UnregistrationStatus:
-      e = VNFContract.events.DeletionStatus;
+      e = VNFContract.events.UnregistrationStatus; // TODO: define status
       break;
   }
 

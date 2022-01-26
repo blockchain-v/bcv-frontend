@@ -16,7 +16,7 @@
 <script>
 import CustomButton from "../atoms/CustomButton";
 import TextInput from "../atoms/TextInput";
-import { BACKEND_STORE_FIELD_NAMES } from "../../constants/apiInterfaceConfig";
+import { BACKEND_STORE_FIELD_NAMES } from "../../constants/interfaceConfig";
 import { apiCall_GET_vnf } from "../../services/apiCallService";
 
 export default {

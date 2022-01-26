@@ -2,9 +2,9 @@
 Store module for managing api call data globally
 */
 import {
-  apiCallIDs,
+  actionIDs,
   BACKEND_STORE_FIELD_NAMES,
-} from "../../constants/apiInterfaceConfig";
+} from "../../constants/interfaceConfig";
 
 /*
 TODO:
@@ -14,23 +14,23 @@ TODO:
 
 // initial state
 const state = {
-  [apiCallIDs.GET_VNFDS]: {
+  [actionIDs.GET_VNFDS]: {
     [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
   },
-  [apiCallIDs.GET_VNFD]: {
+  [actionIDs.GET_VNFD]: {
     [BACKEND_STORE_FIELD_NAMES.VNFDID]: null,
     [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
   },
-  [apiCallIDs.POST_VNFD]: {
+  [actionIDs.POST_VNFD]: {
     [BACKEND_STORE_FIELD_NAMES.NAME]: null,
     [BACKEND_STORE_FIELD_NAMES.DESCRIPTION]: null,
     [BACKEND_STORE_FIELD_NAMES.ATTRIBUTES]: null,
     [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
   },
-  [apiCallIDs.GET_VNFS]: {
+  [actionIDs.GET_VNFS]: {
     [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
   },
-  [apiCallIDs.GET_VNF_INSTANCE]: {
+  [actionIDs.GET_VNF_INSTANCE]: {
     [BACKEND_STORE_FIELD_NAMES.VNFID]: null,
     [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
   },

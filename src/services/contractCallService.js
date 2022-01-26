@@ -6,7 +6,7 @@ Since different calls require/write different data from different components,
 the state is managed using the Vuex store.
 */
 
-import { contractMethodList } from "../constants/contractInterfaceConfig";
+import { actionIDs } from "../constants/interfaceConfig";
 import store from "../store/store.js";
 import { isNil as _isNil } from "lodash";
 import { getDefaultCallParams, VNFContract } from "./truffleService";
@@ -15,28 +15,28 @@ import { v4 as uuidv4 } from "uuid";
 export const performContractCall = async (methodId) => {
   console.log("registered call invocation for method id:", methodId);
   switch (methodId) {
-    case contractMethodList[0].id:
+    case actionIDs.REGISTER:
       // Register
       await performContractCall_register();
       store.commit("appState/setWaitingForContractFeedback", true);
       break;
-    case contractMethodList[1].id:
+    case actionIDs.UNREGISTER:
       // Unregister
       await performContractCall_unregister();
       break;
-    case contractMethodList[2].id:
+    case actionIDs.DEPLOY_VNF:
       await performContractCall_deployVNF();
       // DeployVNF
       break;
-    case contractMethodList[3].id:
+    case actionIDs.DELETE_VNF:
       await performContractCall_deleteVNF();
       // DeleteVNF
       break;
-    case contractMethodList[4].id:
+    case actionIDs.DEV__GET_VNFS:
       await performContractCall_DEV_getVNFs();
       // DEV only - getVNFs
       break;
-    case contractMethodList[5].id:
+    case actionIDs.DEV__GET_VNF_DETAILS:
       await performContractCall_DEV_getVNFDetails();
       // DEV only - getVNFDetails
       break;

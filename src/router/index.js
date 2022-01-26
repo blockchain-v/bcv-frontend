@@ -6,30 +6,16 @@ export const routeNames = {
   ROOT: "Root",
   HOME: "Home",
   ABOUT: "About",
-  CONTRACT_VIEW: "Contract View",
-  BACKEND_VIEW: "Backend View",
   USER: "User",
   VNF: "VNF",
   VNFD: "VNFD",
 };
-
-// TODO: delete unused routes
 
 const routes = [
   {
     path: "/about",
     name: routeNames.ABOUT,
     component: () => import("../views/About.vue"),
-  },
-  {
-    path: "/contract-view",
-    name: routeNames.CONTRACT_VIEW,
-    component: () => import("../views/ContractView.vue"),
-  },
-  {
-    path: "/backend-view",
-    name: routeNames.BACKEND_VIEW,
-    component: () => import("../views/BackendCallView"),
   },
   {
     path: "/user",
@@ -63,13 +49,7 @@ const router = createRouter({
   routes,
 });
 
-const routesToGuard = [
-  routeNames.BACKEND_VIEW,
-  routeNames.CONTRACT_VIEW,
-  routeNames.USER,
-  routeNames.VNF,
-  routeNames.VNFD,
-];
+const routesToGuard = [routeNames.USER, routeNames.VNF, routeNames.VNFD];
 
 router.beforeEach((to, from, next) => {
   if (!Object.values(routeNames).includes(to.name)) {

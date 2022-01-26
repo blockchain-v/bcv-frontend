@@ -1,4 +1,4 @@
-import { apiCallIDs } from "./apiInterfaceConfig";
+import { actionIDs } from "./interfaceConfig";
 
 const BACKEND_URL = process.env.VUE_APP_BACKEND_URL;
 
@@ -13,7 +13,7 @@ const ENDPOINTS = {
 };
 
 const POST_FIELDNAMES = {
-  [apiCallIDs.POST_VNFD]: {
+  [actionIDs.POST_VNFD]: {
     ATTRIBUTES: "attributes",
     NAME: "name",
     DESCRIPTION: "description",

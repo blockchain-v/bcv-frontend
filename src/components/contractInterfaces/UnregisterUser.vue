@@ -10,7 +10,7 @@
 <script>
 import { performContractCall } from "../../services/contractCallService";
 import CustomButton from "../atoms/CustomButton";
-import { methodIDs } from "../../constants/contractInterfaceConfig";
+import { actionIDs } from "../../constants/interfaceConfig";
 
 export default {
   name: "UnregisterUser",
@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       buttonText: "Unregister",
-      methodId: methodIDs.UNREGISTER,
+      methodId: actionIDs.UNREGISTER,
     };
   },
   methods: {

@@ -1,5 +1,3 @@
-import { methodIDs } from "./contractInterfaceConfig";
-
 const BACKEND_STORE_FIELD_NAMES = {
   RESPONSE: "response",
   VNFDID: "vnfdId",
@@ -45,14 +43,14 @@ const actionIDs = {
 //     infoText: "Toddo long Toddo",
 //   },
 //   {
-//     id: methodIDs.DEV__GET_VNFS,
+//     id: contractMethodIDs.DEV__GET_VNFS,
 //     groupings: [],
 //     displayText: "(DEV only) Get VNFs of calling user",
 //     buttonText: "Get VNFs",
 //     infoText: "(DEV-getVNF) imagine a longer text explanation here",
 //   },
 //   {
-//     id: methodIDs.DEV__GET_VNF_DETAILS,
+//     id: contractMethodIDs.DEV__GET_VNF_DETAILS,
 //     groupings: [],
 //     displayText: "(DEV only) Get Details of specified VNF",
 //     buttonText: "Get VNF Details",
@@ -72,7 +70,7 @@ const actionIDs = {
 
 const homeActionList = [
   {
-    id: methodIDs.REGISTER,
+    id: contractMethodIDs.REGISTER,
     groupings: [],
     displayText: "Register as new user",
     actionText: "Register",
@@ -82,7 +80,7 @@ const homeActionList = [
 
 const userActionList = [
   {
-    id: methodIDs.UNREGISTER,
+    id: contractMethodIDs.UNREGISTER,
     groupings: [],
     displayText: "Unregister current user",
     buttonText: "Unregister",
@@ -105,7 +103,7 @@ const vnfActionList = [
     inputPlaceholder: "VNF ID",
   },
   {
-    id: methodIDs.DEPLOY_VNF,
+    id: contractMethodIDs.DEPLOY_VNF,
     groupings: [],
     displayText: "Request VNF deployment",
     buttonText: "Deploy VNF",
@@ -113,7 +111,7 @@ const vnfActionList = [
     inputPlaceholder: "Enter/paste your VNF Descriptor here.",
   },
   {
-    id: methodIDs.DELETE_VNF,
+    id: contractMethodIDs.DELETE_VNF,
     groupings: [], // TODO groupings attribute
     displayText: "Request Deletion of selected VNF",
     buttonText: "Delete VNF",
