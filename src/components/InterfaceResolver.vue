@@ -51,7 +51,7 @@ import DeployVNF from "./contractInterfaces/DeployVNF";
 import RegisterUser from "./contractInterfaces/RegisterUser";
 import UnregisterUser from "./contractInterfaces/UnregisterUser";
 
-import { actionIDs, actionList } from "../constants/interfaceConfig";
+import { actionIDs } from "../constants/interfaceConfig";
 import { isNil as _isNil, find as _find } from "lodash";
 
 export default {
@@ -76,13 +76,17 @@ export default {
       default: null,
       type: String,
     },
+    actionList: {
+      required: true,
+      type: Array,
+    },
     actionListIDs: {
       default: () => [],
       type: Array,
     },
   },
   data() {
-    return { actionList, actionIDs };
+    return { actionIDs };
   },
   computed: {
     actionIdIsValid() {

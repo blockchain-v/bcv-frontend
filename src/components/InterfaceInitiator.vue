@@ -12,6 +12,7 @@
       <div v-if="expandItemList[action.id]" class="details">
         <InterfaceResolver
           :action-id="action.id"
+          :action-list="actionList"
           :action-list-i-ds="actionListIDs"
         />
       </div>
@@ -20,7 +21,6 @@
 </template>
 
 <script>
-import { actionIDs, actionList } from "../constants/interfaceConfig";
 import InterfaceResolver from "./InterfaceResolver";
 
 export default {
@@ -28,13 +28,23 @@ export default {
   components: {
     InterfaceResolver,
   },
-  props: {},
+  props: {
+    actionList: {
+      required: true,
+      type: Array,
+    },
+    autoExpand: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
-      actionIDs, // TODO: not sure if needed
-      actionList, // TODO: maybe as props -> groupings
       expandItemList: {},
     };
+  },
+  created() {
+    this.populateItemList();
   },
   computed: {
     actionListIDs() {
@@ -53,6 +63,11 @@ export default {
   methods: {
     toggleItemExpand(apiCallId) {
       this.expandItemList[apiCallId] = !this.expandItemList[apiCallId];
+    },
+    populateItemList() {
+      this.actionList.forEach(
+        (action) => (this.expandItemList[action.id] = !!this.autoExpand)
+      );
     },
   },
 };

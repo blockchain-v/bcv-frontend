@@ -8,7 +8,7 @@
       />
       <h1 class="title">User Options</h1>
       <hr class="horizontal-divider" />
-      <InterfaceInitiator />
+      <InterfaceInitiator :action-list="userActionList" :auto-expand="true" />
     </div>
   </div>
 </template>
@@ -17,6 +17,7 @@
 import InterfaceInitiator from "../components/InterfaceInitiator";
 import { EventTypes } from "../services/eventListenerService";
 import EventNotification from "../components/atoms/EventNotification.vue";
+import { userActionList } from "../constants/interfaceConfig";
 
 export default {
   name: "UserView",
@@ -31,6 +32,7 @@ export default {
         EventTypes.RegistrationStatus,
         EventTypes.UnregistrationStatus,
       ],
+      userActionList,
     };
   },
 };

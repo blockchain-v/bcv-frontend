@@ -37,17 +37,92 @@ const actionIDs = {
   ...apiCallIDs,
 };
 
-const actionGroupings = {
-  // TODO
-};
+// const unusedActionList = [
+//   {
+//     id: apiCallIDs.DELETE_VNFD,
+//     displayText: "Delete VNFD (pending - DEV only)",
+//     actionText: "Toddo",
+//     infoText: "Toddo long Toddo",
+//   },
+//   {
+//     id: methodIDs.DEV__GET_VNFS,
+//     groupings: [],
+//     displayText: "(DEV only) Get VNFs of calling user",
+//     buttonText: "Get VNFs",
+//     infoText: "(DEV-getVNF) imagine a longer text explanation here",
+//   },
+//   {
+//     id: methodIDs.DEV__GET_VNF_DETAILS,
+//     groupings: [],
+//     displayText: "(DEV only) Get Details of specified VNF",
+//     buttonText: "Get VNF Details",
+//     infoText: "(DEV-getVNF Details) imagine a longer text explanation here",
+//     inputPlaceholder: "Enter/paste ID of the VNF",
+//   },
+// ];
 
-const getGroupingsPerAction = (actionID) => {
-  // TODO
-  console.log(actionID);
-  return [];
-};
+// const actionList = [...contractMethodList, ...apiCallList];
 
-const apiCallList = [
+/* 4 distinct lists
+  - just register -> on home.vue
+  - just unregister -> user-related
+  - vnf-related
+  - vnfd-related
+*/
+
+const homeActionList = [
+  {
+    id: methodIDs.REGISTER,
+    groupings: [],
+    displayText: "Register as new user",
+    actionText: "Register",
+    infoText: "(register) imagine a longer text explanation here",
+  },
+];
+
+const userActionList = [
+  {
+    id: methodIDs.UNREGISTER,
+    groupings: [],
+    displayText: "Unregister current user",
+    buttonText: "Unregister",
+    infoText: "(unregister) imagine a longer text explanation here",
+  },
+];
+
+const vnfActionList = [
+  {
+    id: apiCallIDs.GET_VNFS,
+    displayText: "Get VNF List",
+    actionText: "Get VNFs",
+    infoText: "Get a list of your current VNFs",
+  },
+  {
+    id: apiCallIDs.GET_VNF_INSTANCE,
+    displayText: "Get VNF",
+    actionText: "Get specific VNF",
+    infoText: "Get information about a specific VNF Descriptor",
+    inputPlaceholder: "VNF ID",
+  },
+  {
+    id: methodIDs.DEPLOY_VNF,
+    groupings: [],
+    displayText: "Request VNF deployment",
+    buttonText: "Deploy VNF",
+    infoText: "(deployVNF) imagine a longer text explanation here",
+    inputPlaceholder: "Enter/paste your VNF Descriptor here.",
+  },
+  {
+    id: methodIDs.DELETE_VNF,
+    groupings: [], // TODO groupings attribute
+    displayText: "Request Deletion of selected VNF",
+    buttonText: "Delete VNF",
+    infoText: "(deleteVNF) imagine a longer text explanation here",
+    inputPlaceholder: "Enter/paste the ID of the VNF you wish to delete.",
+  },
+];
+
+const vnfdActionList = [
   {
     id: apiCallIDs.GET_VNFDS,
     displayText: "Get VNFD List",
@@ -78,75 +153,13 @@ const apiCallList = [
     infoText: "Get information about a specific VNF Descriptor",
     inputPlaceholder: "VNFD ID",
   },
-  {
-    id: apiCallIDs.DELETE_VNFD,
-    displayText: "Delete VNFD (pending - DEV only)",
-    actionText: "Todo",
-    infoText: "Todo long Todo",
-  },
-  {
-    id: apiCallIDs.GET_VNFS,
-    displayText: "Get VNF List",
-    actionText: "Get VNFs",
-    infoText: "Get a list of your current VNFs",
-  },
-  {
-    id: apiCallIDs.GET_VNF_INSTANCE,
-    displayText: "Get VNF",
-    actionText: "Get specific VNF",
-    infoText: "Get information about a specific VNF Descriptor",
-    inputPlaceholder: "VNF ID",
-  },
 ];
 
-const contractMethodList = [
-  {
-    id: methodIDs.REGISTER,
-    groupings: getGroupingsPerAction(methodIDs.REGISTER),
-    displayText: "Register as new user",
-    actionText: "Register",
-    infoText: "(register) imagine a longer text explanation here",
-  },
-  {
-    id: methodIDs.UNREGISTER,
-    groupings: getGroupingsPerAction(methodIDs.UNREGISTER),
-    displayText: "Unregister current user",
-    buttonText: "Unregister",
-    infoText: "(unregister) imagine a longer text explanation here",
-  },
-  {
-    id: methodIDs.DEPLOY_VNF,
-    groupings: getGroupingsPerAction(methodIDs.DEPLOY_VNF),
-    displayText: "Request VNF deployment",
-    buttonText: "Deploy VNF",
-    infoText: "(deployVNF) imagine a longer text explanation here",
-    inputPlaceholder: "Enter/paste your VNF Descriptor here.",
-  },
-  {
-    id: methodIDs.DELETE_VNF,
-    groupings: getGroupingsPerAction(methodIDs.DELETE_VNF),
-    displayText: "Request Deletion of selected VNF",
-    buttonText: "Delete VNF",
-    infoText: "(deleteVNF) imagine a longer text explanation here",
-    inputPlaceholder: "Enter/paste the ID of the VNF you wish to delete.",
-  },
-  {
-    id: methodIDs.DEV__GET_VNFS,
-    groupings: getGroupingsPerAction(methodIDs.DEV__GET_VNFS),
-    displayText: "(DEV only) Get VNFs of calling user",
-    buttonText: "Get VNFs",
-    infoText: "(DEV-getVNF) imagine a longer text explanation here",
-  },
-  {
-    id: methodIDs.DEV__GET_VNF_DETAILS,
-    groupings: getGroupingsPerAction(methodIDs.DEV__GET_VNF_DETAILS),
-    displayText: "(DEV only) Get Details of specified VNF",
-    buttonText: "Get VNF Details",
-    infoText: "(DEV-getVNF Details) imagine a longer text explanation here",
-    inputPlaceholder: "Enter/paste ID of the VNF",
-  },
-];
-
-const actionList = [...contractMethodList, ...apiCallList];
-
-export { actionIDs, actionGroupings, actionList, BACKEND_STORE_FIELD_NAMES };
+export {
+  actionIDs,
+  homeActionList,
+  userActionList,
+  vnfActionList,
+  vnfdActionList,
+  BACKEND_STORE_FIELD_NAMES,
+};
