@@ -8,6 +8,9 @@ export const routeNames = {
   ABOUT: "About",
   CONTRACT_VIEW: "Contract View",
   BACKEND_VIEW: "Backend View",
+  USER: "User",
+  VNF: "VNF",
+  VNFD: "VNFD",
 };
 
 const routes = [
@@ -27,6 +30,21 @@ const routes = [
     component: () => import("../views/BackendCallView"),
   },
   {
+    path: "/user",
+    name: routeNames.USER,
+    component: () => import("../views/UserView"),
+  },
+  {
+    path: "/vnf",
+    name: routeNames.VNF,
+    component: () => import("../views/VNFView"),
+  },
+  {
+    path: "/vnfd",
+    name: routeNames.VNFD,
+    component: () => import("../views/VNFDView"),
+  },
+  {
     path: "/home",
     name: routeNames.HOME,
     component: () => import("../views/Home.vue"),
@@ -43,7 +61,13 @@ const router = createRouter({
   routes,
 });
 
-const routesToGuard = [routeNames.BACKEND_VIEW, routeNames.CONTRACT_VIEW];
+const routesToGuard = [
+  routeNames.BACKEND_VIEW,
+  routeNames.CONTRACT_VIEW,
+  routeNames.USER,
+  routeNames.VNF,
+  routeNames.VNFD,
+];
 
 router.beforeEach((to, from, next) => {
   if (!Object.values(routeNames).includes(to.name)) {
