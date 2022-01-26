@@ -12,33 +12,9 @@ export const routeNames = {
 
 const routes = [
   {
-    path: "/",
-    name: routeNames.ROOT,
-    component: () => import("../views/AppRoot.vue"),
-  },
-  {
-    path: "/home",
-    name: routeNames.HOME,
-    component: () => import("../views/Home.vue"),
-    beforeEnter: async (to, from, next) => {
-      await store.dispatch("contracts/getAccountStatus").then((res) => {
-        if (_isNil(res.ethAccount)) {
-          next({ name: routeNames.ROOT });
-        } else {
-          // if account present, resolve normally
-          next();
-        }
-      });
-    },
-  },
-  {
     path: "/about",
     name: routeNames.ABOUT,
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    component: () => import("../views/About.vue"),
   },
   {
     path: "/contract-view",
@@ -50,6 +26,16 @@ const routes = [
     name: routeNames.BACKEND_VIEW,
     component: () => import("../views/BackendCallView"),
   },
+  {
+    path: "/home",
+    name: routeNames.HOME,
+    component: () => import("../views/Home.vue"),
+  },
+  {
+    path: "/",
+    name: routeNames.ROOT,
+    component: () => import("../views/AppRoot.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -59,29 +45,33 @@ const router = createRouter({
 
 const routesToGuard = [routeNames.BACKEND_VIEW, routeNames.CONTRACT_VIEW];
 
-router.beforeEach(async (to, from, next) => {
-  if (Object.values(routeNames).includes(to.name)) {
-    // if called a valid route
-    if (routesToGuard.includes(to.name)) {
-      await store.dispatch("contracts/getAccountStatus").then((res) => {
-        if (!res.userRegistered) {
-          /* 
-          send to /home if no user registered
-          -> if also no account present, /home will send to /
-           */
-          next({ name: routeNames.HOME });
-        } else {
-          next();
-        }
-      });
-    } else {
-      // let non-guarded routes pass
-      next();
-    }
-  } else {
-    console.log("invalid route", to.path);
+router.beforeEach((to, from, next) => {
+  if (!Object.values(routeNames).includes(to.name)) {
+    // invalid route
     next({ name: routeNames.ROOT });
+    return;
   }
+
+  if (!routesToGuard.includes(to.name)) {
+    // let non-guarded routes pass
+    next();
+    return;
+  }
+
+  store.dispatch("contracts/getAccountStatus").then((res) => {
+    if (_isNil(res.ethAccount)) {
+      // send to root if no metamask account
+      next({ name: routeNames.ROOT });
+      return;
+    }
+    if (!res.userRegistered) {
+      // send to /home if user is not registered
+      next({ name: routeNames.HOME });
+      return;
+    }
+    // resolve normally
+    next();
+  });
 });
 
 export default router;
