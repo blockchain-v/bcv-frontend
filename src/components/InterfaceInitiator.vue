@@ -1,25 +1,19 @@
 <template>
-  <div
-    class="api-call-item-container"
-    v-for="apiCall in apiCallList"
-    :key="apiCall.id"
-  >
-    <div
-      class="api-call-item"
-      :class="{ expanded: expandItemList[apiCall.id] }"
-    >
+  <div class="item-container" v-for="action in actionList" :key="action.id">
+    <div class="item" :class="{ expanded: expandItemList[action.id] }">
       <div
         class="item-title"
-        :class="{ expanded: expandItemList[apiCall.id] }"
-        @click="toggleItemExpand(apiCall.id)"
+        :class="{ expanded: expandItemList[action.id] }"
+        @click="toggleItemExpand(action.id)"
       >
-        {{ apiCall.displayText }}
+        {{ action.displayText }}
       </div>
 
-      <div v-if="expandItemList[apiCall.id]" class="details">
-        <ApiInterfaceResolver
-          :api-call-id="apiCall.id"
-          :api-call-list-i-ds="apiCallListIDs"
+      <div v-if="expandItemList[action.id]" class="details">
+        <InterfaceResolver
+          :action-id="action.id"
+          :action-list="actionList"
+          :action-list-i-ds="actionListIDs"
         />
       </div>
     </div>
@@ -27,39 +21,53 @@
 </template>
 
 <script>
-import { apiCallList, apiCallIDs } from "../constants/apiInterfaceConfig";
-import ApiInterfaceResolver from "./ApiInterfaceResolver";
+import InterfaceResolver from "./InterfaceResolver";
 
 export default {
-  name: "ApiInterfaceInitiator",
+  name: "InterfaceInitiator",
   components: {
-    ApiInterfaceResolver,
+    InterfaceResolver,
   },
-  props: {},
+  props: {
+    actionList: {
+      required: true,
+      type: Array,
+    },
+    autoExpand: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
-      apiCallIDs,
-      apiCallList,
       expandItemList: {},
     };
   },
+  created() {
+    this.populateItemList();
+  },
   computed: {
-    apiCallListIDs() {
+    actionListIDs() {
       /*
-      compile list of apiCallIds which are present in the apiCallList
+      compile list of actionIDs which are present in the actionList
       allows for validation of ids, in case the components are not used as intended,
       will prevent ui errors
       */
-      const callIDs = [];
-      this.apiCallList.forEach((call) => {
-        callIDs.push(call.id);
+      const actionIDs = [];
+      this.actionList.forEach((action) => {
+        actionIDs.push(action.id);
       });
-      return callIDs;
+      return actionIDs;
     },
   },
   methods: {
     toggleItemExpand(apiCallId) {
       this.expandItemList[apiCallId] = !this.expandItemList[apiCallId];
+    },
+    populateItemList() {
+      this.actionList.forEach(
+        (action) => (this.expandItemList[action.id] = !!this.autoExpand)
+      );
     },
   },
 };
@@ -68,13 +76,13 @@ export default {
 <style scoped lang="scss">
 @import "src/styles/global.scss";
 
-.api-call-item-container {
+.item-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
 
-  .api-call-item {
+  .item {
     cursor: pointer;
     margin: 10px 30px 50px;
     display: flex;

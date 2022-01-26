@@ -1,9 +1,20 @@
 <template>
   <div id="app">
     <div v-if="showNavigation" class="navigation">
-      <router-link to="/contract-view">Contract Interface</router-link> |
-      <router-link to="/backend-view">Make API Calls</router-link> |
-      <router-link to="/about">About</router-link>
+      <div class="nav-items">
+        <router-link to="/vnf">VNF</router-link> |
+        <router-link to="/vnfd">VNFD</router-link>
+
+        <div class="address" v-if="userETHAccount">
+          {{ userETHAccount }}
+        </div>
+        <div v-else>|</div>
+
+        <router-link to="/user">User</router-link> |
+        <router-link to="/about">About</router-link>
+      </div>
+
+      <hr />
     </div>
     <div v-if="showLoadingScreen" class="loading-container">
       <PulseLoader />
@@ -25,6 +36,9 @@ export default {
   computed: {
     ...mapState("appState", {
       showLoadingScreen: (state) => state.isLoading,
+    }),
+    ...mapState("contracts", {
+      userETHAccount: (state) => state.userETHAccount,
     }),
     showNavigation() {
       return (
@@ -50,10 +64,24 @@ export default {
 
   .navigation {
     padding: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .nav-items {
+      display: flex;
+      justify-content: center;
+    }
+
+    hr {
+      width: 800px;
+    }
 
     a {
       font-weight: bold;
       color: $vue-darkblue;
+      text-decoration: none;
+      margin: 0 10px;
 
       &.router-link-exact-active {
         color: $vue-green;

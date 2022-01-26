@@ -36,7 +36,7 @@
 import CustomButton from "../atoms/CustomButton";
 import TextInput from "../atoms/TextInput";
 import MultilineInput from "../atoms/MultilineInput";
-import { BACKEND_STORE_FIELD_NAMES } from "../../constants/apiInterfaceConfig";
+import { BACKEND_STORE_FIELD_NAMES } from "../../constants/interfaceConfig";
 import { apiCall_POST_vnfd } from "../../services/apiCallService";
 import { POST_FIELDNAMES } from "../../constants/http";
 

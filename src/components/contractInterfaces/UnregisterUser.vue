@@ -10,24 +10,21 @@
 <script>
 import { performContractCall } from "../../services/contractCallService";
 import CustomButton from "../atoms/CustomButton";
-
-// TODO: currently identical to RegisterUser -> maybe consolidate
+import { actionIDs } from "../../constants/interfaceConfig";
 
 export default {
   name: "UnregisterUser",
   components: { CustomButton },
   props: {
-    methodSpecification: {
+    interfaceSpecification: {
       type: Object,
     },
   },
-  computed: {
-    methodId() {
-      return this.methodSpecification.id;
-    },
-    buttonText() {
-      return this.methodSpecification.buttonText;
-    },
+  data() {
+    return {
+      buttonText: "Unregister",
+      methodId: actionIDs.UNREGISTER,
+    };
   },
   methods: {
     initiateContractCall() {

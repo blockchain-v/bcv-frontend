@@ -25,19 +25,19 @@ export default {
   name: "DeleteVNF",
   components: { CustomButton, TextInput },
   props: {
-    methodSpecification: {
+    interfaceSpecification: {
       type: Object,
     },
   },
   computed: {
     methodId() {
-      return this.methodSpecification.id;
+      return this.interfaceSpecification.id;
     },
     buttonText() {
-      return this.methodSpecification.buttonText;
+      return this.interfaceSpecification.buttonText;
     },
     placeholderText() {
-      return this.methodSpecification.inputPlaceholder;
+      return this.interfaceSpecification.inputPlaceholder;
     },
   },
   methods: {

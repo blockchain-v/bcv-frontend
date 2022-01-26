@@ -27,24 +27,16 @@
         <b>{{ texts.currentUserAddress }}</b> {{ ethereumAccount }}
       </p>
       <hr class="horizontal-divider" />
-      <ContractInterfaceInitiator
-        :resolver-index="methodGroupingKeys.register"
-        :expand-all-items="true"
-        :propagate-events-for-methods="[methodIDs.REGISTER]"
-        @contractCall="handleContractCall"
-      />
+      <InterfaceInitiator :action-list="homeActionList" :auto-expand="true" />
     </div>
   </div>
 </template>
 
 <script>
-import ContractInterfaceInitiator from "../components/ContractInterfaceInitiator";
+import InterfaceInitiator from "../components/InterfaceInitiator";
 import EventNotification from "../components/atoms/EventNotification.vue";
 import { EventTypes } from "../services/eventListenerService";
-import {
-  methodGroupingKeys,
-  methodIDs,
-} from "../constants/contractInterfaceConfig";
+import { homeActionList } from "../constants/interfaceConfig";
 import {
   apiCall_PUT_token,
   apiCall_POST_token,
@@ -57,16 +49,14 @@ import { isNil as _isNil, find as _find } from "lodash";
 export default {
   name: "Home",
   components: {
-    ContractInterfaceInitiator,
+    InterfaceInitiator,
     EventNotification,
   },
   data() {
     return {
-      methodGroupingKeys,
-      methodIDs,
+      homeActionList,
       registrationStatusEvent: EventTypes.RegistrationStatus,
       texts: uiTexts.home,
-      eventWatcherActive: false,
     };
   },
   mounted() {
@@ -75,7 +65,7 @@ export default {
   watch: {
     userRegistered(newVal) {
       if (newVal === true) {
-        this.$router.push({ name: routeNames.CONTRACT_VIEW });
+        this.$router.push({ name: routeNames.USER });
       }
     },
     nonce(newVal, oldVal) {
@@ -86,12 +76,11 @@ export default {
     },
     registeredNotification(newVal, oldVal) {
       if (
-        this.eventWatcherActive &&
         !_isNil(newVal) &&
         newVal.notification.transactionHash !==
           oldVal?.notification?.transactionHash
       ) {
-        this.$store.commit("appState/setRegistrationCheckDone", false)
+        this.$store.commit("appState/setRegistrationCheckDone", false);
         // also compare transactionHashes so sequential userRegister events are still treated
         // if incoming event detected that fulfils criteria, re-run authentication-flow for token
         this.initiateUserRegistrationCheck();
@@ -135,7 +124,6 @@ export default {
       await apiCall_PUT_token(account);
     },
     async initiateUserRegistrationCheck() {
-      this.eventWatcherActive = false;
       this.$store.dispatch("appState/setIsLoading", true);
       const account = this.$store.getters["contracts/getUserETHAccount"];
       // get a nonce from the backend
@@ -154,12 +142,6 @@ export default {
       const payload = [nonce, signedValue, account];
       await this.performTokenCheck(payload);
       this.$store.dispatch("appState/setIsLoading", false);
-    },
-    handleContractCall(methodId) {
-      if (methodId === methodIDs.REGISTER) {
-        // activate event Watcher, so it reacts to incoming user registration events
-        this.eventWatcherActive = true;
-      }
     },
   },
 };
