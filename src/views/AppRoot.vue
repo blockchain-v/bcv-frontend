@@ -1,6 +1,9 @@
 <template>
   <div class="app-root">
-    <div v-if="!ethereumAccountIsKnown" class="container">
+    <div v-if="showSpinner" class="loading-container">
+      <PulseLoader />
+    </div>
+    <div v-else-if="!ethereumAccountIsKnown" class="container">
       <h1 class="title">No Ethereum Account Detected</h1>
       <p>Please use MetaMask to set up a connection with an account</p>
       <p>
@@ -21,6 +24,8 @@
 import { isNil as _isNil } from "lodash";
 import CustomButton from "../components/atoms/CustomButton";
 import { routeNames } from "../router";
+import { getToken } from "../services/appService";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 
 /*
  https://stackoverflow.com/a/59499056
@@ -37,11 +42,18 @@ export default {
   name: "AppRoot",
   components: {
     CustomButton,
+    PulseLoader,
   },
   data() {
     return {};
   },
   computed: {
+    token() {
+      return getToken();
+    },
+    showSpinner() {
+      return this.token && !this.ethereumAccountIsKnown;
+    },
     ethereumAccount() {
       return this.$store.state.contracts.userETHAccount;
     },
@@ -85,7 +97,15 @@ export default {
   },
   methods: {
     navigateToHome() {
-      this.$router.push({ name: routeNames.HOME });
+      if (!this.token) {
+        this.$router.push({ name: routeNames.HOME });
+      } else {
+        /*
+        Means that page was refreshed, token still present.
+        No need to run authentication flow.
+         */
+        this.$router.push({ name: routeNames.USER });
+      }
     },
     async getAccount() {
       /*
@@ -151,6 +171,17 @@ export default {
       font-size: 10px;
       background-color: $green-white;
     }
+  }
+  .loading-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $white;
+    opacity: 0.6;
   }
 }
 </style>
