@@ -3,6 +3,8 @@ import { BACKEND_URL, DEFAULT_HEADERS, ENDPOINTS } from "../constants/http";
 import store from "../store/store.js";
 import { BACKEND_STORE_FIELD_NAMES, actionIDs } from "../constants/interfaceConfig";
 import { isNil as _isNil } from "lodash";
+import add from 'date-fns/add'
+
 
 // --------------- HELPERS ---------------------------------------------------------------------------------------------
 const buildHeaderWithAuth = (bearerToken) => {
@@ -35,8 +37,7 @@ const apiCall_POST_token = (payload) => {
     .then(async (response) => {
       console.log("response for url", url, response);
       if (response.status === 200 || response.status === 204) {
-        // TODO: maybe set the token to localStorage/sessionStorage so it can also be checked for?
-        //  -> avoids having to resign upon refresh of the page -> discuss
+        document.cookie = `token=${response.data.token}; expires=${add(new Date(), { days: 1 }).toUTCString()}`;
         await store.dispatch("appState/setBearerToken", response.data.token);
         store
           .dispatch("contracts/setUserRegistered", response.data.isRegistered)

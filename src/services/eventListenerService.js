@@ -1,5 +1,7 @@
 import { registerEventListener, VNFContract } from "./truffleService";
 import store from "../store/store.js";
+import { logoutUser } from "./appService";
+
 
 export const attachEventListener = (eventType, callback) => {
   let e;
@@ -32,6 +34,7 @@ const getEventMessageSuccess = (eventType, parameters) => {
     case EventTypes.RegistrationStatus:
       return `Registration of user ${parameters["user"]} succeeded.`;
     case EventTypes.UnregistrationStatus:
+      logoutUser();
       return `Unregistration of user ${parameters["user"]} succeeded.`;
   }
 };
@@ -43,7 +46,7 @@ const getEventMessageFailure = (eventType, parameters) => {
     case EventTypes.RegistrationStatus:
       return `Registration of user ${parameters["user"]} failed.`;
     case EventTypes.UnregistrationStatus:
-      return `Unregistration succeeded.`;
+      return `Unregistration failed.`;
   }
 };
 

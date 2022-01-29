@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "../store/store.js";
 import { isNil as _isNil } from "lodash";
+import { getToken } from "../services/appService";
 
 export const routeNames = {
   ROOT: "Root",
@@ -64,13 +65,15 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
+  const token = getToken();
+
   store.dispatch("contracts/getAccountStatus").then((res) => {
     if (_isNil(res.ethAccount)) {
       // send to root if no metamask account
       next({ name: routeNames.ROOT });
       return;
     }
-    if (!res.userRegistered) {
+    if (!token) {
       // send to /home if user is not registered
       next({ name: routeNames.HOME });
       return;

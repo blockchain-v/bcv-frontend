@@ -21,6 +21,7 @@
 import { isNil as _isNil } from "lodash";
 import CustomButton from "../components/atoms/CustomButton";
 import { routeNames } from "../router";
+import { getToken } from "../services/appService";
 
 /*
  https://stackoverflow.com/a/59499056
@@ -85,7 +86,16 @@ export default {
   },
   methods: {
     navigateToHome() {
-      this.$router.push({ name: routeNames.HOME });
+      const token = getToken();
+      if (!token) {
+        this.$router.push({ name: routeNames.HOME });
+      } else {
+        /*
+        Means that page was refreshed, token still present.
+        No need to run authentication flow.
+         */
+        this.$router.push({ name: routeNames.USER });
+      }
     },
     async getAccount() {
       /*
