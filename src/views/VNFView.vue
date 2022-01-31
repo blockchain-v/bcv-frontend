@@ -1,6 +1,6 @@
 <template>
   <div class="vnf-view">
-    <div class="container">
+     <div class="container">
       <EventNotification
         v-for="(eventType, index) in eventTypes"
         v-bind:key="index"
