@@ -24,3 +24,12 @@ body {
 *:after {
   box-sizing: inherit;
 }
+
+// TODO
+.container {
+  border-radius: 20px;
+}
+
+.item.expanded {
+  border-radius: 20px;
+}
