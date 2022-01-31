@@ -104,7 +104,9 @@ export default {
         Means that page was refreshed, token still present.
         No need to run authentication flow.
          */
-        this.$router.push({ name: routeNames.USER });
+        this.$store.dispatch("appState/setBearerToken", this.token).then(() => {
+          this.$router.push({ name: routeNames.USER });
+        });
       }
     },
     async getAccount() {
