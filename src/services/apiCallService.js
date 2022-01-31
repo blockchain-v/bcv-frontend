@@ -125,7 +125,7 @@ const apiCall_GET_vnfds = async () => {
       console.log("response for url", url, response); // TODO: CLEANUP logs
       store.commit("backend/setApiCallData", {
         callId: actionIDs.GET_VNFDS,
-        data: response,
+        data: response.data,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
     });

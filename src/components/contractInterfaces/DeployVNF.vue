@@ -1,6 +1,9 @@
 <template>
   <div class="deploy-vnf-ui">
     <div class="input-container">
+      <div class="selection-container">
+        <vSelect :options="vnfdIds" />
+      </div>
       <MultilineInput
         :id="methodId"
         :placeholder="placeholderText"
@@ -22,6 +25,10 @@
 import { performContractCall } from "../../services/contractCallService";
 import CustomButton from "../atoms/CustomButton";
 import MultilineInput from "../atoms/MultilineInput";
+import { mapState } from "vuex";
+import { actionIDs } from "../../constants/interfaceConfig";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 
 /*
 TODO:
@@ -31,13 +38,26 @@ TODO:
 
 export default {
   name: "DeployVNF",
-  components: { CustomButton, MultilineInput },
+  components: { CustomButton, MultilineInput, vSelect },
   props: {
     interfaceSpecification: {
       type: Object,
     },
   },
+  data() {
+    return {
+      movie: "godfather",
+    };
+  },
   computed: {
+    ...mapState("backend", {
+      vnfds: (state) => state[actionIDs.GET_VNFDS].response,
+    }),
+    vnfdIds() {
+      return this.vnfds.map((vnfd) => {
+        return vnfd.id;
+      });
+    },
     methodId() {
       return this.interfaceSpecification.id;
     },
@@ -71,6 +91,17 @@ export default {
 
   .input-container {
     width: 100%;
+
+    //.selection-container {
+    //  align-self: center;
+    //  width: 50%;
+      > div:first-of-type {
+        width: 50%;
+      }
+      .v-select {
+        background-color: $white;
+      }
+    //}
   }
 
   .button-container {
