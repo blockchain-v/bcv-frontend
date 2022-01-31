@@ -92,16 +92,18 @@ export default {
   .input-container {
     width: 100%;
 
-    //.selection-container {
-    //  align-self: center;
-    //  width: 50%;
+    .selection-container {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+
       > div:first-of-type {
         width: 50%;
       }
       .v-select {
         background-color: $white;
       }
-    //}
+    }
   }
 
   .button-container {
