@@ -9,8 +9,6 @@ const state = {
   currentVNFDescriptorInput: null,
   currentVNFToDelete: null,
   eventNotifications: [],
-  // DEV only
-  currentVNFDetailsID: null,
 };
 
 /*
@@ -35,10 +33,6 @@ const getters = {
   },
   getEventNotifications(eventType) {
     return state.eventNotifications[eventType];
-  },
-  // DEV only
-  getCurrentVNFDetailsID() {
-    return state.currentVNFDetailsID;
   },
 };
 
@@ -72,10 +66,6 @@ const actions = {
       });
     });
   },
-  // DEV only
-  setCurrentVNFDetailsID({ commit }, id) {
-    commit("setCurrentVNFDetailsID", id);
-  },
 };
 
 // mutations
@@ -99,10 +89,6 @@ const mutations = {
       notification: notification,
       message: message,
     };
-  },
-  // DEV only
-  setCurrentVNFDetailsID(state, id) {
-    state.currentVNFDetailsID = id;
   },
 };
 
