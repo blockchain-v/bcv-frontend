@@ -27,7 +27,7 @@ const getters = {
   },
   getRegistrationCheckDone() {
     return state.registrationCheckDone;
-  }
+  },
 };
 
 // actions

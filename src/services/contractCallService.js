@@ -6,11 +6,13 @@ Since different calls require/write different data from different components,
 the state is managed using the Vuex store.
 */
 
-import { actionIDs } from "../constants/interfaceConfig";
+import {
+  actionIDs,
+  BACKEND_STORE_FIELD_NAMES as fieldNames,
+} from "../constants/interfaceConfig";
 import store from "../store/store.js";
 import { isNil as _isNil } from "lodash";
 import { getDefaultCallParams, VNFContract } from "./truffleService";
-import { v4 as uuidv4 } from "uuid";
 
 export const performContractCall = async (methodId) => {
   console.log("registered call invocation for method id:", methodId);
@@ -89,12 +91,18 @@ const performContractCall_deployVNF = async () => {
   console.log("call for deployVNF");
   const account = store.getters["contracts/getUserETHAccount"];
   if (!_isNil(account)) {
-    // TODO: real VNFD-ids from backend
-    let VNFD_ID = uuidv4();
-    VNFD_ID = "638530e7-1120-41c1-8a03-149b66247d02";
-    // TODO: let the user parameters, not VNFDs - that is a different call that goes to
-    // the backend
-    const parameters = store.getters["contracts/getCurrentVNFDescriptorInput"];
+    const callData = store.getters["contracts/getContractCallData"](
+      actionIDs.DEPLOY_VNF
+    );
+    const VNFD_ID = callData[fieldNames.VNFDID];
+    // parameters so far: object containing: name, description, attributes.
+    const parameters = {
+      name: callData[fieldNames.NAME],
+      description: callData[fieldNames.DESCRIPTION],
+      attributes: callData[fieldNames.ATTRIBUTES],
+    };
+    // const parameters = store.getters["contracts/getCurrentVNFDescriptorInput"];
+      // TODO: Cleanup getCurrentVNFDescriptorInput in store
     const deployVNFrequest = VNFContract.methods.deployVNF(VNFD_ID, parameters);
     const deployVNFresult = await deployVNFrequest.send(
       getDefaultCallParams(account)

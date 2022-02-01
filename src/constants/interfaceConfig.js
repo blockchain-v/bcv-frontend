@@ -108,11 +108,11 @@ const vnfActionList = [
     displayText: "Request VNF deployment",
     buttonText: "Deploy VNF",
     infoText: "(deployVNF) imagine a longer text explanation here",
-    inputPlaceholder: "Enter/paste your VNF Descriptor here.",
+    inputPlaceholder: "{}",
   },
   {
     id: contractMethodIDs.DELETE_VNF,
-    groupings: [], // TODO groupings attribute
+    groupings: [], // TODO groupings attribute (leave empty or refactor to remove, not needed)
     displayText: "Request Deletion of selected VNF",
     buttonText: "Delete VNF",
     infoText: "(deleteVNF) imagine a longer text explanation here",

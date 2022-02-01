@@ -3,6 +3,22 @@ $rem-baseline: 16px;
 
 /*TODO: rem all the things in all the files*/
 
+// FONTS
+$default-font-family: Avenir, Helvetica, Arial, sans-serif;
+$light: 200;
+$normal: normal;
+$bold: bold;
+$font-size-s: 16px;
+$font-size-normal: 20px;
+
+// SPACING
+$margin-m: 30px;
+$margin-sm: 20px;
+$margin-s: 15px;
+$margin-xs: 10px;
+$margin-xxs: 5px;
+$margin-non-flex-self-center: 0 auto;
+
 // CONTRACT UIs SHARED VARIABLES
 // for the method-id specific UIs
 $method-specific-ui-margin: 30px 0 15px 0;
@@ -14,6 +30,7 @@ $api-call-specific-ui-margin: $method-specific-ui-margin;
 // INPUT COMPONENTS
 $input-width: 50%;
 $text-area-width: $input-width;
+$input-padding: $margin-xs $margin-sm;
 
 // BUTTONS
 $button-padding: 5px 15px;
@@ -24,9 +41,12 @@ TODO: colors all come here
  */
 // vue
 $vue-darkblue: #2c3e50;
+$vue-darkblue-pale: #9fa9b3;
 $vue-green: #42b983;
 // custom
 // NOTE: some duplicates for colors tied to "events" such as hover, active etc.
+$grey-disabled-dark: #e1e2e3;
+$grey-disabled: #f5f5f5;
 $green-cadetblue: cadetblue;
 $green-aquamarine-medium: mediumaquamarine;
 $green-aquamarine: aquamarine;

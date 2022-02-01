@@ -1,6 +1,6 @@
 <template>
   <div class="multiline-input">
-    <p class="label" v-if="hasLabel">{{ label }}</p>
+    <p class="label f-label" v-if="hasLabel">{{ label }}</p>
     <textarea
       :id="areaId"
       @input="handleInput"

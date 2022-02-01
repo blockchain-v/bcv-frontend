@@ -1,16 +1,27 @@
 /*
 Store module for managing contract call data globally
 */
+import {
+  actionIDs,
+  BACKEND_STORE_FIELD_NAMES,
+} from "../../constants/interfaceConfig";
 
 // initial state
 const state = {
   userETHAccount: null,
   userRegistered: false,
-  currentVNFDescriptorInput: null,
-  currentVNFToDelete: null,
   eventNotifications: [],
+  [actionIDs.DEPLOY_VNF]: {
+    [BACKEND_STORE_FIELD_NAMES.VNFDID]: null,
+    [BACKEND_STORE_FIELD_NAMES.NAME]: null,
+    [BACKEND_STORE_FIELD_NAMES.DESCRIPTION]: null,
+    [BACKEND_STORE_FIELD_NAMES.ATTRIBUTES]: null,
+    [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
+  },
+  currentVNFDescriptorInput: null, // TODO: refactor away and delete -> use structure like for backend in store
+  currentVNFToDelete: null, // TODO: refactor away and delete -> use structure like for backend in store
   // DEV only
-  currentVNFDetailsID: null,
+  currentVNFDetailsID: null, // TODO CLEANUP
 };
 
 /*
@@ -33,8 +44,11 @@ const getters = {
   getCurrentVNFToDelete() {
     return state.currentVNFToDelete;
   },
-  getEventNotifications(eventType) {
-    return state.eventNotifications[eventType];
+  getContractCallData() {
+    /* returns all data, designed to be used like in e.g. 'contractCallService'
+      because getters (unfortunately) cannot receive arguments
+      alternatively, one might write individual getters, e.g. getDeployVNFData() */
+    return state;
   },
   // DEV only
   getCurrentVNFDetailsID() {
@@ -62,6 +76,9 @@ const actions = {
       notification: notification,
       message: message,
     });
+  },
+  setContractCallData({ commit }, { actionId, data, fieldName }) {
+    commit("setContractCallData", { actionId, data, fieldName });
   },
   // async getter via actions
   getAccountStatus() {
@@ -99,6 +116,9 @@ const mutations = {
       notification: notification,
       message: message,
     };
+  },
+  setContractCallData(state, { actionId, data, fieldName }) {
+    state[actionId][fieldName] = data;
   },
   // DEV only
   setCurrentVNFDetailsID(state, id) {
