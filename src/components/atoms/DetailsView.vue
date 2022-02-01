@@ -42,7 +42,7 @@
 export default {
   name: "DetailsView",
   props: {
-    vnf: {
+    item: {
       type: Object,
     },
     baseFields: {
@@ -75,7 +75,7 @@ export default {
       return this.$props.baseFields;
     },
     getAttributes() {
-      return Object.entries(this.$props.vnf.attributes);
+      return Object.entries(this.$props.item.attributes);
     },
   },
 };

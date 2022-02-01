@@ -5,7 +5,7 @@
       >: <span> {{ vnf.description }}</span>
     </template>
     <template v-slot:content>
-      <DetailsView v-bind:vnf="vnf" v-bind:baseFields="getBaseFields(vnf)" />
+      <DetailsView v-bind:item="vnf" v-bind:baseFields="getBaseFields(vnf)" />
     </template>
   </Accordion>
 </template>
@@ -36,6 +36,11 @@ export default {
           label: "Description",
           id: `description-${vnf.id}`,
           text: vnf.description,
+        },
+        {
+          label: "ID",
+          id: `id-${vnf.id}`,
+          text: vnf.id,
         },
         {
           label: "Created",
@@ -97,7 +102,6 @@ export default {
   },
   data() {
     return {
-      attributes: [],
       exampleVnfs: [
         {
           attributes: {

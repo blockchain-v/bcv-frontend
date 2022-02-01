@@ -8,6 +8,7 @@
       />
       <h1 class="title">VNFD Controls</h1>
       <hr class="horizontal-divider" />
+      <VNFDDetails />
       <InterfaceInitiator :action-list="vnfdActionList" />
     </div>
   </div>
@@ -17,6 +18,7 @@
 import InterfaceInitiator from "../components/InterfaceInitiator";
 import { EventTypes } from "../services/eventListenerService";
 import EventNotification from "../components/atoms/EventNotification.vue";
+import VNFDDetails from "../components/molecules/VNFDDetails.vue";
 import { vnfdActionList } from "../constants/interfaceConfig";
 
 export default {
@@ -24,6 +26,7 @@ export default {
   components: {
     InterfaceInitiator,
     EventNotification,
+    VNFDDetails,
   },
   data() {
     return {
