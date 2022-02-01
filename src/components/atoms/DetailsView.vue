@@ -10,6 +10,13 @@
           v-model="field.text"
           disabled
         />
+        <button
+          class="btn-copy"
+          :id="`btn-${field.id}`"
+          @click="copyToClipboard(field.id)"
+        >
+          Copy
+        </button>
       </div>
     </div>
     <hr class="horizontal-divider" />
@@ -20,18 +27,32 @@
         <div v-if="!containsLineBreak(attr[1])">
           <input
             class="detail-property"
-            :id="attr[0]"
+            :id="attr[2]"
             v-model="attr[1]"
             disabled
           />
+          <button
+            class="btn-copy"
+            :id="`btn-${attr[2]}`"
+            @click="copyToClipboard(attr[2])"
+          >
+            Copy
+          </button>
         </div>
         <div v-else>
           <textarea
             class="detail-property"
-            :id="attr[0]"
+            :id="attr[2]"
             v-model="attr[1]"
             disabled
           />
+          <button
+            class="btn-copy textarea"
+            :id="`btn-${attr[2]}`"
+            @click="copyToClipboard(attr[2])"
+          >
+            Copy
+          </button>
         </div>
       </div>
     </div>
@@ -64,10 +85,31 @@ export default {
       );
 
       txts.forEach((element) => {
-        const srclHeight = element.scrollHeight;
+        const scrlHeight = element.scrollHeight;
+        const btn = this.getCopyButton(element.id);
+        const height = `${scrlHeight + 2}px`;
 
-        element.style.height = `${srclHeight + 2}px`;
+        element.style.height = height;
+        btn.style.height = height;
       });
+    },
+    async copyToClipboard(id) {
+      const element = document.getElementById(id);
+
+      await navigator.clipboard.writeText(element.value);
+
+      const btn = this.getCopyButton(element.id);
+
+      const originalValue = btn.textContent;
+
+      btn.textContent = "Copied!";
+
+      setTimeout(() => {
+        btn.textContent = originalValue;
+      }, 2000);
+    },
+    getCopyButton(id) {
+      return document.getElementById(`btn-${id}`);
     },
   },
   computed: {
@@ -75,7 +117,13 @@ export default {
       return this.$props.baseFields;
     },
     getAttributes() {
-      return Object.entries(this.$props.item.attributes);
+      let attributes = Object.entries(this.$props.item.attributes);
+
+      attributes.forEach((element) => {
+        element.push(`${element[0]}-${this.$props.item.id}`);
+      });
+
+      return attributes;
     },
   },
 };
@@ -87,6 +135,7 @@ export default {
 .form-element {
   margin-top: 10px;
   margin-bottom: 10px;
+  position: relative;
 }
 
 .detail-label {
@@ -104,10 +153,10 @@ export default {
 .detail-property {
   position: relative;
   display: inline;
-  width: 80%;
   padding: 12px;
   border: 1px solid $green-cadetblue;
-  border-radius: 10px;
+  width: 60%;
+  border-radius: 10px 0 0 10px;
 }
 
 .horizontal-divider {
@@ -121,4 +170,23 @@ export default {
   padding-left: 12px;
   font-weight: bold;
 }
+
+.btn-copy {
+  background: $green-mint-tulip;
+  border: 1px solid $green-cadetblue;
+  border-radius: 0 10px 10px 0;
+  position: absolute;
+  width: 60px;
+  height: 42px;
+}
+
+.btn-copy.textarea {
+  margin-top: 1px;
+  height: auto;
+}
+
+.btn-copy:hover {
+  background: $green-cadetblue;
+}
+
 </style>
