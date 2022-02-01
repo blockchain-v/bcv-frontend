@@ -101,8 +101,6 @@ const performContractCall_deployVNF = async () => {
       description: callData[fieldNames.DESCRIPTION],
       attributes: callData[fieldNames.ATTRIBUTES],
     };
-    // const parameters = store.getters["contracts/getCurrentVNFDescriptorInput"];
-      // TODO: Cleanup getCurrentVNFDescriptorInput in store
     const deployVNFrequest = VNFContract.methods.deployVNF(VNFD_ID, parameters);
     const deployVNFresult = await deployVNFrequest.send(
       getDefaultCallParams(account)

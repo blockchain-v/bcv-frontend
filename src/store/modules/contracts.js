@@ -18,7 +18,6 @@ const state = {
     [BACKEND_STORE_FIELD_NAMES.ATTRIBUTES]: null,
     [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
   },
-  currentVNFDescriptorInput: null, // TODO: refactor away and delete -> use structure like for backend in store
   currentVNFToDelete: null, // TODO: refactor away and delete -> use structure like for backend in store
   // DEV only
   currentVNFDetailsID: null, // TODO CLEANUP
@@ -37,9 +36,6 @@ const getters = {
   },
   getUserRegistered() {
     return state.userRegistered;
-  },
-  getCurrentVNFDescriptorInput() {
-    return state.currentVNFDescriptorInput;
   },
   getCurrentVNFToDelete() {
     return state.currentVNFToDelete;
@@ -63,9 +59,6 @@ const actions = {
   },
   setUserRegistered({ commit }, bool) {
     commit("setUserRegistered", bool);
-  },
-  setCurrentVNFDescriptorInput({ commit }, input) {
-    commit("setCurrentVNFDescriptorInput", input);
   },
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
@@ -104,9 +97,6 @@ const mutations = {
   },
   setUserRegistered(state, bool) {
     state.userRegistered = bool;
-  },
-  setCurrentVNFDescriptorInput(state, input) {
-    state.currentVNFDescriptorInput = input;
   },
   setCurrentVNFToDelete(state, input) {
     state.currentVNFToDelete = input;
