@@ -5,7 +5,7 @@
       : <span> {{ vnfd.description }} </span>
     </template>
     <template v-slot:content>
-      <DetailsView v-bind:item="vnfd" v-bind:baseFields="getBaseFields(vnfd)" />
+      <DetailsView :item="vnfd" :baseFields="getBaseFields(vnfd)" />
     </template>
   </Accordion>
 </template>

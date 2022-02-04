@@ -2,7 +2,7 @@
   <div
     v-if="hasEventNotification && this.isVisible"
     class="container"
-    v-bind:class="{ 'event-error': isErroneous }"
+    :class="{ 'event-error': isErroneous }"
   >
     <p>
       {{ eventMessage }}

@@ -5,15 +5,15 @@ https://medium.com/notonlycss/how-to-build-an-accordion-component-in-vue-js-570e
     <div
       @click="toggle()"
       class="accordion-title"
-      v-bind:class="{ open: isExpanded, closed: !isExpanded }"
+      :class="{ open: isExpanded, closed: !isExpanded }"
     >
       <slot name="title" />
-      <i class="caret" v-bind:class="{ down: isExpanded, up: !isExpanded }" />
+      <i class="caret" :class="{ down: isExpanded, up: !isExpanded }" />
     </div>
 
     <div
       class="accordion-content"
-      v-bind:class="{ expanded: isExpanded, collapsed: !isExpanded }"
+      :class="{ expanded: isExpanded, collapsed: !isExpanded }"
     >
       <slot name="content" />
     </div>
