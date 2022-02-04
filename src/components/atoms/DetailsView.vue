@@ -1,7 +1,7 @@
 <template>
   <div class="details-info">
     <p class="section-label">General</p>
-    <div v-for="field in getBaseFields" :key="field.id">
+    <div v-for="field in this.baseFields" :key="field.id">
       <div class="form-element">
         <label class="detail-label" :for="field.id">{{ field.label }}</label>
         <input
@@ -113,14 +113,11 @@ export default {
     },
   },
   computed: {
-    getBaseFields() {
-      return this.$props.baseFields;
-    },
     getAttributes() {
-      let attributes = Object.entries(this.$props.item.attributes);
+      let attributes = Object.entries(this.item.attributes);
 
       attributes.forEach((element) => {
-        element.push(`${element[0]}-${this.$props.item.id}`);
+        element.push(`${element[0]}-${this.item.id}`);
       });
 
       return attributes;
