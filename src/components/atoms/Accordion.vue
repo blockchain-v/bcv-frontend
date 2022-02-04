@@ -5,16 +5,13 @@ https://medium.com/notonlycss/how-to-build-an-accordion-component-in-vue-js-570e
     <div
       @click="toggle()"
       class="accordion-title"
-      :class="{ open: isExpanded, closed: !isExpanded }"
+      :class="{ open: isExpanded }"
     >
       <slot name="title" />
-      <i class="caret" :class="{ down: isExpanded, up: !isExpanded }" />
+      <i class="caret" :class="{ down: isExpanded }" />
     </div>
 
-    <div
-      class="accordion-content"
-      :class="{ expanded: isExpanded, collapsed: !isExpanded }"
-    >
+    <div class="accordion-content" :class="{ expanded: isExpanded }">
       <slot name="content" />
     </div>
   </div>
@@ -52,31 +49,27 @@ export default {
   z-index: 1;
   user-select: none;
   cursor: pointer;
-}
-
-.accordion-title.closed {
   border-radius: 8px;
-}
 
-.accordion-title.open {
-  border-radius: 8px 8px 0px 0px;
+  &.open {
+    border-radius: 8px 8px 0px 0px;
+  }
 }
 
 .accordion-content {
-  border: 1px solid $green-cadetblue;
   background-color: $green-white;
   z-index: 0;
-}
-
-.accordion-content.expanded {
-  padding: 5px;
-  border-radius: 0px 0px 10px 10px;
-}
-
-.accordion-content.collapsed {
   overflow: hidden;
-  max-height: 0;
   border: 0px;
+  max-height: 0;
+
+  &.expanded {
+    overflow: visible;
+    max-height: fit-content;
+    border: 1px solid $green-cadetblue;
+    padding: 5px;
+    border-radius: 0px 0px 10px 10px;
+  }
 }
 
 // inspired by: https://www.w3schools.com/howto/howto_css_arrows.asp
@@ -87,15 +80,12 @@ export default {
   margin-right: 10px;
   float: right;
   transition: all 0.2s ease-out;
-}
-
-.caret.up {
   margin-top: 7px;
   transform: rotate(-135deg);
-}
 
-.caret.down {
-  margin-top: 2px;
-  transform: rotate(45deg);
+  &.down {
+    margin-top: 2px;
+    transform: rotate(45deg);
+  }
 }
 </style>
