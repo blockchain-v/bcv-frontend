@@ -1,28 +1,45 @@
 <template>
-  <Accordion v-for="vnf in this.exampleVnfs" :key="vnf.id">
-    <template v-slot:title>
-      <span class="vnf-title">{{ vnf.name }}</span
-      >: <span> {{ vnf.description }}</span>
-    </template>
-    <template v-slot:content>
-      <DetailsView :item="vnf" :baseFields="getBaseFields(vnf)" />
-    </template>
-  </Accordion>
+  <div class="vnfs-container">
+    <Accordion v-for="vnf in vnfs" :key="vnf.id">
+      <template v-slot:title>
+        <span class="vnf-title">{{ vnf.name }}</span
+        >: <span> {{ vnf.description }}</span>
+      </template>
+      <template v-slot:content>
+        <DetailsView :item="vnf" :baseFields="getBaseFields(vnf)" />
+      </template>
+    </Accordion>
+  </div>
 </template>
 
 <script>
 import DetailsView from "../atoms/DetailsView.vue";
 import Accordion from "../atoms/Accordion.vue";
+import {
+  actionIDs,
+  BACKEND_STORE_FIELD_NAMES,
+} from "../../constants/interfaceConfig";
+import { isNil as _isNil } from "lodash";
+
 export default {
   name: "VNFDetails",
-  props: {
-    vnfs: {
-      type: Array,
-    },
-  },
   components: {
     DetailsView,
     Accordion,
+  },
+  computed: {
+    vnfs() {
+      const vnfResults =
+        this.$store.state.backend[actionIDs.GET_VNFS][
+          BACKEND_STORE_FIELD_NAMES.RESPONSE
+        ];
+
+      if (_isNil(vnfResults) || _isNil(vnfResults.data)) {
+        return [];
+      }
+
+      return vnfResults.data;
+    },
   },
   methods: {
     getBaseFields(vnf) {
@@ -100,66 +117,6 @@ export default {
       ];
     },
   },
-  data() {
-    return {
-      exampleVnfs: [
-        {
-          attributes: {
-            param_values:
-              "vdus:\n  vdu1:\n    param:\n      vdu-name: openwrt_vdu1\n",
-            config:
-              "vdus:\n  vdu1:\n    config:\n      firewall: 'package firewall\n\n        '\n",
-          },
-          id: "5e45b6e3-0dd4-40e9-a181-025c495540d2",
-          tenant_id: "0506addd081049429e860305166bb7bd",
-          name: "OpenWRT 1234",
-          description: "OpenWRT with services",
-          instance_id: null,
-          vim_id: "d8a819e9-5742-4d2e-b4f4-f7ded1b18282",
-          placement_attr: {
-            region_name: "RegionOne",
-            vim_name: "DefaultVIM",
-          },
-          vnfd_id: "5ef87b99-4608-4465-a9c5-f11cd750b1e6",
-          status: "PENDING_CREATE",
-          mgmt_ip_address: null,
-          error_reason: null,
-          created_at: "2021-10-12 12:04:16",
-          updated_at: null,
-        },
-        {
-          attributes: {
-            maintenance_url:
-              "http://openstacktacker:9890/v1.0/vnfs/181f3006-1b04-485f-8837-fba0262e7e61/maintenance/0506addd081049429e860305166bb7bd",
-            config:
-              "vdus:\n  vdu1:\n    config:\n      firewall: 'package firewall\n\n        '\n",
-            param_values:
-              "vdus:\n  vdu1:\n    param:\n      vdu-name: openwrt_vdu1\n",
-            maintenance: '{"ALL": "lst412e8"}',
-            heat_template:
-              "heat_template_version: 2013-05-23\ndescription: 'Demo example\n\n  '\nparameters: {}\nresources:\n  CP1:\n    type: OS::Neutron::Port\n    properties:\n      port_security_enabled: false\n      network: net2\n  VDU1:\n    type: OS::Nova::Server\n    properties:\n      flavor:\n        get_resource: VDU1_flavor\n      user_data_format: SOFTWARE_CONFIG\n      image: cirros-0.5.2-x86_64-disk\n      config_drive: false\n      networks:\n      - port:\n          get_resource: CP1\n  VDU1_flavor:\n    properties:\n      disk: 1\n      ram: 512\n      vcpus: 1\n    type: OS::Nova::Flavor\n  ALL_maintenance:\n    properties:\n      alarm_actions:\n      - http://openstacktacker:9890/v1.0/vnfs/181f3006-1b04-485f-8837-fba0262e7e61/maintenance/0506addd081049429e860305166bb7bd/lst412e8\n      event_type: maintenance.scheduled\n    type: OS::Aodh::EventAlarm\noutputs:\n  mgmt_ip-VDU1:\n    value:\n      get_attr:\n      - CP1\n      - fixed_ips\n      - 0\n      - ip_address\n",
-            maintenance_group: "d28e293d-7059-4c72-9d3a-267fd6b2b35d",
-          },
-          id: "181f3006-1b04-485f-8837-fba0262e7e61",
-          tenant_id: "0506addd081049429e860305166bb7bd",
-          name: "Test VNF 2",
-          description: "Sample",
-          instance_id: "1c76f4a3-7528-4c0e-a271-cc58f596b357",
-          vim_id: "d8a819e9-5742-4d2e-b4f4-f7ded1b18282",
-          placement_attr: {
-            region_name: "RegionOne",
-            vim_name: "DefaultVIM",
-          },
-          vnfd_id: "c5022863-2186-4cbf-8976-47802139a8b5",
-          status: "ACTIVE",
-          mgmt_ip_address: '{"VDU1": "10.0.1.98"}',
-          error_reason: null,
-          created_at: "2021-10-26 15:52:21",
-          updated_at: "2021-10-26 15:53:30",
-        },
-      ],
-    };
-  },
 };
 </script>
 
@@ -168,5 +125,9 @@ export default {
 
 .vnf-title {
   font-weight: bold;
+}
+
+.vnfs-container {
+  padding: 10px;
 }
 </style>

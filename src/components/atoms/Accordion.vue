@@ -36,7 +36,6 @@ export default {
 <style scoped lang="scss">
 @import "src/styles/global.scss";
 .accordion-container {
-  width: 100%;
   border-radius: 10px;
   border: 1px solid $green-cadetblue;
   margin: 10px;
