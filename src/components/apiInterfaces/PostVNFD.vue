@@ -37,7 +37,7 @@ import CustomButton from "../atoms/CustomButton";
 import TextInput from "../atoms/TextInput";
 import MultilineInput from "../atoms/MultilineInput";
 import { BACKEND_STORE_FIELD_NAMES } from "../../constants/interfaceConfig";
-import { apiCall_POST_vnfd } from "../../services/apiCallService";
+import { apiCall_POST_vnfd, apiCall_GET_vnfds } from "../../services/apiCallService";
 import { POST_FIELDNAMES } from "../../constants/http";
 
 export default {
@@ -113,6 +113,8 @@ export default {
         [POST_FIELDNAMES[this.apiCallId].NAME]: this.vnfdName,
         [POST_FIELDNAMES[this.apiCallId].DESCRIPTION]: this.vnfdDescription,
         [POST_FIELDNAMES[this.apiCallId].ATTRIBUTES]: this.vnfdAttributes,
+      }).then(() => {
+        apiCall_GET_vnfds();
       });
     },
     handleInputChange(input, fieldName) {
