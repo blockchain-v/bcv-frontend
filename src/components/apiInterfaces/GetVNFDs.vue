@@ -2,19 +2,27 @@
   <div class="get-vnfds-ui">
     <CustomButton @button-click="performApiCall" :button-text="buttonText" />
   </div>
+  <VNFDDetails />
 </template>
 
 <script>
 import CustomButton from "../atoms/CustomButton";
 import { apiCall_GET_vnfds } from "../../services/apiCallService";
+import VNFDDetails from "../molecules/VNFDDetails.vue";
 
 export default {
   name: "GetVNFDs",
-  components: { CustomButton },
+  components: {
+    CustomButton,
+    VNFDDetails,
+  },
   props: {
     interfaceSpecification: {
       type: Object,
     },
+  },
+  created() {
+    this.performApiCall();
   },
   computed: {
     buttonText() {

@@ -1,15 +1,15 @@
 <template>
   <div
-    v-if="hasEventNotification && this.isVisible"
+    v-if="hasEventNotification && isVisible"
     class="container"
-    v-bind:class="{ 'event-error': isErroneous }"
+    :class="{ 'event-error': isErroneous }"
   >
     <p>
       {{ eventMessage }}
     </p>
     <div class="button-container">
       <CustomButton
-        @button-click="this.isVisible = false"
+        @button-click="isVisible = false"
         button-text="dismiss"
       />
     </div>
@@ -40,10 +40,10 @@ export default {
     };
   },
   async created() {
-    attachEventListener(this.$props.eventType, async (err, e) => {
-      let message = getEventMessage(this.$props.eventType, e.returnValues);
+    attachEventListener(this.eventType, async (err, e) => {
+      let message = getEventMessage(this.eventType, e.returnValues);
 
-      await this.setEventNotification(e, this.$props.eventType, message);
+      await this.setEventNotification(e, this.eventType, message);
 
       this.isVisible = true;
 
@@ -54,16 +54,16 @@ export default {
   },
   computed: {
     hasEventNotification() {
-      return this.hasNotifications(this.$props.eventType);
+      return this.hasNotifications(this.eventType);
     },
     eventNotification() {
-      return this.getEventNotification(this.$props.eventType).notification;
+      return this.getEventNotification(this.eventType).notification;
     },
     eventMessage() {
-      return this.getEventNotification(this.$props.eventType).message;
+      return this.getEventNotification(this.eventType).message;
     },
     isErroneous() {
-      let hasError = !this.getEventNotification(this.$props.eventType)
+      let hasError = !this.getEventNotification(this.eventType)
         .notification.returnValues["success"];
       console.log("IsErroneous", hasError);
       return hasError;

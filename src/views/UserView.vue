@@ -3,8 +3,8 @@
     <div class="container">
       <EventNotification
         v-for="(eventType, index) in eventTypes"
-        v-bind:key="index"
-        v-bind:eventType="eventType"
+        :key="index"
+        :eventType="eventType"
       />
       <h1 class="title">User Options</h1>
       <hr class="horizontal-divider" />
