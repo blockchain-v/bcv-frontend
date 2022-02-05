@@ -10,7 +10,7 @@ import add from 'date-fns/add'
 const buildHeaderWithAuth = (bearerToken) => {
   return {
     ...DEFAULT_HEADERS,
-    Authentication: bearerToken,
+    Authorization: bearerToken,
   };
 };
 
