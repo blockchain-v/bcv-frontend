@@ -9,6 +9,10 @@
 import CustomButton from "../atoms/CustomButton";
 import { apiCall_GET_vnfs } from "../../services/apiCallService";
 import VNFDetails from "../molecules/VNFDetails.vue";
+import {
+  attachEventListener,
+  EventTypes,
+} from "../../services/eventListenerService";
 
 export default {
   name: "GetVNFs",
@@ -18,8 +22,9 @@ export default {
       type: Object,
     },
   },
-  created(){
+  created() {
     this.performApiCall();
+    this.listenToContract();
   },
   computed: {
     buttonText() {
@@ -29,6 +34,13 @@ export default {
   methods: {
     performApiCall() {
       apiCall_GET_vnfs();
+    },
+    async listenToContract() {
+      attachEventListener(EventTypes.DeploymentStatus, async (err, event) => {
+        if (event.returnValues.success) {
+          this.performApiCall();
+        }
+      });
     },
   },
 };
