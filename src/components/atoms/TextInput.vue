@@ -1,5 +1,5 @@
 <template>
-  <div class="multiline-input">
+  <div class="text-input">
     <p class="label" v-if="hasLabel">{{ label }}</p>
     <input :id="inputId" @input="handleInput" :placeholder="placeholder" />
   </div>
@@ -9,7 +9,7 @@
 import { debounce as _debounce, isNil as _isNil } from "lodash";
 
 export default {
-  name: "MultilineInput",
+  name: "TextInput.vue",
   props: {
     id: {
       required: true,
@@ -44,13 +44,13 @@ export default {
 <style scoped lang="scss">
 @import "src/styles/global.scss";
 
-.multiline-input {
+.text-input {
   width: 100%;
 
   .label {
     position: relative;
     display: flex;
-    left: calc((100% - #{$input-width}) / 2);
+    left: $input-width-based-centering-offset;
   }
 
   input {

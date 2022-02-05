@@ -5,7 +5,7 @@
         :id="methodId"
         :placeholder="placeholderText"
         @input-change="handleInputChange"
-        :format-j-s-o-n="true"
+        :text-format="textFormat.JSON"
         :store-as-j-s-o-n="false"
       />
     </div>
@@ -22,6 +22,7 @@
 import { performContractCall } from "../../services/contractCallService";
 import CustomButton from "../atoms/CustomButton";
 import MultilineInput from "../atoms/MultilineInput";
+import { TEXT_FORMAT } from "../../constants/global";
 
 /*
 TODO:
@@ -36,6 +37,11 @@ export default {
     interfaceSpecification: {
       type: Object,
     },
+  },
+  data() {
+    return {
+      textFormat: TEXT_FORMAT,
+    };
   },
   computed: {
     methodId() {
