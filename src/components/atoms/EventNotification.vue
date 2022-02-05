@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="hasEventNotification && this.isVisible"
+    v-if="hasEventNotification && isVisible"
     class="container"
     :class="{ 'event-error': isErroneous }"
   >
@@ -9,7 +9,7 @@
     </p>
     <div class="button-container">
       <CustomButton
-        @button-click="this.isVisible = false"
+        @button-click="isVisible = false"
         button-text="dismiss"
       />
     </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="details-info">
     <p class="section-label">General</p>
-    <div v-for="field in this.baseFields" :key="field.id">
+    <div v-for="field in baseFields" :key="field.id">
       <div class="form-element">
         <label class="detail-label" :for="field.id">{{ field.label }}</label>
         <input
