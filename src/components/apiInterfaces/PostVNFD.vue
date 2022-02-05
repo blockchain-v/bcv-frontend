@@ -142,7 +142,9 @@ export default {
       apiCall_POST_vnfd({
         [POST_FIELDNAMES[this.apiCallId].NAME]: this.vnfdName,
         [POST_FIELDNAMES[this.apiCallId].DESCRIPTION]: this.vnfdDescription,
-        [POST_FIELDNAMES[this.apiCallId].ATTRIBUTES]: this.vnfdAttributes,
+        [POST_FIELDNAMES[this.apiCallId].ATTRIBUTES]: {
+          [POST_FIELDNAMES.GENERAL.VNFD]: this.vnfdAttributes,
+        },
       }).then(() => {
         apiCall_GET_vnfds();
       });
