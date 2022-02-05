@@ -22,9 +22,17 @@
         :label="labelTexts[fieldName_attributes]"
         :placeholder="placeholderTexts[fieldName_attributes]"
         @input-change="handleInputChange($event, fieldName_attributes)"
-        :format-j-s-o-n="true"
+        :text-format="selectedTextFormatOption"
         :store-as-j-s-o-n="true"
-      />
+      >
+        <div class="switch-button-container">
+          <SwitchButton
+            :options="textFormatOptions"
+            :label="textFormatSelectionLabel"
+            :selected-option="selectedTextFormatOption"
+            @selection="handleTextFormatSelection"
+          /></div
+      ></MultilineInput>
     </div>
     <div class="button-container">
       <CustomButton @button-click="performApiCall" :button-text="buttonText" />
@@ -34,15 +42,24 @@
 
 <script>
 import CustomButton from "../atoms/CustomButton";
+import SwitchButton from "../atoms/SwitchButton";
 import TextInput from "../atoms/TextInput";
 import MultilineInput from "../atoms/MultilineInput";
 import { BACKEND_STORE_FIELD_NAMES } from "../../constants/interfaceConfig";
-import { apiCall_POST_vnfd, apiCall_GET_vnfds } from "../../services/apiCallService";
+import {
+  apiCall_POST_vnfd,
+  apiCall_GET_vnfds,
+} from "../../services/apiCallService";
 import { POST_FIELDNAMES } from "../../constants/http";
+import { TEXT_FORMAT } from "../../constants/global";
+
+/*
+TODO: dynamic setting of text format, based on a switch/toggle button like thing
+ */
 
 export default {
   name: "PostVNFD",
-  components: { CustomButton, TextInput, MultilineInput },
+  components: { CustomButton, TextInput, MultilineInput, SwitchButton },
   props: {
     interfaceSpecification: {
       type: Object,
@@ -53,6 +70,19 @@ export default {
       fieldName_attributes: BACKEND_STORE_FIELD_NAMES.ATTRIBUTES,
       fieldName_name: BACKEND_STORE_FIELD_NAMES.NAME,
       fieldName_description: BACKEND_STORE_FIELD_NAMES.DESCRIPTION,
+      textFormat: TEXT_FORMAT,
+      textFormatSelectionLabel: "Change input format:",
+      selectedTextFormatOption: TEXT_FORMAT.YAML,
+      textFormatOptions: [
+        {
+          id: TEXT_FORMAT.JSON,
+          displayText: "JSON",
+        },
+        {
+          id: TEXT_FORMAT.YAML,
+          displayText: "YAML",
+        },
+      ],
     };
   },
   computed: {
@@ -124,6 +154,9 @@ export default {
         fieldName: fieldName,
       });
     },
+    handleTextFormatSelection(selection) {
+      this.selectedTextFormatOption = selection;
+    },
   },
 };
 </script>
@@ -141,6 +174,13 @@ export default {
   .input-container {
     width: 100%;
     margin: 15px 0;
+
+    .switch-button-container {
+      position: relative;
+      width: $text-area-width;
+      left: $text-area-width-based-centering-offset;
+      margin-bottom: $margin-xxs;
+    }
   }
 
   .button-container {
