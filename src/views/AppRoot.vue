@@ -26,17 +26,7 @@ import CustomButton from "../components/atoms/CustomButton";
 import { routeNames } from "../router";
 import { getToken } from "../services/appService";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
-
-/*
- https://stackoverflow.com/a/59499056
- -> just window.ethereum not working in App.vue
- */
-const Web3 = require("web3");
-const web3 = new Web3(window.ethereum);
-
-/*
-TODO: styles like container etc. are used in all views, put them into an external .scss file
- */
+import { getAccount } from "../services/truffleService";
 
 export default {
   name: "AppRoot",
@@ -65,20 +55,18 @@ export default {
     this.$store.dispatch("appState/setIsLoading", true);
 
     // NOTE: working, but polling :(
-    let account = await this.getAccount().then(() => {
+    let account = await getAccount().then(() => {
       if (_isNil(account)) {
         console.log("on created, no MM account found");
         setInterval(async () => {
-          account = await this.getAccount();
+          account = await getAccount();
           if (!_isNil(account) && account !== this.ethereumAccount) {
             console.log("found new MM account/address:", account);
             await this.setAccountToStore(account);
           }
         }, 200);
-        this.isLoading = false;
       } else {
         this.setAccountToStore(account);
-        this.isLoading = false;
       }
     });
     this.$store.dispatch("appState/setIsLoading", false);
@@ -108,16 +96,6 @@ export default {
           this.$router.push({ name: routeNames.USER });
         });
       }
-    },
-    async getAccount() {
-      /*
-      TODO: perhaps if multiple accounts detected (e.g., on navigation or created), ask user
-        to select the account to be used for calls.
-      */
-
-      // grab account with which to perform call
-      const accounts = await web3.eth.getAccounts();
-      return accounts[0];
     },
     async setAccountToStore(account) {
       await this.$store

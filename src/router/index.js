@@ -66,15 +66,17 @@ router.beforeEach((to, from, next) => {
   }
 
   const token = getToken();
-
+  
   store.dispatch("contracts/getAccountStatus").then((res) => {
     if (_isNil(res.ethAccount)) {
       // send to root if no metamask account
+      resetStore();
       next({ name: routeNames.ROOT });
       return;
     }
     if (!token) {
       // send to /home if user is not registered
+      resetStore();
       next({ name: routeNames.HOME });
       return;
     }
@@ -82,5 +84,10 @@ router.beforeEach((to, from, next) => {
     next();
   });
 });
+
+const resetStore = () => {
+  store.commit("contracts/setUserRegistered", false);
+  store.commit("appState/setRegistrationCheckDone", false);
+};
 
 export default router;
