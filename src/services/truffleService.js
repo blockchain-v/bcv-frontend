@@ -31,6 +31,12 @@ function getDefaultCallParams(account) {
   };
 }
 
+async function getAccount() {
+  // grab account with which to perform call
+  const accounts = await window.web3.eth.getAccounts();
+  return accounts[0];
+}
+
 function registerEventListener(
   eventType,
   callback,
@@ -39,4 +45,4 @@ function registerEventListener(
   eventType(filter, callback);
 }
 
-export { VNFContract, getDefaultCallParams, registerEventListener };
+export { VNFContract, getDefaultCallParams, registerEventListener, getAccount };

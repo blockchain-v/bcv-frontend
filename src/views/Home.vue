@@ -45,6 +45,7 @@ import { mapState } from "vuex";
 import { routeNames } from "../router";
 import { uiTexts } from "../constants/texts";
 import { isNil as _isNil, find as _find } from "lodash";
+import { getAccount } from "../services/truffleService";
 
 export default {
   name: "Home",
@@ -59,8 +60,32 @@ export default {
       texts: uiTexts.home,
     };
   },
-  mounted() {
-    this.initiateUserRegistrationCheck();
+  async mounted() {
+    /* to protect against error when manually navigation to home, we fetch account here too and
+     * force the authentication flow -> always a new cookie when navigation hits /home */
+    this.$store.dispatch("appState/setIsLoading", true);
+
+    if (this.ethereumAccount) {
+      // prevent getting stuck on comparing account to already existing account in store
+      this.initiateUserRegistrationCheck();
+    } else {
+      // NOTE: working, but polling :(
+      let account = await getAccount().then(() => {
+        if (_isNil(account)) {
+          console.log("on created, no MM account found");
+          setInterval(async () => {
+            account = await getAccount();
+            if (!_isNil(account) && account !== this.ethereumAccount) {
+              console.log("found new MM account/address:", account);
+              await this.setAccountToStore(account);
+            }
+          }, 200);
+        } else {
+          this.setAccountToStore(account);
+        }
+      });
+      this.$store.dispatch("appState/setIsLoading", false);
+    }
   },
   watch: {
     userRegistered(newVal) {
@@ -118,6 +143,13 @@ export default {
     },
   },
   methods: {
+    async setAccountToStore(account) {
+      await this.$store
+        .dispatch("contracts/setUserETHAccount", account)
+        .then(() => {
+          this.initiateUserRegistrationCheck();
+        });
+    },
     async performTokenCheck(payload) {
       await apiCall_POST_token(payload);
     },
@@ -125,7 +157,6 @@ export default {
       await apiCall_PUT_token(account);
     },
     async initiateUserRegistrationCheck() {
-      
       this.$store.dispatch("appState/setIsLoading", true);
       const account = this.$store.getters["contracts/getUserETHAccount"];
       console.log("initiateUserRegistrationCheck", account);
