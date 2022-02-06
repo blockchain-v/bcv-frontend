@@ -13,6 +13,9 @@ const ENDPOINTS = {
 };
 
 const POST_FIELDNAMES = {
+  GENERAL: {
+    VNFD: "vnfd",
+  },
   [actionIDs.POST_VNFD]: {
     ATTRIBUTES: "attributes",
     NAME: "name",

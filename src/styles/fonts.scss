@@ -1,0 +1,41 @@
+@import "variables.scss";
+/*
+Define fonts for global use
+ */
+
+.f-standard {
+  color: $vue-darkblue;
+  font-family: $default-font-family;
+  font-weight: $normal;
+  font-size: $font-size-normal;
+}
+
+.f-label {
+  color: $vue-darkblue;
+  font-family: $default-font-family;
+  font-weight: $normal;
+  font-size: $font-size-normal;
+  margin: $margin-sm 0 $margin-xs
+}
+
+.f-label-heavy {
+  @extend .f-label;
+  font-weight: $bold;
+}
+
+.f-label-light {
+  @extend .f-label;
+  font-weight: $light;
+}
+
+.f-info {
+  @extend .f-standard;
+  font-weight: $light;
+  font-size: $font-size-s;
+  margin: $margin-xxs 0 0;
+}
+
+.f-info-greyed {
+  @extend .f-info;
+  color: $vue-darkblue-pale;
+}

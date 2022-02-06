@@ -1,6 +1,6 @@
 @import "variables.scss";
+@import "fonts.scss";
 
-// https://stackoverflow.com/a/35256494
 html {
   box-sizing: border-box;
   height: 100%;
@@ -12,19 +12,19 @@ html {
 html::-webkit-scrollbar {
   display: none; /* Hide scrollbar for Chrome, Safari and Opera */
 }
-
 body {
   height: 100%;
   width: 100%;
   margin: 0;
 }
-
+// global box-sizing
 *,
 *:before,
 *:after {
   box-sizing: inherit;
 }
 
+/* Component Styles */
 // TODO
 .container {
   border-radius: 20px;

@@ -1,13 +1,14 @@
 <template>
   <div class="multiline-input">
     <p class="label" v-if="hasLabel">{{ label }}</p>
+    <slot></slot>
     <textarea
       :id="areaId"
       @input="handleInput"
       :style="customStyle"
       :placeholder="placeholder"
     ></textarea>
-    <div v-if="formatJSON && !validJSON" class="warning-text">
+    <div v-if="showWarning" class="warning-text">
       {{ warningText }}
     </div>
   </div>
@@ -16,6 +17,9 @@
 <script>
 import { debounce as _debounce, isNil as _isNil } from "lodash";
 import { uiTexts } from "../../constants/texts";
+import { TEXT_FORMAT } from "../../constants/global";
+
+const yaml = require("js-yaml");
 
 export default {
   name: "MultilineInput",
@@ -32,9 +36,9 @@ export default {
       default: "",
       type: String,
     },
-    formatJSON: {
-      type: Boolean,
-      default: false,
+    textFormat: {
+      type: String,
+      default: TEXT_FORMAT.NONE,
     },
     storeAsJSON: {
       type: Boolean,
@@ -47,9 +51,20 @@ export default {
   },
   data() {
     return {
+      inputText: null,
       validJSON: true,
-      warningText: uiTexts.multilineInput.warningText,
+      validYAML: true,
+      warningTextJSON: uiTexts.multilineInput.warningTextJSON,
+      warningTextYAML: uiTexts.multilineInput.warningTextYAML,
     };
+  },
+  watch: {
+    textFormat(newVal, oldVal) {
+      console.log(`changed input format from ${oldVal} to ${newVal}`);
+      // force value to be re-parsed on changing the textFormat
+      const area = document.querySelector(`#${this.areaId}`);
+      area.dispatchEvent(new Event("input", { bubbles: true }));
+    },
   },
   computed: {
     areaId() {
@@ -63,13 +78,38 @@ export default {
     hasLabel() {
       return !_isNil(this.label);
     },
+    formatJSON() {
+      return this.textFormat === TEXT_FORMAT.JSON;
+    },
+    formatYAML() {
+      return this.textFormat === TEXT_FORMAT.YAML;
+    },
+    warningText() {
+      return this.formatYAML
+        ? this.warningTextYAML
+        : this.formatJSON
+        ? this.warningTextJSON
+        : "";
+    },
+    hasInput() {
+      return this.inputText !== "" && !_isNil(this.inputText);
+    },
+    showWarning() {
+      // don't show warning if no input yet
+      return (
+        (this.formatJSON && !this.validJSON && this.hasInput) ||
+        (this.formatYAML && !this.validYAML && this.hasInput)
+      );
+    },
   },
   methods: {
     handleInput(event) {
       if (this.formatJSON) {
         this.prettifyJSON();
       }
-      this.propagateChange(event);
+      // no need to treat YAML here, is just raw multiline text basically
+      const input = event.target.value;
+      this.propagateChange(input);
     },
     prettifyJSON: _debounce(function () {
       // NOTE: cannot use arrow function here, else we lose the .this context
@@ -80,18 +120,85 @@ export default {
         this.validJSON = true;
         area.value = prettified;
       } catch (e) {
-        console.log(
+        console.warn(
           "JSON parsing error, ignoring. area input will remain unformatted..."
         );
         this.validJSON = false;
       }
     }, 500),
-    propagateChange: _debounce(function (event) {
-      let value = event.target.value;
+    yaml2Json(value) {
+      if (this.isJsonString(value)) {
+        /*
+        catch case where already in json (annoyingly, yaml.load() will load json too), but we
+        need the appropriate user feedback, so...
+        */
+        this.validYAML = false;
+        return value;
+      }
+
+      const jsonVal = yaml.load(value);
+      /* 
+      yaml.load takes raw input (yaml, so basically text) and TRIES to read it in as json
+      - if successful -> result is json
+      - else -> result will be plain text / undefined
+       */
+      if (typeof jsonVal !== "object") {
+        /*
+        either 'undefined' if not defined, or 'string' if unable to format as json
+         */
+        console.warn(
+          "unable to parse yaml to json. check your input for errors"
+        );
+        this.validYAML = false;
+      } else {
+        this.validYAML = true;
+      }
+      return jsonVal;
+    },
+    tolerantParseJson(value) {
+      let parsedJson = value;
+      try {
+        parsedJson = JSON.parse(value);
+      } catch (e) {
+        /*
+        this is a bit of a hackjob, but basically if formatJSON, then the prettifyJSON
+        method will try to apply formatting and takes care of the warning message if need be.
+
+        However, to store the value of the input as JSON we have to parse it AGAIN here
+        (because we are passed the value that is read fresh form the input field after formatting),
+        and we might run into invalid json, therefore we have to try-catch. But this time, we don't
+        have to actually deal with verifying the JSON for user feedback, since already done
+        in the aforementioned prettifyJSON, thus just wave any errors through here.
+        
+        TODO: (maybe/low prio) restructure for a more elegant solution
+        */
+      }
+      return parsedJson;
+    },
+    isJsonString(str) {
+      try {
+        JSON.parse(str);
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
+    propagateChange: _debounce(function (input) {
+      let value = input;
+
       if (this.storeAsJSON) {
-        value = JSON.parse(event.target.value);
+        if (this.formatJSON) {
+          value = this.tolerantParseJson(value);
+        } else if (this.formatYAML) {
+          value = this.yaml2Json(value);
+        } else {
+          console.warn(
+            "invalid prop combination: standard text formatting (plain text) and 'storeAsJson' = true"
+          );
+        }
       }
       this.$emit("inputChange", value);
+      this.inputText = value;
     }, 500),
   },
 };
@@ -106,7 +213,7 @@ export default {
   .label {
     position: relative;
     display: flex;
-    left: calc((100% - #{$text-area-width}) / 2);
+    left: $text-area-width-based-centering-offset;
   }
 
   textarea {
