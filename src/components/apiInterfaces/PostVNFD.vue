@@ -35,7 +35,11 @@
       ></MultilineInput>
     </div>
     <div class="button-container">
-      <CustomButton @button-click="performApiCall" :button-text="buttonText" />
+      <CustomButton
+        @button-click="performApiCall"
+        :button-text="buttonText"
+        :disabled="!isReadyForCall"
+      />
     </div>
   </div>
 </template>
@@ -52,10 +56,7 @@ import {
 } from "../../services/apiCallService";
 import { POST_FIELDNAMES } from "../../constants/http";
 import { TEXT_FORMAT } from "../../constants/global";
-
-/*
-TODO: dynamic setting of text format, based on a switch/toggle button like thing
- */
+import { isNil as _isNil } from "lodash";
 
 export default {
   name: "PostVNFD",
@@ -135,6 +136,18 @@ export default {
       return this.$store.state.backend[this.apiCallId][
         this.fieldName_attributes
       ];
+    },
+    hasName() {
+      return !_isNil(this.vnfdName);
+    },
+    hasDescription() {
+      return !_isNil(this.vnfdDescription);
+    },
+    hasAttributes() {
+      return !_isNil(this.vnfdAttributes);
+    },
+    isReadyForCall() {
+      return this.hasName && this.hasDescription && this.hasAttributes;
     },
   },
   methods: {

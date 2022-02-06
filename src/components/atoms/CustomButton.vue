@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-button" :class="themeClass" @click="handleClick">
+  <div class="custom-button" :class="buttonClass" @click="handleClick">
     {{ buttonText }}
   </div>
 </template>
@@ -16,10 +16,21 @@ export default {
       default: "green",
       type: String,
     },
+    disabled: {
+      default: false,
+      type: Boolean,
+    },
+  },
+  computed: {
+    buttonClass() {
+      return this.disabled ? "disabled" : this.themeClass;
+    },
   },
   methods: {
     handleClick() {
-      this.$emit("buttonClick");
+      if (!this.disabled) {
+        this.$emit("buttonClick");
+      }
     },
   },
 };
@@ -35,6 +46,12 @@ export default {
   padding: $button-padding;
   cursor: pointer;
   width: fit-content;
+
+  &.disabled {
+    border-color: $grey-disabled-dark;
+    background-color: $grey-disabled;
+    cursor: unset;
+  }
 
   &.green {
     border-color: $green-aquamarine-medium;

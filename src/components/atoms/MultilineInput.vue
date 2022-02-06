@@ -161,15 +161,16 @@ export default {
         parsedJson = JSON.parse(value);
       } catch (e) {
         /*
-        this is a bit of a hack, but basically if formatJSON, then the prettifyJSON
+        this is a bit of a hackjob, but basically if formatJSON, then the prettifyJSON
         method will try to apply formatting and takes care of the warning message if need be.
 
-        However, to store the value of the input as JSON we have to parse it AGAIN here, and
-        we might run into invalid json, therefore we have to try-catch. But this time, we don't
+        However, to store the value of the input as JSON we have to parse it AGAIN here
+        (because we are passed the value that is read fresh form the input field after formatting),
+        and we might run into invalid json, therefore we have to try-catch. But this time, we don't
         have to actually deal with verifying the JSON for user feedback, since already done
         in the aforementioned prettifyJSON, thus just wave any errors through here.
         
-        I'm sure there are ways to solve this elegantly, but I don't have the nerve for it now.
+        TODO: (maybe/low prio) restructure for a more elegant solution
         */
       }
       return parsedJson;
