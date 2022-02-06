@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-    <EventNotification :eventType="registrationStatusEvent" />
-
     <div v-if="showWaitForRegistrationEvent" class="container">
       <h1 class="title has-subtext">
         {{ texts.waitingForRegistrationEvent.title }}
@@ -34,7 +32,6 @@
 
 <script>
 import InterfaceInitiator from "../components/InterfaceInitiator";
-import EventNotification from "../components/atoms/EventNotification.vue";
 import { EventTypes } from "../services/eventListenerService";
 import { homeActionList } from "../constants/interfaceConfig";
 import {
@@ -51,7 +48,6 @@ export default {
   name: "Home",
   components: {
     InterfaceInitiator,
-    EventNotification,
   },
   data() {
     return {
