@@ -66,7 +66,7 @@ router.beforeEach((to, from, next) => {
   }
 
   const token = getToken();
-  console.log("index token", token);
+  
   store.dispatch("contracts/getAccountStatus").then((res) => {
     if (_isNil(res.ethAccount)) {
       // send to root if no metamask account
