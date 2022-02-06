@@ -2,19 +2,29 @@
   <div class="get-vnfs-ui">
     <CustomButton @button-click="performApiCall" :button-text="buttonText" />
   </div>
+  <VNFDetails />
 </template>
 
 <script>
 import CustomButton from "../atoms/CustomButton";
 import { apiCall_GET_vnfs } from "../../services/apiCallService";
+import VNFDetails from "../molecules/VNFDetails.vue";
+import {
+  attachEventListener,
+  EventTypes,
+} from "../../services/eventListenerService";
 
 export default {
   name: "GetVNFs",
-  components: { CustomButton },
+  components: { CustomButton, VNFDetails },
   props: {
     interfaceSpecification: {
       type: Object,
     },
+  },
+  created() {
+    this.performApiCall();
+    this.listenToContract();
   },
   computed: {
     buttonText() {
@@ -24,6 +34,13 @@ export default {
   methods: {
     performApiCall() {
       apiCall_GET_vnfs();
+    },
+    async listenToContract() {
+      attachEventListener(EventTypes.DeploymentStatus, async (err, event) => {
+        if (event.returnValues.success) {
+          this.performApiCall();
+        }
+      });
     },
   },
 };

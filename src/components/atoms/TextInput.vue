@@ -9,7 +9,7 @@
 import { debounce as _debounce, isNil as _isNil } from "lodash";
 
 export default {
-  name: "TextInput",
+  name: "TextInput.vue",
   props: {
     id: {
       required: true,
@@ -50,7 +50,7 @@ export default {
   .label {
     position: relative;
     display: flex;
-    left: calc((100% - #{$input-width}) / 2);
+    left: $input-width-based-centering-offset;
   }
 
   input {

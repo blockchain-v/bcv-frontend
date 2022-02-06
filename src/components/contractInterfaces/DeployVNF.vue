@@ -38,7 +38,7 @@
           label="TODO - Dynamic & determine if actually needed"
           :placeholder="placeholderText"
           @input-change="handleInputChange($event, fieldNames.ATTRIBUTES)"
-          :format-j-s-o-n="true"
+          :text-format="textFormat.JSON"
           :store-as-j-s-o-n="false"
         />
       </div>
@@ -66,6 +66,13 @@ import {
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import { isNil as _isNil } from "lodash";
+import { TEXT_FORMAT } from "../../constants/global";
+
+/*
+TODO:
+  - check if valid json for multilineinputs like parameters etc.
+    - do that here in the parent, simply pass a boolean into the MultilineInput to trigger error styling
+ */
 
 export default {
   name: "DeployVNF",
@@ -88,6 +95,7 @@ export default {
         vnfSpecificationDescriptionLabel: "VNF Description",
         vnfSpecificationDescriptionPlaceholder: "Enter VNF Description...",
       },
+      textFormat: TEXT_FORMAT,
     };
   },
   watch: {

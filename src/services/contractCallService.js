@@ -38,10 +38,6 @@ export const performContractCall = async (methodId) => {
       await performContractCall_DEV_getVNFs();
       // DEV only - getVNFs
       break;
-    case actionIDs.DEV__GET_VNF_DETAILS:
-      await performContractCall_DEV_getVNFDetails();
-      // DEV only - getVNFDetails
-      break;
     default:
       console.log(
         "unable to identify method to be used with methodId",
@@ -134,13 +130,4 @@ const performContractCall_DEV_getVNFs = async () => {
   const getVNFResult = await getVNFRequest.call();
   // TODO: CLEANUP logs
   console.log("getVNFs", getVNFResult);
-};
-
-const performContractCall_DEV_getVNFDetails = async () => {
-  console.log("call for DEV_getVNFDetails");
-  const VNF_ID = store.getters["contracts/getCurrentVNFDetailsID"];
-  const getVNFDetailsRequest = VNFContract.methods.getVnfDetails(VNF_ID);
-  const getVNFDetailsResult = await getVNFDetailsRequest.call();
-  // TODO: CLEANUP logs
-  console.log("getVNFDetails", getVNFDetailsResult);
 };

@@ -46,10 +46,6 @@ const getters = {
       alternatively, one might write individual getters, e.g. getDeployVNFData() */
     return state;
   },
-  // DEV only
-  getCurrentVNFDetailsID() {
-    return state.currentVNFDetailsID;
-  },
 };
 
 // actions
@@ -81,10 +77,6 @@ const actions = {
         userRegistered: state.userRegistered,
       });
     });
-  },
-  // DEV only
-  setCurrentVNFDetailsID({ commit }, id) {
-    commit("setCurrentVNFDetailsID", id);
   },
 };
 

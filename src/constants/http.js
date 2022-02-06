@@ -8,11 +8,14 @@ const DEFAULT_HEADERS = {
 
 const ENDPOINTS = {
   TOKEN: "token",
-  VNFD: "tacker/vnfds",
-  VNF: "tacker/vnfs",
+  VNFD: "vnfd",
+  VNF: "vnf",
 };
 
 const POST_FIELDNAMES = {
+  GENERAL: {
+    VNFD: "vnfd",
+  },
   [actionIDs.POST_VNFD]: {
     ATTRIBUTES: "attributes",
     NAME: "name",

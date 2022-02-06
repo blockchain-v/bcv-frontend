@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <EventNotification v-bind:eventType="registrationStatusEvent" />
+    <EventNotification :eventType="registrationStatusEvent" />
 
     <div v-if="showWaitForRegistrationEvent" class="container">
       <h1 class="title has-subtext">

@@ -28,9 +28,11 @@ $method-specific-ui-margin: 30px 0 15px 0;
 $api-call-specific-ui-margin: $method-specific-ui-margin;
 
 // INPUT COMPONENTS
-$input-width: 50%;
-$text-area-width: $input-width;
 $input-padding: $margin-xs $margin-sm;
+$input-width: 50%;
+$input-width-based-centering-offset: calc((100% - #{$input-width}) / 2);
+$text-area-width: $input-width;
+$text-area-width-based-centering-offset: calc((100% - #{$text-area-width}) / 2);
 
 // BUTTONS
 $button-padding: 5px 15px;
@@ -58,4 +60,3 @@ $green-white: #f7fffd;
 $white: white;
 $red: red;
 $red-salmon: darksalmon;
-

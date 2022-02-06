@@ -1,23 +1,26 @@
 import axios from "axios";
 import { BACKEND_URL, DEFAULT_HEADERS, ENDPOINTS } from "../constants/http";
 import store from "../store/store.js";
-import { BACKEND_STORE_FIELD_NAMES, actionIDs } from "../constants/interfaceConfig";
+import {
+  BACKEND_STORE_FIELD_NAMES,
+  actionIDs,
+} from "../constants/interfaceConfig";
 import { isNil as _isNil } from "lodash";
-import add from 'date-fns/add'
-
+import add from "date-fns/add";
 
 // --------------- HELPERS ---------------------------------------------------------------------------------------------
 const buildHeaderWithAuth = (bearerToken) => {
   return {
     ...DEFAULT_HEADERS,
-    Authentication: bearerToken,
+    Authorization: bearerToken,
   };
 };
 
 /*
 TODO:
-  large parts of the calls are generic, there surely is a way to generalize and reduce
-  duplicate code
+  - CLEANUP log statements with the responses
+  - TODO: large parts of the calls are generic, there surely is a way to generalize and reduce
+      duplicate code
  */
 
 // --------------- API CALLS -------------------------------------------------------------------------------------------
@@ -35,9 +38,12 @@ const apiCall_POST_token = (payload) => {
   axios
     .post(url, data, config)
     .then(async (response) => {
-      console.log("response for url", url, response);
+      console.log(`response for url ${url}, with response`, response);
       if (response.status === 200 || response.status === 204) {
-        document.cookie = `token=${response.data.token}; expires=${add(new Date(), { days: 1 }).toUTCString()}`;
+        document.cookie = `token=${response.data.token}; expires=${add(
+          new Date(),
+          { days: 1 }
+        ).toUTCString()}`;
         await store.dispatch("appState/setBearerToken", response.data.token);
         store
           .dispatch("contracts/setUserRegistered", response.data.isRegistered)
@@ -47,12 +53,7 @@ const apiCall_POST_token = (payload) => {
       }
     })
     .catch(async (error) => {
-      console.log(
-        "error whilst performing call to",
-        url,
-        "error:",
-        error.response
-      );
+      console.log(`error whilst performing call to ${url}, error:`, error);
       if (error.response.status === 401) {
         store.dispatch("contracts/setUserRegistered", false).then(() => {
           store.commit("appState/setRegistrationCheckDone", true);
@@ -71,13 +72,13 @@ const apiCall_PUT_token = async (address) => {
   };
   try {
     axios.put(url, data, config).then(async (response) => {
-      console.log("response for url", url, response);
+      console.log(`response for url ${url}, with response`, response);
       if (response.status === 200) {
         store.commit("appState/setNonce", response.data.nonce);
       }
     });
   } catch (e) {
-    console.log("error whilst performing call to", url, "error:", e);
+    console.log(`error whilst performing call to ${url}, error:`, e);
   }
 };
 
@@ -96,7 +97,7 @@ const apiCall_POST_vnfd = async (payload) => {
   };
   try {
     await axios.post(url, data, config).then(async (response) => {
-      console.log("response for url", url, response);
+      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         callId: actionIDs.POST_VNFD,
         data: response,
@@ -104,7 +105,7 @@ const apiCall_POST_vnfd = async (payload) => {
       });
     });
   } catch (e) {
-    console.log("error whilst performing call to", url, "error:", e);
+    console.log(`error whilst performing call to ${url}, error:`, e);
   }
   store.commit("appState/setIsLoading", false);
 };
@@ -122,7 +123,7 @@ const apiCall_GET_vnfds = async () => {
   };
   try {
     await axios.get(url, config).then(async (response) => {
-      console.log("response for url", url, response); // TODO: CLEANUP logs
+      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         callId: actionIDs.GET_VNFDS,
         data: response.data,
@@ -130,7 +131,7 @@ const apiCall_GET_vnfds = async () => {
       });
     });
   } catch (e) {
-    console.log("error whilst performing call to", url, "error:", e);
+    console.log(`error whilst performing call to ${url}, error:`, e);
   }
   store.commit("appState/setIsLoading", false);
 };
@@ -148,7 +149,7 @@ const apiCall_GET_vnfd = async (vnfdId) => {
   };
   try {
     await axios.get(url, config).then(async (response) => {
-      console.log("response for url", url, response); // TODO: CLEANUP logs
+      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         callId: actionIDs.GET_VNFD,
         data: response,
@@ -156,7 +157,7 @@ const apiCall_GET_vnfd = async (vnfdId) => {
       });
     });
   } catch (e) {
-    console.log("error whilst performing call to", url, "error:", e);
+    console.log(`error whilst performing call to ${url}, error:`, e);
   }
   store.commit("appState/setIsLoading", false);
 };
@@ -174,7 +175,7 @@ const apiCall_GET_vnfs = async () => {
   };
   try {
     await axios.get(url, config).then(async (response) => {
-      console.log("response for url", url, response); // TODO: CLEANUP logs
+      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         callId: actionIDs.GET_VNFS,
         data: response,
@@ -182,7 +183,7 @@ const apiCall_GET_vnfs = async () => {
       });
     });
   } catch (e) {
-    console.log("error whilst performing call to", url, "error:", e);
+    console.log(`error whilst performing call to ${url}, error:`, e);
   }
   store.commit("appState/setIsLoading", false);
 };
@@ -200,7 +201,7 @@ const apiCall_GET_vnf = async (vnfId) => {
   };
   try {
     await axios.get(url, config).then(async (response) => {
-      console.log("response for url", url, response); // TODO: CLEANUP logs
+      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         callId: actionIDs.GET_VNF_INSTANCE,
         data: response,
@@ -208,7 +209,7 @@ const apiCall_GET_vnf = async (vnfId) => {
       });
     });
   } catch (e) {
-    console.log("error whilst performing call to", url, "error:", e);
+    console.log(`error whilst performing call to ${url}, error:`, e);
   }
   store.commit("appState/setIsLoading", false);
 };
