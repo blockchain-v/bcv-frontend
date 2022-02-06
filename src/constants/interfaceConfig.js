@@ -8,6 +8,7 @@ const BACKEND_STORE_FIELD_NAMES = {
   ADDRESS: "address",
   NONCE: "nonce",
   SIGNED_NONCE: "signedNonce",
+  PARAM_VALUES: "param_values",
 };
 
 const apiCallIDs = {
@@ -108,7 +109,10 @@ const vnfActionList = [
     displayText: "Request VNF deployment",
     buttonText: "Deploy VNF",
     infoText: "Deploy a VNF based on a selected VNF Descriptor",
-    inputPlaceholder: "{}",
+    inputPlaceholder: {
+      genericMultiline: "{}",
+      genericParameter: "Enter parameter value...",
+    },
   },
   {
     id: contractMethodIDs.DELETE_VNF,

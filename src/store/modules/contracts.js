@@ -40,11 +40,8 @@ const getters = {
   getCurrentVNFToDelete() {
     return state.currentVNFToDelete;
   },
-  getContractCallData() {
-    /* returns all data, designed to be used like in e.g. 'contractCallService'
-      because getters (unfortunately) cannot receive arguments
-      alternatively, one might write individual getters, e.g. getDeployVNFData() */
-    return state;
+  getDeployVnfData() {
+    return state[actionIDs.DEPLOY_VNF];
   },
 };
 

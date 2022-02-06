@@ -87,14 +87,13 @@ const performContractCall_deployVNF = async () => {
   console.log("call for deployVNF");
   const account = store.getters["contracts/getUserETHAccount"];
   if (!_isNil(account)) {
-    const callData = store.getters["contracts/getContractCallData"](
-      actionIDs.DEPLOY_VNF
-    );
+    const callData = store.getters["contracts/getDeployVnfData"];
     const VNFD_ID = callData[fieldNames.VNFDID];
-    // parameters so far: object containing: name, description, attributes.
     const parameters = {
       name: callData[fieldNames.NAME],
       description: callData[fieldNames.DESCRIPTION],
+      // TODO: need to stringify? previously with multiline input was not stored as json,
+      //  but rather as string
       attributes: callData[fieldNames.ATTRIBUTES],
     };
     const deployVNFrequest = VNFContract.methods.deployVNF(VNFD_ID, parameters);

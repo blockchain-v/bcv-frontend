@@ -49,7 +49,6 @@ const actions = {
 // mutations
 const mutations = {
   setApiCallData(state, { actionId, data, fieldName }) {
-    console.log("incoming input", actionId, data, fieldName); // TODO: CLEANUP
     state[actionId][fieldName] = data;
   },
 };

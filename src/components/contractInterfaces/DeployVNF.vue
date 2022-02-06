@@ -32,15 +32,20 @@
           :placeholder="texts.vnfSpecificationDescriptionPlaceholder"
           @input-change="handleInputChange($event, fieldNames.DESCRIPTION)"
         />
-        <!--      TODO: determine if still needed-->
-        <MultilineInput
-          :id="actionId"
-          label="TODO - Dynamic & determine if actually needed"
-          :placeholder="placeholderText"
-          @input-change="handleInputChange($event, fieldNames.ATTRIBUTES)"
-          :text-format="textFormat.JSON"
-          :store-as-j-s-o-n="false"
-        />
+        <div class="parameter-specification" v-if="selectedVnfdHasParams">
+          <hr />
+          <div class="f-info param-info">{{ texts.paramInfo }}</div>
+          <TextInput
+            v-for="param in selectedVnfdParams"
+            :key="`${param.id}-${this.updateCycle}`"
+            :id="`${param.id}-${this.updateCycle}`"
+            :label="`Parameter: ${param.displayText}`"
+            :placeholder="placeholderTextParams"
+            @input-change="
+              handleInputChange($event, fieldNames.ATTRIBUTES, param.id)
+            "
+          />
+        </div>
       </div>
     </div>
     <div class="button-container">
@@ -57,7 +62,6 @@
 import { performContractCall } from "../../services/contractCallService";
 import { apiCall_GET_vnfds } from "../../services/apiCallService";
 import CustomButton from "../atoms/CustomButton";
-import MultilineInput from "../atoms/MultilineInput";
 import TextInput from "../atoms/TextInput";
 import { mapState } from "vuex";
 import {
@@ -66,19 +70,18 @@ import {
 } from "../../constants/interfaceConfig";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import { isNil as _isNil } from "lodash";
+import {
+  isNil as _isNil,
+  cloneDeep as _cloneDeep,
+  update as _update,
+} from "lodash";
 import { TEXT_FORMAT } from "../../constants/global";
 
 const yaml = require("js-yaml");
 
-/*
-TODO:
-  -fetch VNFDs on created
- */
-
 export default {
   name: "DeployVNF",
-  components: { CustomButton, MultilineInput, vSelect, TextInput },
+  components: { CustomButton, vSelect, TextInput },
   props: {
     interfaceSpecification: {
       type: Object,
@@ -86,6 +89,7 @@ export default {
   },
   data() {
     return {
+      updateCycle: 0,
       selectedVnfd: null,
       selectedVnfdParams: [],
       fieldNames: BACKEND_STORE_FIELD_NAMES,
@@ -97,6 +101,8 @@ export default {
         vnfSpecificationNamePlaceholder: "Enter VNF Name...",
         vnfSpecificationDescriptionLabel: "VNF Description",
         vnfSpecificationDescriptionPlaceholder: "Enter VNF Description...",
+        paramInfo:
+          "Fill in the values for the parametrized fields in the selected VNF Descriptor",
       },
       textFormat: TEXT_FORMAT,
     };
@@ -109,6 +115,12 @@ export default {
       const fieldVal = _isNil(newVal?.id) ? null : newVal.id;
       this.handleInputChange(fieldVal, this.fieldNames.VNFDID);
       this.selectedVnfdParams = this.scanForVnfdParams();
+      this.createStoreFieldsForParams();
+      this.updateCycle += 1;
+      // updateCycle needs to be updated, such that the textFields don't maintain their value
+      // if in the new selectedVnf parameters are present that have previously been filled in
+      // Note, that this is just concerning the UI, the store is fully reset even without the
+      // method 'createStoreFieldsForParams();
     },
   },
   computed: {
@@ -124,6 +136,9 @@ export default {
     hasVnfdSelected() {
       return !_isNil(this.selectedVnfd);
     },
+    selectedVnfdHasParams() {
+      return this.selectedVnfdParams.length > 0;
+    },
     hasVnfName() {
       return !_isNil(this.deployVnfState[this.fieldNames.NAME]);
     },
@@ -131,7 +146,15 @@ export default {
       return !_isNil(this.deployVnfState[this.fieldNames.DESCRIPTION]);
     },
     hasVnfAttributes() {
-      return !_isNil(this.deployVnfState[this.fieldNames.ATTRIBUTES]);
+      if (!this.selectedVnfdHasParams) {
+        // no attributes need to be specified
+        return true;
+      }
+      const paramObject = this.vnfdAttributes[this.fieldNames.PARAM_VALUES];
+      if (_isNil(paramObject)) {
+        return false;
+      }
+      return Object.values(paramObject).every((val) => !_isNil(val));
     },
     isReadyForDeployment() {
       return (
@@ -150,8 +173,16 @@ export default {
     buttonText() {
       return this.interfaceSpecification.buttonText;
     },
-    placeholderText() {
-      return this.interfaceSpecification.inputPlaceholder;
+    placeholderTextMultiline() {
+      return this.interfaceSpecification.inputPlaceholder.genericMultiline;
+    },
+    placeholderTextParams() {
+      return this.interfaceSpecification.inputPlaceholder.genericParameter;
+    },
+    vnfdAttributes() {
+      return this.$store.state.contracts[this.actionId][
+        this.fieldNames.ATTRIBUTES
+      ];
     },
   },
   methods: {
@@ -249,12 +280,45 @@ export default {
 
       return matches;
     },
-    handleInputChange(input, fieldName) {
-      console.log(fieldName, ": ", input); // TODO: CLEANUP
-      if (Object.values(this.fieldNames).includes(fieldName)) {
+    createStoreFieldsForParams() {
+      const params = this.selectedVnfdParams;
+      if (params.length !== 0) {
+        const param_values = {};
+        params.forEach((param) => {
+          param_values[param.id] = null;
+        });
+
         this.$store.dispatch("contracts/setContractCallData", {
           actionId: this.actionId,
-          data: input,
+          data: {
+            [this.fieldNames.PARAM_VALUES]: param_values,
+          },
+          fieldName: this.fieldNames.ATTRIBUTES,
+          nestingName: null,
+        });
+      }
+    },
+    updateAttributes(input, fieldName) {
+      // all values (even booleans) apparently as string
+      // TODO: verify if numbers too
+      const currentAttributes = _cloneDeep(this.vnfdAttributes);
+      _update(
+        currentAttributes,
+        `${this.fieldNames.PARAM_VALUES}.${fieldName}`,
+        () => input.toString()
+      );
+      return currentAttributes;
+    },
+    handleInputChange(input, fieldName, nestingName = null) {
+      if (Object.values(this.fieldNames).includes(fieldName)) {
+        let data = input;
+        if (fieldName === this.fieldNames.ATTRIBUTES) {
+          data = this.updateAttributes(input, nestingName);
+        }
+
+        this.$store.dispatch("contracts/setContractCallData", {
+          actionId: this.actionId,
+          data,
           fieldName,
         });
       } else {
@@ -307,6 +371,19 @@ export default {
     .vnf-specification {
       .multiline-input {
         margin-top: $margin-m;
+      }
+
+      .parameter-specification {
+        > hr {
+          width: $input-width;
+          margin: $margin-sm auto $margin-xs;
+        }
+        .param-info {
+          width: $input-width;
+          margin-left: auto;
+          margin-right: auto;
+          text-align: start;
+        }
       }
     }
   }
