@@ -64,6 +64,7 @@ export default {
   },
   watch: {
     userRegistered(newVal) {
+      console.log("newVal", newVal);
       if (newVal === true) {
         this.$router.push({ name: routeNames.USER });
       }
@@ -124,13 +125,16 @@ export default {
       await apiCall_PUT_token(account);
     },
     async initiateUserRegistrationCheck() {
+      
       this.$store.dispatch("appState/setIsLoading", true);
       const account = this.$store.getters["contracts/getUserETHAccount"];
+      console.log("initiateUserRegistrationCheck", account);
       // get a nonce from the backend
       await this.getNonce(account);
       this.$store.dispatch("appState/setIsLoading", false);
     },
     async concludeUserRegistrationCheck() {
+      console.log("concludeUserRegistrationCheck");
       const account = this.$store.getters["contracts/getUserETHAccount"];
       const nonce = this.nonce;
       // sign nonce
