@@ -9,7 +9,6 @@ export const logoutUser = () => {
   }, 5000);
 };
 
-
 export const getToken = () => {
   return cookies.get("token");
-}
+};

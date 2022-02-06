@@ -2,7 +2,6 @@ import { registerEventListener, VNFContract } from "./truffleService";
 import store from "../store/store.js";
 import { logoutUser } from "./appService";
 
-
 export const attachEventListener = (eventType, callback) => {
   let e;
   switch (eventType) {

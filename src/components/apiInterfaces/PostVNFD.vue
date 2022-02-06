@@ -164,7 +164,7 @@ export default {
     },
     handleInputChange(input, fieldName) {
       this.$store.dispatch("backend/setApiCallData", {
-        callId: this.apiCallId,
+        actionId: this.apiCallId,
         data: input,
         fieldName: fieldName,
       });
