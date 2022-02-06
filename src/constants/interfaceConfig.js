@@ -107,7 +107,7 @@ const vnfActionList = [
     groupings: [],
     displayText: "Request VNF deployment",
     buttonText: "Deploy VNF",
-    infoText: "(deployVNF) imagine a longer text explanation here",
+    infoText: "Deploy a VNF based on a selected VNF Descriptor",
     inputPlaceholder: "{}",
   },
   {

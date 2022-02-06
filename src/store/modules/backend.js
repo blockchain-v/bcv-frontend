@@ -6,12 +6,6 @@ import {
   BACKEND_STORE_FIELD_NAMES,
 } from "../../constants/interfaceConfig";
 
-/*
-TODO:
-    - consider: currently store entire response, could be more elegant, such as
-    e.g. just status code & data OR just data -> only set when successful
- */
-
 // initial state
 const state = {
   [actionIDs.GET_VNFDS]: {
@@ -55,6 +49,7 @@ const actions = {
 // mutations
 const mutations = {
   setApiCallData(state, { actionId, data, fieldName }) {
+    console.log("incoming input", actionId, data, fieldName); // TODO: CLEANUP
     state[actionId][fieldName] = data;
   },
 };

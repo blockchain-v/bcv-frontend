@@ -99,7 +99,7 @@ const apiCall_POST_vnfd = async (payload) => {
     await axios.post(url, data, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.POST_VNFD,
+        actionId: actionIDs.POST_VNFD,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
@@ -125,8 +125,8 @@ const apiCall_GET_vnfds = async () => {
     await axios.get(url, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.GET_VNFDS,
-        data: response.data,
+        actionId: actionIDs.GET_VNFDS,
+        data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
     });
@@ -151,7 +151,7 @@ const apiCall_GET_vnfd = async (vnfdId) => {
     await axios.get(url, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.GET_VNFD,
+        actionId: actionIDs.GET_VNFD,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
@@ -177,7 +177,7 @@ const apiCall_GET_vnfs = async () => {
     await axios.get(url, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.GET_VNFS,
+        actionId: actionIDs.GET_VNFS,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
@@ -203,7 +203,7 @@ const apiCall_GET_vnf = async (vnfId) => {
     await axios.get(url, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.GET_VNF_INSTANCE,
+        actionId: actionIDs.GET_VNF_INSTANCE,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
