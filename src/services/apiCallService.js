@@ -40,10 +40,13 @@ const apiCall_POST_token = (payload) => {
     .then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       if (response.status === 200 || response.status === 204) {
-        document.cookie = `token=${response.data.token}; expires=${add(
-          new Date(),
-          { days: 1 }
-        ).toUTCString()}`;
+        if(response.data.isRegistered){
+          document.cookie = `token=${response.data.token}; expires=${add(
+            new Date(),
+            { days: 1 }
+          ).toUTCString()}`;
+        }
+        
         await store.dispatch("appState/setBearerToken", response.data.token);
         store
           .dispatch("contracts/setUserRegistered", response.data.isRegistered)
