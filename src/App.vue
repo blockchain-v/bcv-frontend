@@ -35,7 +35,7 @@ import { routeNames } from "./router";
 import { mapState } from "vuex";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import EventNotification from "./components/atoms/EventNotification.vue";
-import { EventTypes } from './services/eventListenerService';
+import { EventTypes } from "./services/eventListenerService";
 
 export default {
   name: "App",
@@ -120,10 +120,10 @@ export default {
     opacity: 0.6;
   }
 
-  .notification-container{
+  .notification-container {
     visibility: visible;
-    
-    &.show{
+
+    &.show {
       visibility: visible;
       z-index: 10;
     }

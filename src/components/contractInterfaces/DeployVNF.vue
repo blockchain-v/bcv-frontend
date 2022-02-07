@@ -224,6 +224,14 @@ export default {
     },
     handleConfigClick() {
       this.addConfig = !this.addConfig;
+      if (this.addConfig === false) {
+        // purge store state of config
+        this.$store.dispatch("contracts/setContractCallData", {
+          actionId: this.actionId,
+          data: null,
+          fieldName: this.fieldNames.CONFIG,
+        });
+      }
     },
     fetchVnfdsIfMissing() {
       /* if call to api has not been made yet (state -> null), perform call */
