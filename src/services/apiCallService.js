@@ -39,8 +39,8 @@ const apiCall_POST_token = (payload) => {
     .post(url, data, config)
     .then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
-      if (response.status === 200 || response.status === 204) {
-        if (response.data.isRegistered) {
+      if (response.status === 200 || response.status === 201) {
+        if(response.data.isRegistered){
           document.cookie = `token=${response.data.token}; expires=${add(
             new Date(),
             { days: 1 }
@@ -76,7 +76,7 @@ const apiCall_PUT_token = async (address) => {
   try {
     axios.put(url, data, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
-      if (response.status === 200) {
+      if (response.status === 201) {
         store.commit("appState/setNonce", response.data.nonce);
       }
     });
