@@ -7,6 +7,23 @@ const uiTexts = {
     warningTextJSON: "Not valid JSON! Unable to apply pretty formatting.",
     warningTextYAML: "Not valid YAML! Unable to parse user input.",
   },
+  deployVnf: {
+    selectionLabel: "Select / paste VNF Descriptor ID",
+    selectionNameLabel: "VNFD Name",
+    selectionDescriptionLabel: "VNFD Description",
+    vnfSpecificationNameLabel: "VNF Name",
+    vnfSpecificationNamePlaceholder: "Enter VNF Name...",
+    vnfSpecificationDescriptionLabel: "VNF Description",
+    vnfSpecificationDescriptionPlaceholder: "Enter VNF Description...",
+    paramInfo:
+      "Fill in the values for the parametrized fields in the selected VNF Descriptor",
+    configPlaceholder: "{}",
+    configInfo: "Provide a configuration object in JSON format",
+    configTrue: "remove configuration",
+    configTrueIcon: "-",
+    configFalse: "(Optional) add configuration",
+    configFalseIcon: "+",
+  },
   home: {
     currentUserAddress: "current user address: ",
     userNotRegistered: {

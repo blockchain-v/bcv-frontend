@@ -17,17 +17,14 @@ const state = {
     [BACKEND_STORE_FIELD_NAMES.DESCRIPTION]: null,
     [BACKEND_STORE_FIELD_NAMES.ATTRIBUTES]: null,
     [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
+    [BACKEND_STORE_FIELD_NAMES.CONFIG]: null,
+    /* decided against nesting this in 'ATTRIBUTES' too, because the updating becomes a
+    pain with the possible combinations of config/no config/params/no params/no attributes */
   },
   currentVNFToDelete: null, // TODO: refactor away and delete -> use structure like for backend in store
   // DEV only
   currentVNFDetailsID: null, // TODO CLEANUP
 };
-
-/*
-TODO
-  - (potentially) unified act/mut/get for the eventStatuses, e.g. some map object as state
-  so setting can be done through the key for all statuses
- */
 
 // getters
 const getters = {

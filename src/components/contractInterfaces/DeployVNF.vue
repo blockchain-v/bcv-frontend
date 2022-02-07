@@ -34,7 +34,7 @@
         />
         <div class="parameter-specification" v-if="selectedVnfdHasParams">
           <hr />
-          <div class="f-info param-info">{{ texts.paramInfo }}</div>
+          <div class="f-info info-block">{{ texts.paramInfo }}</div>
           <TextInput
             v-for="param in selectedVnfdParams"
             :key="`${param.id}-${this.updateCycle}`"
@@ -44,6 +44,23 @@
             @input-change="
               handleInputChange($event, fieldNames.ATTRIBUTES, param.id)
             "
+          />
+        </div>
+        <div class="config-action">
+          <div class="f-label icon" @click="handleConfigClick">
+            <b>{{ configToggleIcon }}</b>
+          </div>
+          <div class="f-label">{{ configToggleText }}</div>
+        </div>
+        <div v-if="addConfig" class="configuration-specification">
+          <hr class="low-margin" />
+          <div class="f-info info-block">{{ texts.configInfo }}</div>
+          <MultilineInput
+            :text-format="textFormat.JSON"
+            :store-as-j-s-o-n="true"
+            :placeholder="texts.configPlaceholder"
+            :id="`vnf-deployment-${fieldNames.CONFIG}`"
+            @input-change="handleInputChange($event, fieldNames.CONFIG)"
           />
         </div>
       </div>
@@ -63,6 +80,7 @@ import { performContractCall } from "../../services/contractCallService";
 import { apiCall_GET_vnfds } from "../../services/apiCallService";
 import CustomButton from "../atoms/CustomButton";
 import TextInput from "../atoms/TextInput";
+import MultilineInput from "../atoms/MultilineInput";
 import { mapState } from "vuex";
 import {
   actionIDs,
@@ -76,12 +94,13 @@ import {
   update as _update,
 } from "lodash";
 import { TEXT_FORMAT } from "../../constants/global";
+import { uiTexts } from "../../constants/texts";
 
 const yaml = require("js-yaml");
 
 export default {
   name: "DeployVNF",
-  components: { CustomButton, vSelect, TextInput },
+  components: { CustomButton, vSelect, TextInput, MultilineInput },
   props: {
     interfaceSpecification: {
       type: Object,
@@ -93,18 +112,9 @@ export default {
       selectedVnfd: null,
       selectedVnfdParams: [],
       fieldNames: BACKEND_STORE_FIELD_NAMES,
-      texts: {
-        selectionLabel: "Select / paste VNF Descriptor ID",
-        selectionNameLabel: "VNFD Name",
-        selectionDescriptionLabel: "VNFD Description",
-        vnfSpecificationNameLabel: "VNF Name",
-        vnfSpecificationNamePlaceholder: "Enter VNF Name...",
-        vnfSpecificationDescriptionLabel: "VNF Description",
-        vnfSpecificationDescriptionPlaceholder: "Enter VNF Description...",
-        paramInfo:
-          "Fill in the values for the parametrized fields in the selected VNF Descriptor",
-      },
+      texts: uiTexts.deployVnf,
       textFormat: TEXT_FORMAT,
+      addConfig: false,
     };
   },
   mounted() {
@@ -119,7 +129,7 @@ export default {
       this.updateCycle += 1;
       // updateCycle needs to be updated, such that the textFields don't maintain their value
       // if in the new selectedVnf parameters are present that have previously been filled in
-      // Note, that this is just concerning the UI, the store is fully reset even without the
+      // Note, that this is just concerning the UI, the store is fully reset by the
       // method 'createStoreFieldsForParams();
     },
   },
@@ -140,10 +150,12 @@ export default {
       return this.selectedVnfdParams.length > 0;
     },
     hasVnfName() {
-      return !_isNil(this.deployVnfState[this.fieldNames.NAME]);
+      const state = this.deployVnfState[this.fieldNames.NAME];
+      return !_isNil(state) && state !== "";
     },
     hasVnfDescription() {
-      return !_isNil(this.deployVnfState[this.fieldNames.DESCRIPTION]);
+      const state = this.deployVnfState[this.fieldNames.DESCRIPTION];
+      return !_isNil(state) && state !== "";
     },
     hasVnfAttributes() {
       if (!this.selectedVnfdHasParams) {
@@ -154,14 +166,24 @@ export default {
       if (_isNil(paramObject)) {
         return false;
       }
-      return Object.values(paramObject).every((val) => !_isNil(val));
+      return Object.values(paramObject).every(
+        (val) => !_isNil(val) && val !== ""
+      );
+    },
+    hasVnfConfiguration() {
+      if (!this.addConfig) {
+        // since optional, if not enabled return true
+        return true;
+      }
+      return !_isNil(this.vnfdConfiguration) && this.vnfdConfiguration !== "";
     },
     isReadyForDeployment() {
       return (
         this.hasVnfdSelected &&
         this.hasVnfName &&
         this.hasVnfDescription &&
-        this.hasVnfAttributes
+        this.hasVnfAttributes &&
+        this.hasVnfConfiguration
       );
     },
     vnfdArray() {
@@ -179,15 +201,29 @@ export default {
     placeholderTextParams() {
       return this.interfaceSpecification.inputPlaceholder.genericParameter;
     },
+    configToggleText() {
+      return this.addConfig ? this.texts.configTrue : this.texts.configFalse;
+    },
+    configToggleIcon() {
+      return this.addConfig
+        ? this.texts.configTrueIcon
+        : this.texts.configFalseIcon;
+    },
     vnfdAttributes() {
       return this.$store.state.contracts[this.actionId][
         this.fieldNames.ATTRIBUTES
       ];
     },
+    vnfdConfiguration() {
+      return this.$store.state.contracts[this.actionId][this.fieldNames.CONFIG];
+    },
   },
   methods: {
     initiateContractCall() {
       performContractCall(this.actionId);
+    },
+    handleConfigClick() {
+      this.addConfig = !this.addConfig;
     },
     fetchVnfdsIfMissing() {
       /* if call to api has not been made yet (state -> null), perform call */
@@ -219,7 +255,7 @@ export default {
       }
       console.log("jsonified yaml.", attributesObject); // TODO CLEANUP
 
-      /* 
+      /*
       2. check if ANY 'get_input' field is present in object ('get_input' is the reserved
       keyword for parametrization in vnfds:
       https://docs.openstack.org/tacker/latest/contributor/vnfd_template_parameterization.html#parameterized-vnfd-template
@@ -282,25 +318,27 @@ export default {
     },
     createStoreFieldsForParams() {
       const params = this.selectedVnfdParams;
-      if (params.length !== 0) {
+      let storeVal = null;
+      // have to reset attribute if no params
+      if (this.selectedVnfdHasParams) {
         const param_values = {};
         params.forEach((param) => {
           param_values[param.id] = null;
         });
-
-        this.$store.dispatch("contracts/setContractCallData", {
-          actionId: this.actionId,
-          data: {
-            [this.fieldNames.PARAM_VALUES]: param_values,
-          },
-          fieldName: this.fieldNames.ATTRIBUTES,
-          nestingName: null,
-        });
+        storeVal = param_values;
       }
+      this.$store.dispatch("contracts/setContractCallData", {
+        actionId: this.actionId,
+        data: _isNil(storeVal)
+          ? storeVal
+          : {
+              [this.fieldNames.PARAM_VALUES]: storeVal,
+            },
+        fieldName: this.fieldNames.ATTRIBUTES,
+      });
     },
     updateAttributes(input, fieldName) {
       // all values (even booleans) apparently as string
-      // TODO: verify if numbers too
       const currentAttributes = _cloneDeep(this.vnfdAttributes);
       _update(
         currentAttributes,
@@ -373,16 +411,31 @@ export default {
         margin-top: $margin-m;
       }
 
-      .parameter-specification {
+      .parameter-specification,
+      .configuration-specification {
         > hr {
           width: $input-width;
           margin: $margin-sm auto $margin-xs;
+          &.low-margin {
+            margin-top: unset;
+          }
         }
-        .param-info {
+        .info-block {
           width: $input-width;
           margin-left: auto;
           margin-right: auto;
           text-align: start;
+        }
+      }
+
+      .config-action {
+        width: $input-width;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        .icon {
+          cursor: pointer;
+          width: 30px;
         }
       }
     }

@@ -9,6 +9,7 @@ const BACKEND_STORE_FIELD_NAMES = {
   NONCE: "nonce",
   SIGNED_NONCE: "signedNonce",
   PARAM_VALUES: "param_values",
+  CONFIG: "config",
 };
 
 const apiCallIDs = {

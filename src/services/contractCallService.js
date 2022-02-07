@@ -93,10 +93,17 @@ const performContractCall_deployVNF = async () => {
       name: callData[fieldNames.NAME],
       description: callData[fieldNames.DESCRIPTION],
     };
+    // attributes have to be present no matter what
     parameters["attributes"] = _isNil(callData[fieldNames.ATTRIBUTES])
       ? {}
       : callData[fieldNames.ATTRIBUTES];
+    // add config to attributes if present
+    const config = callData[fieldNames.CONFIG];
+    if (!_isNil(config) && config !== "") {
+      parameters["attributes"]["config"] = config;
+    }
 
+    console.log("APARAPARAM", parameters);
     const deployVNFrequest = VNFContract.methods.deployVNF(
       VNFD_ID,
       JSON.stringify(parameters)
