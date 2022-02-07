@@ -5,8 +5,8 @@ const cookies = new Cookies();
 export const logoutUser = () => {
   cookies.remove("token");
   setTimeout(() => {
-    router.push({ name: routeNames.ROOT });
-  }, 5000);
+    router.push({ name: routeNames.HOME });
+  }, 3000);
 };
 
 export const getToken = () => {

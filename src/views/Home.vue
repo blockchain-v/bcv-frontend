@@ -129,11 +129,11 @@ export default {
       return !this.registrationCheckDone;
     },
     registeredNotification() {
-      if (this.eventNotifications.length === 0) {
+      if (this?.eventNotifications?.length === 0) {
         return null;
       }
       return _find(this.eventNotifications, (en) => {
-        return en.notification.event === "RegistrationStatus";
+        return en?.notification?.event === "RegistrationStatus";
       });
     },
   },

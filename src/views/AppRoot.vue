@@ -34,9 +34,6 @@ export default {
     CustomButton,
     PulseLoader,
   },
-  data() {
-    return {};
-  },
   computed: {
     token() {
       return getToken();
@@ -51,39 +48,41 @@ export default {
       return !_isNil(this.ethereumAccount);
     },
   },
-  async created() {
-    this.$store.dispatch("appState/setIsLoading", true);
-
-    // NOTE: working, but polling :(
-    let account = await getAccount().then(() => {
-      if (_isNil(account)) {
-        console.log("on created, no MM account found");
-        setInterval(async () => {
-          account = await getAccount();
-          if (!_isNil(account) && account !== this.ethereumAccount) {
-            console.log("found new MM account/address:", account);
-            await this.setAccountToStore(account);
-          }
-        }, 200);
-      } else {
-        this.setAccountToStore(account);
-      }
-    });
-    this.$store.dispatch("appState/setIsLoading", false);
-  },
   mounted() {
-    /*
-    catch case where you have an account, but manipulate the URL to be invalid
-    -> pushes back to app, would be stuck here
-    -> hence re-evaluate account
-    */
-    this.$store.dispatch("contracts/getAccountStatus").then((res) => {
-      if (!_isNil(res.ethAccount)) {
-        this.navigateToHome();
-      }
-    });
+    this.performAccountCheck();
   },
   methods: {
+    async performAccountCheck() {
+      this.$store.dispatch("appState/setIsLoading", true);
+
+      if (this.ethereumAccount) {
+        /*
+          catch case where you have an account, but manipulate the URL to be invalid
+          -> pushes back to app, would be stuck here
+          -> hence re-evaluate account
+          -> also concerns case where you unregister
+          */
+        this.navigateToHome();
+      } else {
+        // NOTE: working, but polling :(
+        let account = await getAccount().then(() => {
+          if (_isNil(account)) {
+            console.log("on created, no MM account found");
+            setInterval(async () => {
+              account = await getAccount();
+              if (!_isNil(account) && account !== this.ethereumAccount) {
+                console.log("found new MM account/address:", account);
+                await this.setAccountToStore(account);
+              }
+            }, 200);
+          } else {
+            this.setAccountToStore(account);
+          }
+        });
+      }
+
+      this.$store.dispatch("appState/setIsLoading", false);
+    },
     navigateToHome() {
       if (!this.token) {
         this.$router.push({ name: routeNames.HOME });
