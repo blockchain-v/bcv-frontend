@@ -125,7 +125,7 @@ export default {
         );
         this.validJSON = false;
       }
-    }, 500),
+    }, 200),
     yaml2Json(value) {
       if (this.isJsonString(value)) {
         /*
@@ -199,7 +199,7 @@ export default {
       }
       this.$emit("inputChange", value);
       this.inputText = value;
-    }, 500),
+    }, 200),
   },
 };
 </script>
