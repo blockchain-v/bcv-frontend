@@ -92,10 +92,31 @@ const performContractCall_deployVNF = async () => {
     const parameters = {
       name: callData[fieldNames.NAME],
       description: callData[fieldNames.DESCRIPTION],
-      // TODO: need to stringify? previously with multiline input was not stored as json,
-      //  but rather as string
-      attributes: callData[fieldNames.ATTRIBUTES],
     };
+    if (!_isNil(callData[fieldNames.ATTRIBUTES])) {
+      parameters["attributes"] = callData[fieldNames.ATTRIBUTES];
+    }
+    // parameters["attributes"] = {
+    //   config: {
+    //     vdus: {
+    //       vdu1: {
+    //         config: {
+    //           firewall: "package firewall\n",
+    //         },
+    //       },
+    //     },
+    //   },
+    //   param_values: {
+    //     vdus: {
+    //       vdu1: {
+    //         param: {
+    //           "vdu-name": "openwrt_vdu1",
+    //         },
+    //       },
+    //     },
+    //   },
+    // };
+    console.log("parameters before send", parameters);
     const deployVNFrequest = VNFContract.methods.deployVNF(VNFD_ID, parameters);
     const deployVNFresult = await deployVNFrequest.send(
       getDefaultCallParams(account)
