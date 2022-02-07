@@ -36,7 +36,7 @@ export default {
     handleInput: _debounce(function (event) {
       // NOTE: cannot use arrow function here, else we lose the .this context
       this.$emit("inputChange", event.target.value);
-    }, 500),
+    }, 200),
   },
 };
 </script>
