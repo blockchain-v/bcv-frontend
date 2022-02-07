@@ -97,7 +97,7 @@ export default {
   border-radius: 10px;
   background-color: $green-white;
   color: $vue-darkblue;
-  position: absolute;
+  position: fixed;
   top: 145px;
   right: 100px;
   float: right;
@@ -108,7 +108,7 @@ export default {
   padding-bottom: 20px;
   font-size: 14px;
   font-weight: bold;
-  box-shadow: 8px 8px 15px grey;
+  box-shadow: 4px 4px 4px grey;
 
   &.error {
     border-color: $red;
