@@ -93,31 +93,14 @@ const performContractCall_deployVNF = async () => {
       name: callData[fieldNames.NAME],
       description: callData[fieldNames.DESCRIPTION],
     };
-    if (!_isNil(callData[fieldNames.ATTRIBUTES])) {
-      parameters["attributes"] = callData[fieldNames.ATTRIBUTES];
-    }
-    // parameters["attributes"] = {
-    //   config: {
-    //     vdus: {
-    //       vdu1: {
-    //         config: {
-    //           firewall: "package firewall\n",
-    //         },
-    //       },
-    //     },
-    //   },
-    //   param_values: {
-    //     vdus: {
-    //       vdu1: {
-    //         param: {
-    //           "vdu-name": "openwrt_vdu1",
-    //         },
-    //       },
-    //     },
-    //   },
-    // };
-    console.log("parameters before send", parameters);
-    const deployVNFrequest = VNFContract.methods.deployVNF(VNFD_ID, parameters);
+    parameters["attributes"] = _isNil(callData[fieldNames.ATTRIBUTES])
+      ? {}
+      : callData[fieldNames.ATTRIBUTES];
+
+    const deployVNFrequest = VNFContract.methods.deployVNF(
+      VNFD_ID,
+      JSON.stringify(parameters)
+    );
     const deployVNFresult = await deployVNFrequest.send(
       getDefaultCallParams(account)
     );
