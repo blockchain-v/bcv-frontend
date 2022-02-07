@@ -98,7 +98,7 @@ export default {
     registeredNotification(newVal, oldVal) {
       if (
         !_isNil(newVal) &&
-        newVal.notification.transactionHash !==
+        newVal?.notification.transactionHash !==
           oldVal?.notification?.transactionHash
       ) {
         this.$store.commit("appState/setRegistrationCheckDone", false);
