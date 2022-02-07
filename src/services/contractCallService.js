@@ -6,11 +6,13 @@ Since different calls require/write different data from different components,
 the state is managed using the Vuex store.
 */
 
-import { actionIDs } from "../constants/interfaceConfig";
+import {
+  actionIDs,
+  BACKEND_STORE_FIELD_NAMES as fieldNames,
+} from "../constants/interfaceConfig";
 import store from "../store/store.js";
 import { isNil as _isNil } from "lodash";
 import { getDefaultCallParams, VNFContract } from "./truffleService";
-import { v4 as uuidv4 } from "uuid";
 
 export const performContractCall = async (methodId) => {
   console.log("registered call invocation for method id:", methodId);
@@ -85,13 +87,27 @@ const performContractCall_deployVNF = async () => {
   console.log("call for deployVNF");
   const account = store.getters["contracts/getUserETHAccount"];
   if (!_isNil(account)) {
-    // TODO: real VNFD-ids from backend
-    let VNFD_ID = uuidv4();
-    VNFD_ID = "638530e7-1120-41c1-8a03-149b66247d02";
-    // TODO: let the user parameters, not VNFDs - that is a different call that goes to
-    // the backend
-    const parameters = store.getters["contracts/getCurrentVNFDescriptorInput"];
-    const deployVNFrequest = VNFContract.methods.deployVNF(VNFD_ID, parameters);
+    const callData = store.getters["contracts/getDeployVnfData"];
+    const VNFD_ID = callData[fieldNames.VNFDID];
+    const parameters = {
+      name: callData[fieldNames.NAME],
+      description: callData[fieldNames.DESCRIPTION],
+    };
+    // attributes have to be present no matter what
+    parameters["attributes"] = _isNil(callData[fieldNames.ATTRIBUTES])
+      ? {}
+      : callData[fieldNames.ATTRIBUTES];
+    // add config to attributes if present
+    const config = callData[fieldNames.CONFIG];
+    if (!_isNil(config) && config !== "") {
+      parameters["attributes"]["config"] = config;
+    }
+
+    console.log("APARAPARAM", parameters);
+    const deployVNFrequest = VNFContract.methods.deployVNF(
+      VNFD_ID,
+      JSON.stringify(parameters)
+    );
     const deployVNFresult = await deployVNFrequest.send(
       getDefaultCallParams(account)
     );

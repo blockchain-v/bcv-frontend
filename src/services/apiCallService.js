@@ -40,13 +40,13 @@ const apiCall_POST_token = (payload) => {
     .then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       if (response.status === 200 || response.status === 204) {
-        if(response.data.isRegistered){
+        if (response.data.isRegistered) {
           document.cookie = `token=${response.data.token}; expires=${add(
             new Date(),
             { days: 1 }
           ).toUTCString()}`;
         }
-        
+
         await store.dispatch("appState/setBearerToken", response.data.token);
         store
           .dispatch("contracts/setUserRegistered", response.data.isRegistered)
@@ -56,8 +56,7 @@ const apiCall_POST_token = (payload) => {
       }
     })
     .catch(async (error) => {
-      console.log(
-        `error whilst performing call to ${url}, error:`, error);
+      console.log(`error whilst performing call to ${url}, error:`, error);
       if (error.response.status === 401) {
         store.dispatch("contracts/setUserRegistered", false).then(() => {
           store.commit("appState/setRegistrationCheckDone", true);
@@ -103,7 +102,7 @@ const apiCall_POST_vnfd = async (payload) => {
     await axios.post(url, data, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.POST_VNFD,
+        actionId: actionIDs.POST_VNFD,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
@@ -129,7 +128,7 @@ const apiCall_GET_vnfds = async () => {
     await axios.get(url, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.GET_VNFDS,
+        actionId: actionIDs.GET_VNFDS,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
@@ -155,7 +154,7 @@ const apiCall_GET_vnfd = async (vnfdId) => {
     await axios.get(url, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.GET_VNFD,
+        actionId: actionIDs.GET_VNFD,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
@@ -181,7 +180,7 @@ const apiCall_GET_vnfs = async () => {
     await axios.get(url, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.GET_VNFS,
+        actionId: actionIDs.GET_VNFS,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
@@ -207,7 +206,7 @@ const apiCall_GET_vnf = async (vnfId) => {
     await axios.get(url, config).then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        callId: actionIDs.GET_VNF_INSTANCE,
+        actionId: actionIDs.GET_VNF_INSTANCE,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });

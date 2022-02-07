@@ -136,7 +136,7 @@ export default {
   padding: 10px;
 }
 
-.no-vnfs{
+.no-vnfs {
   font-style: italic;
   color: $vue-darkblue-pale;
 }

@@ -6,12 +6,6 @@ import {
   BACKEND_STORE_FIELD_NAMES,
 } from "../../constants/interfaceConfig";
 
-/*
-TODO:
-    - consider: currently store entire response, could be more elegant, such as
-    e.g. just status code & data OR just data -> only set when successful
- */
-
 // initial state
 const state = {
   [actionIDs.GET_VNFDS]: {
@@ -38,22 +32,24 @@ const state = {
 
 // getters
 const getters = {
-  getApiCallData(callId) {
-    return state[callId] || undefined;
+  getApiCallData(actionId) {
+    // NOTE: invalid, getters cannot receieve parameters, do like in contracts (filter/access
+    // from whole data after the fact, or write individual getters)
+    return state[actionId] || undefined;
   },
 };
 
 // actions
 const actions = {
-  setApiCallData({ commit }, { callId, data, fieldName }) {
-    commit("setApiCallData", { callId, data, fieldName });
+  setApiCallData({ commit }, { actionId, data, fieldName }) {
+    commit("setApiCallData", { actionId, data, fieldName });
   },
 };
 
 // mutations
 const mutations = {
-  setApiCallData(state, { callId, data, fieldName }) {
-    state[callId][fieldName] = data;
+  setApiCallData(state, { actionId, data, fieldName }) {
+    state[actionId][fieldName] = data;
   },
 };
 

@@ -1,21 +1,30 @@
 /*
 Store module for managing contract call data globally
 */
+import {
+  actionIDs,
+  BACKEND_STORE_FIELD_NAMES,
+} from "../../constants/interfaceConfig";
 
 // initial state
 const state = {
   userETHAccount: null,
   userRegistered: false,
-  currentVNFDescriptorInput: null,
-  currentVNFToDelete: null,
   eventNotifications: [],
+  [actionIDs.DEPLOY_VNF]: {
+    [BACKEND_STORE_FIELD_NAMES.VNFDID]: null,
+    [BACKEND_STORE_FIELD_NAMES.NAME]: null,
+    [BACKEND_STORE_FIELD_NAMES.DESCRIPTION]: null,
+    [BACKEND_STORE_FIELD_NAMES.ATTRIBUTES]: null,
+    [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
+    [BACKEND_STORE_FIELD_NAMES.CONFIG]: null,
+    /* decided against nesting this in 'ATTRIBUTES' too, because the updating becomes a
+    pain with the possible combinations of config/no config/params/no params/no attributes */
+  },
+  currentVNFToDelete: null, // TODO: refactor away and delete -> use structure like for backend in store
+  // DEV only
+  currentVNFDetailsID: null, // TODO CLEANUP
 };
-
-/*
-TODO
-  - (potentially) unified act/mut/get for the eventStatuses, e.g. some map object as state
-  so setting can be done through the key for all statuses
- */
 
 // getters
 const getters = {
@@ -25,14 +34,11 @@ const getters = {
   getUserRegistered() {
     return state.userRegistered;
   },
-  getCurrentVNFDescriptorInput() {
-    return state.currentVNFDescriptorInput;
-  },
   getCurrentVNFToDelete() {
     return state.currentVNFToDelete;
   },
-  getEventNotifications(eventType) {
-    return state.eventNotifications[eventType];
+  getDeployVnfData() {
+    return state[actionIDs.DEPLOY_VNF];
   },
 };
 
@@ -44,9 +50,6 @@ const actions = {
   setUserRegistered({ commit }, bool) {
     commit("setUserRegistered", bool);
   },
-  setCurrentVNFDescriptorInput({ commit }, input) {
-    commit("setCurrentVNFDescriptorInput", input);
-  },
   setCurrentVNFToDelete({ commit }, input) {
     commit("setCurrentVNFToDelete", input);
   },
@@ -56,6 +59,9 @@ const actions = {
       notification: notification,
       message: message,
     });
+  },
+  setContractCallData({ commit }, { actionId, data, fieldName }) {
+    commit("setContractCallData", { actionId, data, fieldName });
   },
   // async getter via actions
   getAccountStatus() {
@@ -78,9 +84,6 @@ const mutations = {
   setUserRegistered(state, bool) {
     state.userRegistered = bool;
   },
-  setCurrentVNFDescriptorInput(state, input) {
-    state.currentVNFDescriptorInput = input;
-  },
   setCurrentVNFToDelete(state, input) {
     state.currentVNFToDelete = input;
   },
@@ -89,6 +92,13 @@ const mutations = {
       notification: notification,
       message: message,
     };
+  },
+  setContractCallData(state, { actionId, data, fieldName }) {
+    state[actionId][fieldName] = data;
+  },
+  // DEV only
+  setCurrentVNFDetailsID(state, id) {
+    state.currentVNFDetailsID = id;
   },
 };
 

@@ -185,5 +185,4 @@ export default {
 .btn-copy:hover {
   background: $green-cadetblue;
 }
-
 </style>

@@ -35,7 +35,7 @@ import { routeNames } from "./router";
 import { mapState } from "vuex";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import EventNotification from "./components/atoms/EventNotification.vue";
-import { EventTypes } from './services/eventListenerService';
+import { EventTypes } from "./services/eventListenerService";
 
 export default {
   name: "App",
@@ -73,7 +73,7 @@ export default {
 @import "src/styles/global.scss";
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: $default-font-family;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -120,10 +120,10 @@ export default {
     opacity: 0.6;
   }
 
-  .notification-container{
+  .notification-container {
     visibility: visible;
-    
-    &.show{
+
+    &.show {
       visibility: visible;
       z-index: 10;
     }

@@ -27,7 +27,7 @@ const getters = {
   },
   getRegistrationCheckDone() {
     return state.registrationCheckDone;
-  }
+  },
 };
 
 // actions
@@ -46,9 +46,9 @@ const actions = {
   setWaitingForContractFeedback({ commit }, value) {
     commit("setWaitingForContractFeedback", value);
   },
-  setRegistrationCheckDone({commit}, value) {
+  setRegistrationCheckDone({ commit }, value) {
     commit("setRegistrationCheckDone", value);
-  }
+  },
 };
 
 // mutations
@@ -66,8 +66,8 @@ const mutations = {
     state.waitingForContractFeedback = value;
   },
   setRegistrationCheckDone(state, value) {
-    state.registrationCheckDone = value
-  }
+    state.registrationCheckDone = value;
+  },
 };
 
 export default {

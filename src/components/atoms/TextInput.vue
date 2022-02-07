@@ -1,6 +1,6 @@
 <template>
   <div class="text-input">
-    <p class="label" v-if="hasLabel">{{ label }}</p>
+    <p class="f-label label" v-if="hasLabel">{{ label }}</p>
     <input :id="inputId" @input="handleInput" :placeholder="placeholder" />
   </div>
 </template>
@@ -54,11 +54,11 @@ export default {
   }
 
   input {
+    @extend .f-standard;
     border: 2px solid $green-aquamarine;
     border-radius: 10px;
-    padding: 20px 20px;
+    padding: $input-padding;
     width: $input-width;
-    font-size: 16px;
 
     &:focus {
       outline: none !important;
