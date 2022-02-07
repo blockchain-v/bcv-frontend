@@ -1,11 +1,6 @@
 <template>
   <div class="user-view">
     <div class="container">
-      <EventNotification
-        v-for="(eventType, index) in eventTypes"
-        :key="index"
-        :eventType="eventType"
-      />
       <h1 class="title">User Options</h1>
       <hr class="horizontal-divider" />
       <InterfaceInitiator :action-list="userActionList" :auto-expand="true" />
@@ -15,23 +10,15 @@
 
 <script>
 import InterfaceInitiator from "../components/InterfaceInitiator";
-import { EventTypes } from "../services/eventListenerService";
-import EventNotification from "../components/atoms/EventNotification.vue";
 import { userActionList } from "../constants/interfaceConfig";
 
 export default {
   name: "UserView",
   components: {
     InterfaceInitiator,
-    EventNotification,
   },
   data() {
     return {
-      eventTypes: [
-        EventTypes.DeploymentStatus,
-        EventTypes.RegistrationStatus,
-        EventTypes.UnregistrationStatus,
-      ],
       userActionList,
     };
   },

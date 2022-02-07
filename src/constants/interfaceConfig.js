@@ -92,7 +92,7 @@ const vnfActionList = [
   {
     id: apiCallIDs.GET_VNFS,
     displayText: "Get VNF List",
-    actionText: "Get VNFs",
+    actionText: "Refresh",
     infoText: "Get a list of your current VNFs",
   },
   {
@@ -124,7 +124,7 @@ const vnfdActionList = [
   {
     id: apiCallIDs.GET_VNFDS,
     displayText: "Get VNFD List",
-    actionText: "Get VNFDs",
+    actionText: "Refresh",
     infoText: "Get a list of all currently existing VNF Descriptors",
   },
   {

@@ -12,4 +12,4 @@ export const logoutUser = () => {
 
 export const getToken = () => {
   return cookies.get("token");
-}
+};

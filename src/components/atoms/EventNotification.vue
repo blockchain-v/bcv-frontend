@@ -1,18 +1,15 @@
 <template>
   <div
     v-if="hasEventNotification && isVisible"
-    class="container"
-    :class="{ 'event-error': isErroneous }"
+    class="notification"
+    :class="{ error: isErroneous }"
   >
-    <p>
-      {{ eventMessage }}
-    </p>
     <div class="button-container">
-      <CustomButton
-        @button-click="isVisible = false"
-        button-text="dismiss"
-      />
+      <span class="close" @click="isVisible = false">&times;</span>
     </div>
+    <span :class="{ 'event-error': isErroneous }">
+      {{ eventMessage }}
+    </span>
   </div>
 </template>
 
@@ -22,9 +19,7 @@ import {
   getEventMessage,
 } from "../../services/eventListenerService";
 import { isNil as _isNil } from "lodash";
-import CustomButton from "./CustomButton.vue";
 export default {
-  components: { CustomButton },
   name: "EventNotification",
   props: {
     eventType: {
@@ -47,7 +42,7 @@ export default {
 
       this.isVisible = true;
 
-      setTimeout(() => {
+      setTimeout(async () => {
         this.isVisible = false;
       }, 10000);
     });
@@ -63,8 +58,8 @@ export default {
       return this.getEventNotification(this.eventType).message;
     },
     isErroneous() {
-      let hasError = !this.getEventNotification(this.eventType)
-        .notification.returnValues["success"];
+      let hasError = !this.getEventNotification(this.eventType).notification
+        .returnValues["success"];
       console.log("IsErroneous", hasError);
       return hasError;
     },
@@ -93,15 +88,42 @@ export default {
 <style scoped lang="scss">
 @import "src/styles/global.scss";
 
-.event-error {
-  color: red;
+.button-container {
+  margin-top: 15px;
 }
 
-.button-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 50px 0 30px;
+.notification {
+  border: 1px solid $green-cadetblue;
+  border-radius: 10px;
+  background-color: $green-white;
+  color: $vue-darkblue;
+  position: fixed;
+  top: 145px;
+  right: 100px;
+  float: right;
+  margin: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 4px 4px 4px grey;
+
+  &.error {
+    border-color: $red;
+    background-color: $red-light;
+  }
+}
+
+.close {
+  user-select: none;
+  cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 12px;
+  font-weight: bold;
+  font-size: 20px;
+  float: right;
 }
 </style>
