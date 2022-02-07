@@ -1,14 +1,19 @@
 <template>
   <div class="vnfs-container">
-    <Accordion v-for="vnf in vnfs" :key="vnf.id">
-      <template v-slot:title>
-        <span class="vnf-title">{{ vnf.name }}</span
-        >: <span> {{ vnf.description }}</span>
-      </template>
-      <template v-slot:content>
-        <DetailsView :item="vnf" :baseFields="getBaseFields(vnf)" />
-      </template>
-    </Accordion>
+    <div v-if="vnfs.length > 0">
+      <Accordion v-for="vnf in vnfs" :key="vnf.id">
+        <template v-slot:title>
+          <span class="vnf-title">{{ vnf.name }}</span
+          >: <span> {{ vnf.description }}</span>
+        </template>
+        <template v-slot:content>
+          <DetailsView :item="vnf" :baseFields="getBaseFields(vnf)" />
+        </template>
+      </Accordion>
+    </div>
+    <div v-else>
+      <span class="no-vnfs">You haven't got any VNFs at the moment.</span>
+    </div>
   </div>
 </template>
 
@@ -129,5 +134,10 @@ export default {
 
 .vnfs-container {
   padding: 10px;
+}
+
+.no-vnfs{
+  font-style: italic;
+  color: $vue-darkblue-pale;
 }
 </style>

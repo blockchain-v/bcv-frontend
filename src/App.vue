@@ -19,6 +19,13 @@
     <div v-if="showLoadingScreen" class="loading-container">
       <PulseLoader />
     </div>
+    <div class="notification-container">
+      <EventNotification
+        v-for="(eventType, index) in eventTypes"
+        :key="index"
+        :eventType="eventType"
+      />
+    </div>
     <router-view></router-view>
   </div>
 </template>
@@ -27,11 +34,23 @@
 import { routeNames } from "./router";
 import { mapState } from "vuex";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import EventNotification from "./components/atoms/EventNotification.vue";
+import { EventTypes } from './services/eventListenerService';
 
 export default {
   name: "App",
   components: {
     PulseLoader,
+    EventNotification,
+  },
+  data() {
+    return {
+      eventTypes: [
+        EventTypes.DeploymentStatus,
+        EventTypes.RegistrationStatus,
+        EventTypes.UnregistrationStatus,
+      ],
+    };
   },
   computed: {
     ...mapState("appState", {
@@ -99,6 +118,15 @@ export default {
     align-items: center;
     background-color: $white;
     opacity: 0.6;
+  }
+
+  .notification-container{
+    visibility: visible;
+    
+    &.show{
+      visibility: visible;
+      z-index: 10;
+    }
   }
 }
 </style>
