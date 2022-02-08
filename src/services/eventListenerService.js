@@ -19,7 +19,7 @@ export const attachEventListener = (eventType, callback) => {
       break;
   }
 
-  registerEventListener(e, callback);
+  return registerEventListener(e, callback);
 };
 
 export const getEventMessage = (eventType, parameters) => {

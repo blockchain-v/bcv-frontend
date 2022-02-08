@@ -14,8 +14,13 @@ import store from "../store/store.js";
 import { isNil as _isNil } from "lodash";
 import { getDefaultCallParams, VNFContract } from "./truffleService";
 
-export const performContractCall = async (methodId) => {
-  console.log("registered call invocation for method id:", methodId);
+export const performContractCall = async (methodId, parameters = null) => {
+  console.log(
+    "registered call invocation for method id:",
+    methodId,
+    "with parameters:",
+    parameters
+  );
   switch (methodId) {
     case actionIDs.REGISTER:
       // Register
@@ -31,7 +36,7 @@ export const performContractCall = async (methodId) => {
       // DeployVNF
       break;
     case actionIDs.DELETE_VNF:
-      await performContractCall_deleteVNF();
+      await performContractCall_deleteVNF(parameters);
       // DeleteVNF
       break;
     case actionIDs.DEV__GET_VNFS:
@@ -117,19 +122,23 @@ const performContractCall_deployVNF = async () => {
   }
 };
 
-const performContractCall_deleteVNF = async () => {
+const performContractCall_deleteVNF = (parameters) => {
   console.log("call for deleteVNF");
   const account = store.getters["contracts/getUserETHAccount"];
-  if (!_isNil(account)) {
-    const VNF_toDelete = store.getters["contracts/getCurrentVNFToDelete"];
-    const deleteVNFRequest = VNFContract.methods.deleteVNF(VNF_toDelete);
-    const deleteVNFResult = await deleteVNFRequest.send(
-      getDefaultCallParams(account)
+  if (
+    !_isNil(account) ||
+    !_isNil(parameters) ||
+    !_isNil(parameters.deploymentId)
+  ) {
+    const deleteVNFRequest = VNFContract.methods.deleteVNF(
+      parameters.deploymentId
     );
-    // TODO: CLEANUP logs
-    console.log("unregisterUser", deleteVNFResult);
+    deleteVNFRequest.send(getDefaultCallParams(account)).catch((error) => {
+      console.warn("deletion transaction failed with error", error);
+      store.commit("appState/setIsLoading", false);
+    });
   } else {
-    console.log("no user account to make call with, rejecting...");
+    console.warn("no user account to make call with, rejecting...");
   }
 };
 

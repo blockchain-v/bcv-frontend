@@ -13,7 +13,6 @@
     <div v-else-if="actionId === actionIDs.POST_VNFD">
       <PostVNFD :interface-specification="actionUISpecification" />
     </div>
-    <div v-else-if="actionId === actionIDs.DELETE_VNFD">TODO (maybe)</div>
     <div v-else-if="actionId === actionIDs.GET_VNFS">
       <GetVNFs :interface-specification="actionUISpecification" />
     </div>
@@ -22,9 +21,6 @@
     </div>
     <div v-else-if="actionId === actionIDs.DEPLOY_VNF">
       <DeployVNF :interface-specification="actionUISpecification" />
-    </div>
-    <div v-else-if="actionId === actionIDs.DELETE_VNF">
-      <DeleteVNF :interface-specification="actionUISpecification" />
     </div>
     <div v-else-if="actionId === actionIDs.REGISTER">
       <RegisterUser :interface-specification="actionUISpecification" />
@@ -46,7 +42,6 @@ import GetVNFs from "./apiInterfaces/GetVNFs";
 import GetVNF from "./apiInterfaces/GetVNF";
 import PostVNFD from "./apiInterfaces/PostVNFD";
 // contractInterfaces
-import DeleteVNF from "./contractInterfaces/DeleteVNF";
 import DeployVNF from "./contractInterfaces/DeployVNF";
 import RegisterUser from "./contractInterfaces/RegisterUser";
 import UnregisterUser from "./contractInterfaces/UnregisterUser";
@@ -65,7 +60,6 @@ export default {
     GetVNF,
     // contract UIs
     DeployVNF,
-    DeleteVNF,
     RegisterUser,
     UnregisterUser,
     // others

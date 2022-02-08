@@ -7,7 +7,12 @@
           >: <span> {{ vnf.description }}</span>
         </template>
         <template v-slot:content>
-          <DetailsView :item="vnf" :baseFields="getBaseFields(vnf)" />
+          <DetailsView
+            :item="vnf"
+            :baseFields="getBaseFields(vnf)"
+            :isVnf="true"
+            :key="`${vnf.id}-details-view`"
+          />
         </template>
       </Accordion>
     </div>

@@ -16,9 +16,7 @@
 
       <hr />
     </div>
-    <div v-if="showLoadingScreen" class="loading-container">
-      <PulseLoader />
-    </div>
+    <Spinner v-if="showLoadingScreen" :lock-background="true" />
     <div class="notification-container">
       <EventNotification
         v-for="(eventType, index) in eventTypes"
@@ -33,15 +31,15 @@
 <script>
 import { routeNames } from "./router";
 import { mapState } from "vuex";
-import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import Spinner from "./components/atoms/Spinner";
 import EventNotification from "./components/atoms/EventNotification.vue";
 import { EventTypes } from "./services/eventListenerService";
 
 export default {
   name: "App",
   components: {
-    PulseLoader,
     EventNotification,
+    Spinner,
   },
   data() {
     return {
@@ -102,18 +100,6 @@ export default {
         color: $vue-green;
       }
     }
-  }
-
-  .loading-container {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $white;
-    opacity: 0.6;
   }
 
   .notification-container {

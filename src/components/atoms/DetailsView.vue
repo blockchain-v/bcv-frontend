@@ -1,7 +1,15 @@
 <template>
   <div class="details-info">
-    <p class="section-label">General</p>
-    <div v-for="field in baseFields" :key="field.id">
+    <div class="section-header">
+      <p class="section-label">{{ texts.sectionLabelGeneral }}</p>
+      <CustomButton
+        v-if="isVnf"
+        :button-text="texts.deleteVnfButton"
+        @button-click="handleDelete"
+        theme-class="red"
+      />
+    </div>
+    <div v-for="field in nonEmptyBaseFields" :key="field.id">
       <div class="form-element">
         <label class="detail-label" :for="field.id">{{ field.label }}</label>
         <input
@@ -15,12 +23,12 @@
           :id="`btn-${field.id}`"
           @click="copyToClipboard(field.id)"
         >
-          Copy
+          {{ texts.buttonTextCopy }}
         </button>
       </div>
     </div>
     <hr class="horizontal-divider" />
-    <p class="section-label">Attributes</p>
+    <p class="section-label">{{ texts.sectionLabelAttributes }}</p>
     <div v-for="attr in getAttributes" :key="attr[0]">
       <div class="form-element">
         <label class="detail-label" :for="attr[0]">{{ attr[0] }}</label>
@@ -36,7 +44,7 @@
             :id="`btn-${attr[2]}`"
             @click="copyToClipboard(attr[2])"
           >
-            Copy
+            {{ texts.buttonTextCopy }}
           </button>
         </div>
         <div v-else>
@@ -51,7 +59,7 @@
             :id="`btn-${attr[2]}`"
             @click="copyToClipboard(attr[2])"
           >
-            Copy
+            {{ texts.buttonTextCopy }}
           </button>
         </div>
       </div>
@@ -60,18 +68,45 @@
 </template>
 
 <script>
+import { isNil as _isNil } from "lodash";
+import CustomButton from "./CustomButton";
+import { uiTexts } from "../../constants/texts";
+import { performContractCall } from "../../services/contractCallService";
+import { actionIDs } from "../../constants/interfaceConfig";
+import { apiCall_GET_vnfs } from "../../services/apiCallService";
+import {
+  attachEventListener,
+  EventTypes,
+} from "../../services/eventListenerService";
+
 export default {
   name: "DetailsView",
+  components: {
+    CustomButton,
+  },
   props: {
+    isVnf: {
+      type: Boolean,
+      default: false,
+    },
     item: {
       type: Object,
     },
     baseFields: {
       type: Array,
+      default: () => [],
     },
   },
   mounted() {
     this.resizeTextareas();
+  },
+  data() {
+    return {
+      texts: uiTexts.detailsView,
+      actionIDs,
+      eventTypes: EventTypes,
+      listener: null,
+    };
   },
   methods: {
     containsLineBreak(str) {
@@ -102,7 +137,7 @@ export default {
 
       const originalValue = btn.textContent;
 
-      btn.textContent = "Copied!";
+      btn.textContent = this.texts.buttonTextCopied;
 
       setTimeout(() => {
         btn.textContent = originalValue;
@@ -111,8 +146,33 @@ export default {
     getCopyButton(id) {
       return document.getElementById(`btn-${id}`);
     },
+    async handleDelete() {
+      await this.$store.dispatch("appState/setIsLoading", true);
+      await performContractCall(this.actionIDs.DELETE_VNF, {
+        deploymentId: this.item?.deploymentID,
+      });
+      this.listener = attachEventListener(
+        this.eventTypes.DeletionStatus,
+        this.handleDeletionFeedback
+      );
+    },
+    handleDeletionFeedback() {
+      apiCall_GET_vnfs();
+      this.listener.unsubscribe();
+      setTimeout(() => {
+        this.$store.dispatch("appState/setIsLoading", false);
+      }, 1000);
+    },
   },
   computed: {
+    nonEmptyBaseFields() {
+      if (this.baseFields.length === 0) {
+        return [];
+      }
+      return this.baseFields.filter((field) => {
+        return field.text !== "" && !_isNil(field.text);
+      });
+    },
     getAttributes() {
       let attributes = Object.entries(this.item.attributes);
 
@@ -162,27 +222,42 @@ export default {
   background-color: $green-mint-tulip;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .section-label {
   text-align: left;
   padding-left: 12px;
   font-weight: bold;
 }
 
+.custom-button {
+  position: relative;
+  right: 95px;
+}
+
 .btn-copy {
   background: $green-mint-tulip;
-  border: 1px solid $green-cadetblue;
+  border: 1px solid $green-aquamarine-medium;
   border-radius: 0 10px 10px 0;
   position: absolute;
   width: 60px;
   height: 42px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $green-hover;
+  }
+  &:hover:active {
+    background-color: $green-active;
+  }
 }
 
 .btn-copy.textarea {
   margin-top: 1px;
   height: auto;
-}
-
-.btn-copy:hover {
-  background: $green-cadetblue;
 }
 </style>
