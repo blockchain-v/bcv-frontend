@@ -45,11 +45,7 @@ export default {
   },
   data() {
     return {
-      eventTypes: [
-        EventTypes.DeploymentStatus,
-        EventTypes.RegistrationStatus,
-        EventTypes.UnregistrationStatus,
-      ],
+      eventTypes: EventTypes,
     };
   },
   computed: {

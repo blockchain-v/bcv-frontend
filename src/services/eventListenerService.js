@@ -12,7 +12,10 @@ export const attachEventListener = (eventType, callback) => {
       e = VNFContract.events.RegistrationStatus;
       break;
     case EventTypes.UnregistrationStatus:
-      e = VNFContract.events.UnregistrationStatus; // TODO: define status
+      e = VNFContract.events.UnregistrationStatus;
+      break;
+    case EventTypes.DeletionStatus:
+      e = VNFContract.events.DeletionStatus;
       break;
   }
 
@@ -35,6 +38,8 @@ const getEventMessageSuccess = (eventType, parameters) => {
     case EventTypes.UnregistrationStatus:
       logoutUser();
       return `Unregistration of user ${parameters["user"]} succeeded.`;
+    case EventTypes.DeletionStatus:
+      return `Deletion of VNF succeeded.`;
   }
 };
 
@@ -46,6 +51,8 @@ const getEventMessageFailure = (eventType, parameters) => {
       return `Registration of user ${parameters["user"]} failed.`;
     case EventTypes.UnregistrationStatus:
       return `Unregistration failed.`;
+    case EventTypes.DeletionStatus:
+      return `Deletion of VNF failed.`;
   }
 };
 
@@ -53,4 +60,5 @@ export const EventTypes = {
   RegistrationStatus: 0,
   UnregistrationStatus: 1,
   DeploymentStatus: 2,
+  DeletionStatus: 3,
 };
