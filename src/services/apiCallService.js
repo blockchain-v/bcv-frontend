@@ -40,7 +40,7 @@ const apiCall_POST_token = (payload) => {
     .then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       if (response.status === 200 || response.status === 201) {
-        if(response.data.isRegistered){
+        if (response.data.isRegistered) {
           document.cookie = `token=${response.data.token}; expires=${add(
             new Date(),
             { days: 1 }

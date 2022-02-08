@@ -24,6 +24,18 @@ const uiTexts = {
     configFalse: "(Optional) add configuration",
     configFalseIcon: "+",
   },
+  postVnf: {
+    startFromTemplate: "Start from template",
+    selectTemplateLabel: "Select a VNF Descriptor template",
+    selectTemplateExplanation:
+      "Chose from a number of sample VNFDs also provided on",
+    selectTemplateLink:
+      "https://github.com/openstack/tacker/tree/master/samples/tosca-templates/vnfd",
+    selectTemplateLinkText: "the OpenStack Tacker Github page.",
+    selectTemplateButton: "Confirm",
+    selectTemplateButtonNone: "Close",
+    clearTemplate: "Clear template",
+  },
   home: {
     currentUserAddress: "current user address: ",
     userNotRegistered: {

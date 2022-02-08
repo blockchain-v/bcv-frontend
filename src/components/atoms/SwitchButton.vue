@@ -55,7 +55,7 @@ export default {
 
 .switch-button {
   display: flex;
-  width: 100%;
+  width: fit-content;
   justify-content: flex-start;
 
   .label {

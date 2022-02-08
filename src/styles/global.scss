@@ -27,9 +27,9 @@ body {
 /* Component Styles */
 // TODO
 .container {
-  border-radius: 20px;
+  border-radius: $border-radius;
 }
 
 .item.expanded {
-  border-radius: 20px;
+  border-radius: $border-radius;
 }
