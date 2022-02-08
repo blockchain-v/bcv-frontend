@@ -115,14 +115,6 @@ const vnfActionList = [
       genericParameter: "Enter parameter value...",
     },
   },
-  {
-    id: contractMethodIDs.DELETE_VNF,
-    groupings: [], // TODO groupings attribute (leave empty or refactor to remove, not needed)
-    displayText: "Request Deletion of selected VNF",
-    buttonText: "Delete VNF",
-    infoText: "(deleteVNF) imagine a longer text explanation here",
-    inputPlaceholder: "Enter/paste the ID of the VNF you wish to delete.",
-  },
 ];
 
 const vnfdActionList = [

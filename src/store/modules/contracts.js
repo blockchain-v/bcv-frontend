@@ -18,10 +18,9 @@ const state = {
     [BACKEND_STORE_FIELD_NAMES.ATTRIBUTES]: null,
     [BACKEND_STORE_FIELD_NAMES.RESPONSE]: null,
     [BACKEND_STORE_FIELD_NAMES.CONFIG]: null,
-    /* decided against nesting this in 'ATTRIBUTES' too, because the updating becomes a
+    /* decided against nesting config in 'ATTRIBUTES' too, because the updating becomes a
     pain with the possible combinations of config/no config/params/no params/no attributes */
   },
-  currentVNFToDelete: null, // TODO: refactor away and delete -> use structure like for backend in store
   // DEV only
   currentVNFDetailsID: null, // TODO CLEANUP
 };
@@ -33,9 +32,6 @@ const getters = {
   },
   getUserRegistered() {
     return state.userRegistered;
-  },
-  getCurrentVNFToDelete() {
-    return state.currentVNFToDelete;
   },
   getDeployVnfData() {
     return state[actionIDs.DEPLOY_VNF];
@@ -49,9 +45,6 @@ const actions = {
   },
   setUserRegistered({ commit }, bool) {
     commit("setUserRegistered", bool);
-  },
-  setCurrentVNFToDelete({ commit }, input) {
-    commit("setCurrentVNFToDelete", input);
   },
   setEventNotifications({ commit }, { eventType, notification, message }) {
     commit("setEventNotifications", {
@@ -83,9 +76,6 @@ const mutations = {
   },
   setUserRegistered(state, bool) {
     state.userRegistered = bool;
-  },
-  setCurrentVNFToDelete(state, input) {
-    state.currentVNFToDelete = input;
   },
   setEventNotifications(state, { eventType, notification, message }) {
     state.eventNotifications[eventType] = {

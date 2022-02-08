@@ -36,6 +36,13 @@ const uiTexts = {
     selectTemplateButtonNone: "Close",
     clearTemplate: "Clear template",
   },
+  detailsView: {
+    buttonTextCopy: "Copy",
+    buttonTextCopied: "Copied!",
+    sectionLabelGeneral: "General",
+    sectionLabelAttributes: "Attributes",
+    deleteVnfButton: "Delete VNF",
+  },
   home: {
     currentUserAddress: "current user address: ",
     userNotRegistered: {

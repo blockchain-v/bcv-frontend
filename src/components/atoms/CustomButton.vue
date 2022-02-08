@@ -64,5 +64,17 @@ export default {
     // on "click"
     background-color: $green-active;
   }
+
+  &.red {
+    border-color: $red;
+    background-color: $red-light;
+  }
+  &.red:hover {
+    background-color: $red-hover;
+  }
+  &.red:hover:active {
+    // on "click"
+    background-color: $red-active;
+  }
 }
 </style>
