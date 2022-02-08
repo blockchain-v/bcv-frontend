@@ -9,7 +9,7 @@ const uiTexts = {
   },
   deployVnf: {
     selectionLabel: "Select / paste VNF Descriptor ID",
-    selectionNameLabel: "VNFD Name",
+    selectionIdLabel: "VNFD ID",
     selectionDescriptionLabel: "VNFD Description",
     vnfSpecificationNameLabel: "VNF Name",
     vnfSpecificationNamePlaceholder: "Enter VNF Name...",
