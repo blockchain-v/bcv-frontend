@@ -8,7 +8,7 @@ const uiTexts = {
     warningTextYAML: "Not valid YAML! Unable to parse user input.",
   },
   deployVnf: {
-    selectionLabel: "Select / paste VNF Descriptor ID",
+    selectionLabel: "Select / paste VNF Descriptor Name",
     selectionIdLabel: "VNFD ID",
     selectionDescriptionLabel: "VNFD Description",
     vnfSpecificationNameLabel: "VNF Name",
