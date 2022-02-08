@@ -98,6 +98,7 @@ export default {
   background-color: $green-white;
   color: $vue-darkblue;
   position: fixed;
+  z-index: 20;
   top: 145px;
   right: 100px;
   float: right;
