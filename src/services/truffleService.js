@@ -40,7 +40,7 @@ function registerEventListener(
   callback,
   filter = { filter: { user: [window.web3.eth.defaultAccount] } }
 ) {
-  eventType(filter, callback);
+  return eventType(filter, callback);
 }
 
 export { VNFContract, getDefaultCallParams, registerEventListener, getAccount };

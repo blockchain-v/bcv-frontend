@@ -22,9 +22,17 @@ export default {
       type: Object,
     },
   },
+  data() {
+    return {
+      listener: null,
+    };
+  },
   created() {
     this.performApiCall();
     this.listenToContract();
+  },
+  beforeUnmount() {
+    this.listener.unsubscribe();
   },
   computed: {
     buttonText() {
@@ -36,11 +44,14 @@ export default {
       apiCall_GET_vnfs();
     },
     async listenToContract() {
-      attachEventListener(EventTypes.DeploymentStatus, async (err, event) => {
-        if (event.returnValues.success) {
-          this.performApiCall();
+      this.listener = attachEventListener(
+        EventTypes.DeploymentStatus,
+        async (err, event) => {
+          if (event.returnValues.success) {
+            this.performApiCall();
+          }
         }
-      });
+      );
     },
   },
 };

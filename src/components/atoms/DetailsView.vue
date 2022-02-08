@@ -105,6 +105,7 @@ export default {
       texts: uiTexts.detailsView,
       actionIDs,
       eventTypes: EventTypes,
+      listener: null,
     };
   },
   methods: {
@@ -150,13 +151,14 @@ export default {
       await performContractCall(this.actionIDs.DELETE_VNF, {
         deploymentId: this.item?.deploymentID,
       });
-      attachEventListener(
+      this.listener = attachEventListener(
         this.eventTypes.DeletionStatus,
         this.handleDeletionFeedback
       );
     },
     handleDeletionFeedback() {
       apiCall_GET_vnfs();
+      this.listener.unsubscribe();
       setTimeout(() => {
         this.$store.dispatch("appState/setIsLoading", false);
       }, 1000);
