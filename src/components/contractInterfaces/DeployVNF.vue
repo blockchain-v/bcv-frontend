@@ -6,12 +6,12 @@
         :class="{ 'with-selection': hasVnfdSelected }"
       >
         <p class="f-label">{{ texts.selectionLabel }}</p>
-        <vSelect label="id" :options="vnfdArray" v-model="selectedVnfd" />
+        <vSelect label="name" :options="vnfdArray" v-model="selectedVnfd" />
       </div>
 
       <div class="selection-info" v-if="hasVnfdSelected">
         <p class="f-info-greyed">
-          <b>{{ texts.selectionNameLabel }}:</b> {{ selectedVnfd.name }}
+          <b>{{ texts.selectionIdLabel }}:</b> {{ selectedVnfd.id }}
         </p>
         <p class="f-info-greyed">
           <b>{{ texts.selectionDescriptionLabel }}:</b>
