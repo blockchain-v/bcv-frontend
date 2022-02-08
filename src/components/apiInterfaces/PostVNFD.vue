@@ -20,6 +20,13 @@
       <div class="template-popup-backdrop" v-if="showTemplatePopup"></div>
       <div class="template-popup" v-if="showTemplatePopup">
         <div class="f-label">{{ texts.selectTemplateLabel }}</div>
+        <div class="f-info">
+          {{ texts.selectTemplateExplanation }}<br /><a
+            :href="texts.selectTemplateLink"
+            target="_blank"
+            >{{ texts.selectTemplateLinkText }}</a
+          >
+        </div>
         <vSelect
           label="name"
           :options="vnfdTemplates"
@@ -89,6 +96,7 @@ import {
 import { POST_FIELDNAMES } from "../../constants/http";
 import { TEXT_FORMAT } from "../../constants/global";
 import { uiTexts } from "../../constants/texts";
+import { vnfdTemplates } from "../../constants/vnfds";
 import { isNil as _isNil } from "lodash";
 
 export default {
@@ -127,23 +135,7 @@ export default {
       showTemplatePopup: false,
       selectedTemplate: null,
       selectedTemplateChange: false,
-      vnfdTemplates: [
-        {
-          id: "id1",
-          name: "name 1",
-          vnfd: "vnfd 1",
-        },
-        {
-          id: "id2",
-          name: "name 2",
-          vnfd: "vnfd 1",
-        },
-        {
-          id: "id3",
-          name: "name 3",
-          vnfd: "vnfd 1",
-        },
-      ],
+      vnfdTemplates: vnfdTemplates,
     };
   },
   watch: {
@@ -291,7 +283,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/styles/global.scss";
-$template-popup-width: 40%;
+$template-popup-width: 45%;
 
 .post-vnfd-ui {
   display: flex;
@@ -330,11 +322,16 @@ $template-popup-width: 40%;
       .f-label {
         left: 0;
         text-align: start;
+        margin-bottom: $margin-sm;
+      }
+
+      .f-info {
+        text-align: start;
         margin-bottom: $margin-m;
       }
 
       .custom-button {
-        margin: $margin-m auto $margin-sm;
+        margin: $margin-m auto 0;
       }
     }
 
