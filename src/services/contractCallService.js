@@ -103,7 +103,6 @@ const performContractCall_deployVNF = async () => {
       parameters["attributes"]["config"] = config;
     }
 
-    console.log("APARAPARAM", parameters);
     const deployVNFrequest = VNFContract.methods.deployVNF(
       VNFD_ID,
       JSON.stringify(parameters)

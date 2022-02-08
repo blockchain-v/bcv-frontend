@@ -24,6 +24,13 @@ const uiTexts = {
     configFalse: "(Optional) add configuration",
     configFalseIcon: "+",
   },
+  postVnf: {
+    startFromTemplate: "Start from template",
+    selectTemplateLabel: "Select a VNF Descriptor template",
+    selectTemplateButton: "Confirm",
+    selectTemplateButtonNone: "Close",
+    clearTemplate: "Clear template",
+  },
   home: {
     currentUserAddress: "current user address: ",
     userNotRegistered: {

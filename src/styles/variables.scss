@@ -12,12 +12,18 @@ $font-size-s: 16px;
 $font-size-normal: 20px;
 
 // SPACING
+$margin-xxl: 60px;
+$margin-xl: 50px;
+$margin-l: 40px;
 $margin-m: 30px;
 $margin-sm: 20px;
 $margin-s: 15px;
 $margin-xs: 10px;
 $margin-xxs: 5px;
 $margin-non-flex-self-center: 0 auto;
+
+// GENERAL COMPONENTS
+$border-radius: 20px;
 
 // CONTRACT UIs SHARED VARIABLES
 // for the method-id specific UIs
@@ -48,6 +54,7 @@ $vue-green: #42b983;
 // custom
 // NOTE: some duplicates for colors tied to "events" such as hover, active etc.
 $grey-disabled-dark: #e1e2e3;
+$grey-disabled-alpha: rgba(245, 245, 245, 0.6);
 $grey-disabled: #f5f5f5;
 $green-cadetblue: cadetblue;
 $green-aquamarine-medium: mediumaquamarine;
