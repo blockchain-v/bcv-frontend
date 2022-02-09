@@ -47,9 +47,6 @@ export default {
       this.purgeFromQueue();
     }, 10000);
   },
-  beforeUnmount() {
-    console.log("i got unmounted");
-  },
   computed: {
     isError() {
       return this.payload.isError;

@@ -67,7 +67,6 @@ const mutations = {
     );
   },
   purgeNotification(state, id) {
-    console.log("supposed to purge with id:", id);
     const clone = _cloneDeep(state.apiNotificationQueue);
     _remove(clone, (entry) => {
       return entry.id === id;
@@ -87,6 +86,7 @@ const createApiNotificationEntry = (actionId, isError, body) => {
     actionId,
     isError,
     body,
+    timestamp: Date.now(),
   };
 };
 

@@ -1,85 +1,58 @@
 <template>
-  <div
-    v-if="hasEventNotification && isVisible"
-    class="notification"
-    :class="{ error: isErroneous }"
-  >
-    <div class="button-container">
-      <span class="close" @click="isVisible = false">&times;</span>
+  <div class="notification" :class="{ error: isError, remove: remove }">
+    <div class="button-container" v-if="!remove">
+      <span class="close" @click="handleClose">&times;</span>
     </div>
-    <span :class="{ 'event-error': isErroneous }">
-      {{ eventMessage }}
+    <span
+      class="message title"
+      :class="{ 'event-error': isError }"
+      v-if="!remove"
+    >
+      <b>{{ notificationMessage }}</b
+      ><br />
     </span>
   </div>
 </template>
 
 <script>
-import {
-  attachEventListener,
-  getEventMessage,
-} from "../../services/eventListenerService";
-import { isNil as _isNil } from "lodash";
 export default {
-  name: "EventNotification",
+  name: "EventNotification.vue",
   props: {
-    eventType: {
-      type: Number,
-    },
-    message: {
-      type: String,
+    payload: {
+      // expects event notification object as seen in contracts store
+      type: Object,
+      required: true,
     },
   },
   data() {
     return {
-      isVisible: false,
+      remove: false,
     };
   },
-  async created() {
-    attachEventListener(this.eventType, async (err, e) => {
-      let message = getEventMessage(this.eventType, e.returnValues);
-
-      await this.setEventNotification(e, this.eventType, message);
-
-      this.isVisible = true;
-
-      setTimeout(async () => {
-        this.isVisible = false;
-      }, 10000);
-    });
+  created() {
+    // initiate timer that destroy msg in store -> will resolve entire component
+    setTimeout(() => {
+      this.purgeFromQueue();
+    }, 10000);
   },
   computed: {
-    hasEventNotification() {
-      return this.hasNotifications(this.eventType);
+    isError() {
+      return this.payload.isError;
     },
-    eventNotification() {
-      return this.getEventNotification(this.eventType).notification;
-    },
-    eventMessage() {
-      return this.getEventNotification(this.eventType).message;
-    },
-    isErroneous() {
-      let hasError = !this.getEventNotification(this.eventType).notification
-        .returnValues["success"];
-      console.log("IsErroneous", hasError);
-      return hasError;
+    notificationMessage() {
+      return this.payload.msg;
     },
   },
   methods: {
-    async setEventNotification(e, eventType, message) {
-      await this.$store.dispatch("contracts/setEventNotifications", {
-        eventType: eventType,
-        notification: e,
-        message: message,
-      });
+    handleClose() {
+      this.purgeFromQueue();
     },
-    getEventNotification(eventType) {
-      return this.$store.state.contracts.eventNotifications[eventType];
-    },
-
-    hasNotifications(eventType) {
-      let notifications =
-        this.$store.state.contracts.eventNotifications[eventType];
-      return !_isNil(notifications);
+    purgeFromQueue() {
+      this.remove = true;
+      // allow for the css to resolve the 'remove' class before destroying entry
+      setTimeout(() => {
+        this.$store.commit("contracts/purgeEventNotification", this.payload.id);
+      }, 600);
     },
   },
 };
@@ -98,10 +71,7 @@ export default {
   background-color: $green-white;
   color: $vue-darkblue;
   position: relative;
-  //position: fixed;
   z-index: 20;
-  //top: 145px;
-  //right: 100px;
   float: right;
   margin: 10px;
   padding-top: 10px;
@@ -109,12 +79,32 @@ export default {
   padding-right: 10px;
   padding-bottom: 20px;
   font-size: 14px;
-  font-weight: bold;
   box-shadow: 4px 4px 4px grey;
+  // gives impression of notifications "moving up" when space becomes free
+  transition: all 0.6s ease-out;
+  text-align: start;
+  width: fit-content;
+
+  &.remove {
+    // reduce component completely
+    opacity: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+    // move out of container before componentUnmount to free up space for
+    // potential notifications below to "move up"
+    top: -400px;
+  }
 
   &.error {
     border-color: $red;
     background-color: $red-light;
+  }
+}
+
+.message {
+  &.title {
   }
 }
 

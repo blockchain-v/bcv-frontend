@@ -18,16 +18,16 @@
     </div>
     <Spinner v-if="showLoadingScreen" :lock-background="true" />
     <div class="notification-container">
-      <EventNotification
-        v-for="(eventType, index) in eventTypes"
-        :key="index"
-        :eventType="eventType"
-      />
-      <CallNotification
-        v-for="notification in callNotifications"
+      <div
+        v-for="notification in notifications"
         :key="`notification-${notification.id}`"
-        :payload="notification"
-      />
+      >
+        <EventNotification
+          v-if="isEventNotification(notification)"
+          :payload="notification"
+        />
+        <CallNotification v-else :payload="notification" />
+      </div>
     </div>
     <router-view></router-view>
   </div>
@@ -40,6 +40,12 @@ import Spinner from "./components/atoms/Spinner";
 import EventNotification from "./components/atoms/EventNotification.vue";
 import CallNotification from "./components/atoms/CallNotification";
 import { EventTypes } from "./services/eventListenerService";
+import {
+  attachEventListener,
+  getEventMessage,
+  removeListenerAfterFeedback,
+} from "./services/eventListenerService";
+import { isNil as _isNil } from "lodash";
 
 export default {
   name: "App",
@@ -51,7 +57,14 @@ export default {
   data() {
     return {
       eventTypes: EventTypes,
+      listeners: {},
     };
+  },
+  created() {
+    this.attachEventListeners();
+  },
+  beforeUnmount() {
+    this.removeAllEventListeners();
   },
   computed: {
     ...mapState("appState", {
@@ -59,15 +72,81 @@ export default {
     }),
     ...mapState("contracts", {
       userETHAccount: (state) => state.userETHAccount,
+      eventNotifications: (state) => state.eventNotificationQueue,
     }),
     ...mapState("backend", {
       callNotifications: (state) => state.apiNotificationQueue,
     }),
+    notifications() {
+      const notifications = [
+        ...this.eventNotifications,
+        ...this.callNotifications,
+      ];
+      // have to be sorted by timestamp, else event notifications will always be inserted
+      // above  all notifications. this way they mix
+      return notifications.sort((a, b) => {
+        return a.timestamp - b.timestamp;
+      });
+    },
     showNavigation() {
       return (
         this.$route.name !== routeNames.ROOT &&
         this.$route.name !== routeNames.HOME
       );
+    },
+  },
+  methods: {
+    attachEventListeners() {
+      Object.values(this.eventTypes).forEach((event) => {
+        this.listeners[event] = {
+          id: attachEventListener(event, this.getFeedBackHandler(event)),
+        };
+      });
+    },
+    isEventNotification(notification) {
+      return !_isNil(notification.msg);
+    },
+    getFeedBackHandler(event) {
+      switch (event) {
+        case 0:
+          return this.registrationHandler;
+        case 1:
+          return this.unregistrationHandler;
+        case 2:
+          return this.deploymentHandler;
+        case 3:
+          return this.deletionHandler;
+        default:
+          console.warn("unknown event type", event);
+          return () => {};
+      }
+    },
+    /* I separated the handlers so that only one trigger happens, else all
+    listeners trigger the handler -> 4 triggers */
+    deploymentHandler(error, event) {
+      this.writeToEventNotificationQueue(event);
+    },
+    deletionHandler(error, event) {
+      this.writeToEventNotificationQueue(event);
+    },
+    registrationHandler(error, event) {
+      this.writeToEventNotificationQueue(event);
+    },
+    unregistrationHandler(error, event) {
+      this.writeToEventNotificationQueue(event);
+    },
+    writeToEventNotificationQueue(event) {
+      this.$store.commit("contracts/writeToEventNotificationQueue", {
+        eventType: this.eventTypes[event.event],
+        isError: !event.returnValues["success"],
+        body: event,
+        msg: getEventMessage(this.eventTypes[event.event], event.returnValues),
+      });
+    },
+    removeAllEventListeners() {
+      Object.values(this.listeners).forEach((handler) => {
+        removeListenerAfterFeedback(handler);
+      });
     },
   },
 };

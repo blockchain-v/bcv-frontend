@@ -48,7 +48,7 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: $white;
-  opacity: 0.75;
+  opacity: 0.85;
   &.lock-background {
     // z-index low enough to allow notifications to still overlay the "locked" background
     z-index: 4;
