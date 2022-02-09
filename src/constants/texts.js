@@ -43,6 +43,10 @@ const uiTexts = {
     sectionLabelAttributes: "Attributes",
     deleteVnfButton: "Delete VNF",
   },
+  spinner: {
+    awaitingContract:
+      "Waiting for smart contract feedback. This may take a moment.",
+  },
   home: {
     currentUserAddress: "current user address: ",
     userNotRegistered: {
