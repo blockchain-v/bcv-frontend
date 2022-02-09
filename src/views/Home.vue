@@ -95,15 +95,10 @@ export default {
         this.concludeUserRegistrationCheck();
       }
     },
-    registeredNotification(newVal, oldVal) {
-      if (
-        !_isNil(newVal) &&
-        newVal?.notification.transactionHash !==
-          oldVal?.notification?.transactionHash
-      ) {
+    hasRegisterNotification(newVal) {
+      // react to registration event -> reruns auth check with backend
+      if (newVal === true) {
         this.$store.commit("appState/setRegistrationCheckDone", false);
-        // also compare transactionHashes so sequential userRegister events are still treated
-        // if incoming event detected that fulfils criteria, re-run authentication-flow for token
         this.initiateUserRegistrationCheck();
       }
     },
@@ -112,13 +107,22 @@ export default {
     ...mapState("contracts", {
       ethereumAccount: (state) => state.userETHAccount,
       userRegistered: (state) => state.userRegistered,
-      eventNotifications: (state) => state.eventNotifications,
+      eventNotifications: (state) => state.eventNotificationQueue,
     }),
     ...mapState("appState", {
       nonce: (state) => state.nonce,
       waitingForContractFeedback: (state) => state.waitingForContractFeedback,
       registrationCheckDone: (state) => state.registrationCheckDone,
     }),
+    hasRegisterNotification() {
+      if (this.eventNotifications.length === 0) {
+        return false;
+      }
+      const found = _find(this.eventNotifications, (notification) => {
+        return notification.eventType === this.registrationStatusEvent;
+      });
+      return !!found;
+    },
     showUserNotRegistered() {
       return this.registrationCheckDone && !this.userRegistered;
     },
@@ -127,14 +131,6 @@ export default {
     },
     showUserActionRequired() {
       return !this.registrationCheckDone;
-    },
-    registeredNotification() {
-      if (this?.eventNotifications?.length === 0) {
-        return null;
-      }
-      return _find(this.eventNotifications, (en) => {
-        return en?.notification?.event === "RegistrationStatus";
-      });
     },
   },
   methods: {

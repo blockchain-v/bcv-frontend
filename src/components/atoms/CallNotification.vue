@@ -11,15 +11,25 @@
       <b>{{ notificationMessage }}</b
       ><br />
     </span>
+    <span
+      class="f-info message"
+      :class="{ 'event-error': isError }"
+      v-if="!remove && hasAdditionalMessage"
+      v-html="additionalMessage"
+    ></span>
   </div>
 </template>
 
 <script>
+import { uiTexts } from "../../constants/texts";
+import { actionIDs } from "../../constants/interfaceConfig";
+import { isNil as _isNil } from "lodash";
+
 export default {
-  name: "EventNotification.vue",
+  name: "CallNotification.vue",
   props: {
     payload: {
-      // expects event notification object as seen in contracts store
+      // expects notification object as seen in backend store
       type: Object,
       required: true,
     },
@@ -27,6 +37,8 @@ export default {
   data() {
     return {
       remove: false,
+      texts: uiTexts.callNotification,
+      actionIDs,
     };
   },
   created() {
@@ -40,18 +52,51 @@ export default {
       return this.payload.isError;
     },
     notificationMessage() {
-      return this.payload.msg;
+      return this.isError
+        ? this.texts[this.payload.actionId].error
+        : this.texts[this.payload.actionId].success;
+    },
+    hasAdditionalMessage() {
+      return !_isNil(this.additionalMessage);
+    },
+    additionalMessage() {
+      switch (this.payload.actionId) {
+        case actionIDs.POST_VNFD:
+          return this.isError
+            ? `${this.getErrorMsg()}`
+            : `With VNFD ID ${this.getVnfdId()}`;
+        default:
+          return null;
+      }
     },
   },
   methods: {
     handleClose() {
       this.purgeFromQueue();
     },
+    getVnfdId() {
+      return this.payload?.body?.data?.id;
+    },
+    getErrorMsg() {
+      const errorString = this.payload?.body?.data?.Error;
+      if (!errorString) {
+        return "";
+      }
+      const errorObject = JSON.parse(errorString);
+      if (errorObject?.TackerError) {
+        // received a tacker specific error
+        return `Status code: ${this.payload?.body?.status}<br/>
+        Error type: ${errorObject?.TackerError?.type}<br/>
+        Message: ${errorObject?.TackerError?.message}`;
+      }
+      // cases for e.g. regular non-tacker backend errors
+      return "";
+    },
     purgeFromQueue() {
       this.remove = true;
       // allow for the css to resolve the 'remove' class before destroying entry
       setTimeout(() => {
-        this.$store.commit("contracts/purgeEventNotification", this.payload.id);
+        this.$store.commit("backend/purgeNotification", this.payload.id);
       }, 600);
     },
   },

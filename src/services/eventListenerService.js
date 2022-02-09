@@ -29,6 +29,17 @@ export const getEventMessage = (eventType, parameters) => {
     : getEventMessageFailure(eventType, parameters);
 };
 
+export const removeListenerAfterFeedback = (
+  subscription,
+  manageStore = false
+) => {
+  subscription.unsubscribe();
+  if (manageStore) {
+    store.commit("appState/setIsLoading", false);
+    store.commit("appState/setAwaitingContract", false);
+  }
+};
+
 const getEventMessageSuccess = (eventType, parameters) => {
   switch (eventType) {
     case EventTypes.DeploymentStatus:

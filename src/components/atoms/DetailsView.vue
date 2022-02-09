@@ -76,6 +76,7 @@ import { actionIDs } from "../../constants/interfaceConfig";
 import { apiCall_GET_vnfs } from "../../services/apiCallService";
 import {
   attachEventListener,
+  removeListenerAfterFeedback,
   EventTypes,
 } from "../../services/eventListenerService";
 
@@ -158,9 +159,8 @@ export default {
     },
     handleDeletionFeedback() {
       apiCall_GET_vnfs();
-      this.listener.unsubscribe();
       setTimeout(() => {
-        this.$store.dispatch("appState/setIsLoading", false);
+        removeListenerAfterFeedback(this.listener, true);
       }, 1000);
     },
   },

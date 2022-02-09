@@ -11,6 +11,11 @@
 import { performContractCall } from "../../services/contractCallService";
 import CustomButton from "../atoms/CustomButton";
 import { actionIDs } from "../../constants/interfaceConfig";
+import {
+  attachEventListener,
+  removeListenerAfterFeedback,
+  EventTypes,
+} from "../../services/eventListenerService";
 
 export default {
   name: "UnregisterUser",
@@ -24,11 +29,23 @@ export default {
     return {
       buttonText: "Unregister",
       methodId: actionIDs.UNREGISTER,
+      listener: null,
+      eventTypes: EventTypes,
     };
   },
   methods: {
-    initiateContractCall() {
-      performContractCall(this.methodId);
+    async initiateContractCall() {
+      await this.$store.dispatch("appState/setIsLoading", true);
+      await performContractCall(this.methodId);
+      this.listener = attachEventListener(
+        this.eventTypes.UnregistrationStatus,
+        this.handleUnregisterFeedback
+      );
+    },
+    handleUnregisterFeedback() {
+      setTimeout(() => {
+        removeListenerAfterFeedback(this.listener, true);
+      }, 1000);
     },
   },
 };

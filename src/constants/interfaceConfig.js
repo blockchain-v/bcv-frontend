@@ -97,13 +97,13 @@ const vnfActionList = [
     actionText: "Refresh",
     infoText: "Get a list of your current VNFs",
   },
-  {
-    id: apiCallIDs.GET_VNF_INSTANCE,
-    displayText: "Get VNF",
-    actionText: "Get specific VNF",
-    infoText: "Get information about a specific VNF Descriptor",
-    inputPlaceholder: "VNF ID",
-  },
+  // {
+  //   id: apiCallIDs.GET_VNF_INSTANCE,
+  //   displayText: "Get VNF",
+  //   actionText: "Get specific VNF",
+  //   infoText: "Get information about a specific VNF Descriptor",
+  //   inputPlaceholder: "VNF ID",
+  // },
   {
     id: contractMethodIDs.DEPLOY_VNF,
     groupings: [],
@@ -141,13 +141,13 @@ const vnfdActionList = [
       [BACKEND_STORE_FIELD_NAMES.ATTRIBUTES]: "Enter/Paste the attributes",
     },
   },
-  {
-    id: apiCallIDs.GET_VNFD,
-    displayText: "Get VNFD",
-    actionText: "Get specific VNFD",
-    infoText: "Get information about a specific VNF Descriptor",
-    inputPlaceholder: "VNFD ID",
-  },
+  // {
+  //   id: apiCallIDs.GET_VNFD,
+  //   displayText: "Get VNFD",
+  //   actionText: "Get specific VNFD",
+  //   infoText: "Get information about a specific VNF Descriptor",
+  //   inputPlaceholder: "VNFD ID",
+  // },
 ];
 
 export {

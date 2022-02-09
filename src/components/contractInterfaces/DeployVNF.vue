@@ -95,6 +95,11 @@ import {
 } from "lodash";
 import { TEXT_FORMAT } from "../../constants/global";
 import { uiTexts } from "../../constants/texts";
+import {
+  attachEventListener,
+  removeListenerAfterFeedback,
+  EventTypes,
+} from "../../services/eventListenerService";
 
 const yaml = require("js-yaml");
 
@@ -115,6 +120,8 @@ export default {
       texts: uiTexts.deployVnf,
       textFormat: TEXT_FORMAT,
       addConfig: false,
+      listener: null,
+      eventTypes: EventTypes,
     };
   },
   mounted() {
@@ -219,8 +226,19 @@ export default {
     },
   },
   methods: {
-    initiateContractCall() {
-      performContractCall(this.actionId);
+    async initiateContractCall() {
+      await this.$store.dispatch("appState/setIsLoading", true);
+      await performContractCall(this.actionId);
+      this.listener = attachEventListener(
+        this.eventTypes.DeploymentStatus,
+        this.handleDeploymentFeedback
+      );
+    },
+    handleDeploymentFeedback() {
+      // set timeout for less hectic visuals
+      setTimeout(() => {
+        removeListenerAfterFeedback(this.listener, true);
+      }, 1000);
     },
     handleConfigClick() {
       this.addConfig = !this.addConfig;
