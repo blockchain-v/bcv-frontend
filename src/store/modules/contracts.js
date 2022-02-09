@@ -12,7 +12,6 @@ import { remove as _remove, cloneDeep as _cloneDeep } from "lodash";
 const state = {
   userETHAccount: null,
   userRegistered: false,
-  eventNotifications: [],
   [actionIDs.DEPLOY_VNF]: {
     [BACKEND_STORE_FIELD_NAMES.VNFDID]: null,
     [BACKEND_STORE_FIELD_NAMES.NAME]: null,
@@ -49,13 +48,6 @@ const actions = {
   setUserRegistered({ commit }, bool) {
     commit("setUserRegistered", bool);
   },
-  setEventNotifications({ commit }, { eventType, notification, message }) {
-    commit("setEventNotifications", {
-      eventType: eventType,
-      notification: notification,
-      message: message,
-    });
-  },
   writeToEventNotificationQueue({ commit }, { eventType, isError, body, msg }) {
     commit("writeToEventNotificationQueue", { eventType, isError, body, msg });
   },
@@ -83,12 +75,6 @@ const mutations = {
   },
   setUserRegistered(state, bool) {
     state.userRegistered = bool;
-  },
-  setEventNotifications(state, { eventType, notification, message }) {
-    state.eventNotifications[eventType] = {
-      notification: notification,
-      message: message,
-    };
   },
   writeToEventNotificationQueue(state, { eventType, isError, body, msg }) {
     state.eventNotificationQueue.push(
