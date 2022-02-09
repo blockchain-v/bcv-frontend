@@ -4,7 +4,7 @@
       <span class="close" @click="handleClose">&times;</span>
     </div>
     <span
-      class="message title"
+      class="f-info message title"
       :class="{ 'event-error': isError }"
       v-if="!remove"
     >

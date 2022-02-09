@@ -95,7 +95,7 @@ export default {
         this.concludeUserRegistrationCheck();
       }
     },
-    hasRegisterNotification(newVal, oldVal) {
+    hasRegisterNotification(newVal) {
       // react to registration event -> reruns auth check with backend
       if (newVal === true) {
         this.$store.commit("appState/setRegistrationCheckDone", false);

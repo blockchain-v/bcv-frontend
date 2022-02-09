@@ -64,7 +64,11 @@ export default {
     this.attachEventListeners();
   },
   beforeUnmount() {
-    this.removeAllEventListeners();
+    try {
+      this.removeAllEventListeners();
+    } catch (e) {
+      console.warn("error whilst unsubscribing, refresh page");
+    }
   },
   computed: {
     ...mapState("appState", {

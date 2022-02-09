@@ -4,7 +4,7 @@
       <span class="close" @click="handleClose">&times;</span>
     </div>
     <span
-      class="message title"
+      class="f-info message title"
       :class="{ 'event-error': isError }"
       v-if="!remove"
     >
@@ -12,7 +12,7 @@
       ><br />
     </span>
     <span
-      class="message"
+      class="f-info message"
       :class="{ 'event-error': isError }"
       v-if="!remove && hasAdditionalMessage"
       v-html="additionalMessage"
