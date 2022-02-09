@@ -1,6 +1,7 @@
 /*
 UI texts, nestings are UI components (where possible)
  */
+import { actionIDs } from "./interfaceConfig";
 
 const uiTexts = {
   multilineInput: {
@@ -68,6 +69,12 @@ const uiTexts = {
         "<p>System is waiting for feedback from the Smart Contract on whether <br>" +
         "the user registration process was successful.<br>" +
         "This may take a few moments</p>",
+    },
+  },
+  callNotification: {
+    [actionIDs.POST_VNFD]: {
+      success: "Successfully created VNF Descriptor!",
+      error: "Failed to create VNF Descriptor!",
     },
   },
 };

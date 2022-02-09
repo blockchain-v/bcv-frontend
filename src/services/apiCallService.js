@@ -16,6 +16,15 @@ const buildHeaderWithAuth = (bearerToken) => {
   };
 };
 
+const writeToNotificaitonQueue = (actionId, isError, body) => {
+  // only use for calls where useful to get feedback (data calls)
+  store.commit("backend/writeToApiNotificationQueue", {
+    actionId,
+    isError,
+    body,
+  });
+};
+
 /*
 TODO:
   - CLEANUP log statements with the responses
@@ -90,7 +99,7 @@ const apiCall_POST_vnfd = async (payload) => {
   store.commit("appState/setIsLoading", true);
   const bearerToken = await store.getters["appState/getBearerToken"];
   if (_isNil(bearerToken)) {
-    console.log("no bearertoken, rejecting...");
+    console.warn("no bearertoken, rejecting...");
     return;
   }
   const url = `${BACKEND_URL}/${ENDPOINTS.VNFD}`;
@@ -98,18 +107,24 @@ const apiCall_POST_vnfd = async (payload) => {
   const config = {
     headers: buildHeaderWithAuth(bearerToken),
   };
-  try {
-    await axios.post(url, data, config).then(async (response) => {
+  const id = actionIDs.POST_VNFD;
+
+  axios
+    .post(url, data, config)
+    .then(async (response) => {
       console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
-        actionId: actionIDs.POST_VNFD,
+        actionId: id,
         data: response,
         fieldName: BACKEND_STORE_FIELD_NAMES.RESPONSE,
       });
+      writeToNotificaitonQueue(id, false, response);
+    })
+    .catch((error) => {
+      console.log("error", error.response); // TODO: CLEANUP
+      writeToNotificaitonQueue(id, true, error.response);
     });
-  } catch (e) {
-    console.log(`error whilst performing call to ${url}, error:`, e);
-  }
+
   store.commit("appState/setIsLoading", false);
 };
 

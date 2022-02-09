@@ -23,6 +23,11 @@
         :key="index"
         :eventType="eventType"
       />
+      <CallNotification
+        v-for="notification in callNotifications"
+        :key="`notification-${notification.id}`"
+        :payload="notification"
+      />
     </div>
     <router-view></router-view>
   </div>
@@ -33,12 +38,14 @@ import { routeNames } from "./router";
 import { mapState } from "vuex";
 import Spinner from "./components/atoms/Spinner";
 import EventNotification from "./components/atoms/EventNotification.vue";
+import CallNotification from "./components/atoms/CallNotification";
 import { EventTypes } from "./services/eventListenerService";
 
 export default {
   name: "App",
   components: {
     EventNotification,
+    CallNotification,
     Spinner,
   },
   data() {
@@ -52,6 +59,9 @@ export default {
     }),
     ...mapState("contracts", {
       userETHAccount: (state) => state.userETHAccount,
+    }),
+    ...mapState("backend", {
+      callNotifications: (state) => state.apiNotificationQueue,
     }),
     showNavigation() {
       return (
@@ -104,10 +114,17 @@ export default {
 
   .notification-container {
     visibility: visible;
+    position: fixed;
+    right: 100px;
+    top: 145px;
+    display: flex;
+    flex-direction: column;
+    z-index: 19;
+    align-items: flex-end;
 
     &.show {
       visibility: visible;
-      z-index: 10;
+      z-index: 19;
     }
   }
 }
