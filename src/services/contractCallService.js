@@ -63,32 +63,27 @@ const performContractCall_register = async () => {
       account
     );
     const registerRequest = VNFContract.methods.registerUser(signedAddress);
-    const registerResult = await registerRequest.send(
-      getDefaultCallParams(account)
-    );
-    // TODO: CLEANUP logs
-    console.log("registerUser", registerResult);
+    await registerRequest.send(getDefaultCallParams(account));
   } else {
     console.log("no user account to make call with, rejecting...");
   }
 };
 
-const performContractCall_unregister = async () => {
+const performContractCall_unregister = () => {
   console.log("call for unregister");
   const account = store.getters["contracts/getUserETHAccount"];
   if (!_isNil(account)) {
     const unregisterRequest = VNFContract.methods.unregisterUser();
-    const unregisterResult = await unregisterRequest.send(
-      getDefaultCallParams(account)
-    );
-    // TODO: CLEANUP logs
-    console.log("unregisterUser", unregisterResult);
+    unregisterRequest.send(getDefaultCallParams(account)).catch((error) => {
+      console.warn("unregistration transaction failed with error", error);
+      store.commit("appState/setIsLoading", false);
+    });
   } else {
     console.log("no user account to make call with, rejecting...");
   }
 };
 
-const performContractCall_deployVNF = async () => {
+const performContractCall_deployVNF = () => {
   console.log("call for deployVNF");
   const account = store.getters["contracts/getUserETHAccount"];
   if (!_isNil(account)) {
@@ -112,11 +107,10 @@ const performContractCall_deployVNF = async () => {
       VNFD_ID,
       JSON.stringify(parameters)
     );
-    const deployVNFresult = await deployVNFrequest.send(
-      getDefaultCallParams(account)
-    );
-    // TODO: CLEANUP logs
-    console.log("deployVNF", deployVNFresult);
+    deployVNFrequest.send(getDefaultCallParams(account)).catch((error) => {
+      console.warn("deployment transaction failed with error", error);
+      store.commit("appState/setIsLoading", false);
+    });
   } else {
     console.log("no user account to make call with, rejecting...");
   }
@@ -145,7 +139,5 @@ const performContractCall_deleteVNF = (parameters) => {
 const performContractCall_DEV_getVNFs = async () => {
   console.log("call for DEV_getVNFS");
   const getVNFRequest = VNFContract.methods.getVnfs();
-  const getVNFResult = await getVNFRequest.call();
-  // TODO: CLEANUP logs
-  console.log("getVNFs", getVNFResult);
+  await getVNFRequest.call();
 };
