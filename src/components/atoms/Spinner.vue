@@ -1,5 +1,6 @@
 <template>
   <div class="loading-container" :class="{ 'lock-background': lockBackground }">
+    <div v-if="awaitingContract">AWAIIIIITING YOYOYOYOY</div>
     <PulseLoader />
   </div>
 </template>
@@ -16,6 +17,11 @@ export default {
     lockBackground: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    awaitingContract() {
+      return this.$store.state.appState.awaitingContract;
     },
   },
 };

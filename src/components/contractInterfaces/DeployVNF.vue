@@ -97,6 +97,7 @@ import { TEXT_FORMAT } from "../../constants/global";
 import { uiTexts } from "../../constants/texts";
 import {
   attachEventListener,
+  removeListenerAfterFeedback,
   EventTypes,
 } from "../../services/eventListenerService";
 
@@ -234,9 +235,9 @@ export default {
       );
     },
     handleDeploymentFeedback() {
-      this.listener.unsubscribe();
+      // set timeout for less hectic visuals
       setTimeout(() => {
-        this.$store.dispatch("appState/setIsLoading", false);
+        removeListenerAfterFeedback(this.listener, true);
       }, 1000);
     },
     handleConfigClick() {

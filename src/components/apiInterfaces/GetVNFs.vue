@@ -11,6 +11,7 @@ import { apiCall_GET_vnfs } from "../../services/apiCallService";
 import VNFDetails from "../molecules/VNFDetails.vue";
 import {
   attachEventListener,
+  removeListenerAfterFeedback,
   EventTypes,
 } from "../../services/eventListenerService";
 
@@ -32,7 +33,7 @@ export default {
     this.listenToContract();
   },
   beforeUnmount() {
-    this.listener.unsubscribe();
+    removeListenerAfterFeedback(this.listener);
   },
   computed: {
     buttonText() {

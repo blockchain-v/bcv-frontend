@@ -74,10 +74,16 @@ const performContractCall_unregister = () => {
   const account = store.getters["contracts/getUserETHAccount"];
   if (!_isNil(account)) {
     const unregisterRequest = VNFContract.methods.unregisterUser();
-    unregisterRequest.send(getDefaultCallParams(account)).catch((error) => {
-      console.warn("unregistration transaction failed with error", error);
-      store.commit("appState/setIsLoading", false);
-    });
+    unregisterRequest
+      .send(getDefaultCallParams(account))
+      .then(() => {
+        // only set for showing text if actually confirmed tx in MM
+        store.commit("appState/setAwaitingContract", true);
+      })
+      .catch((error) => {
+        console.warn("unregistration transaction failed with error", error);
+        store.commit("appState/setIsLoading", false);
+      });
   } else {
     console.log("no user account to make call with, rejecting...");
   }
@@ -107,10 +113,16 @@ const performContractCall_deployVNF = () => {
       VNFD_ID,
       JSON.stringify(parameters)
     );
-    deployVNFrequest.send(getDefaultCallParams(account)).catch((error) => {
-      console.warn("deployment transaction failed with error", error);
-      store.commit("appState/setIsLoading", false);
-    });
+    deployVNFrequest
+      .send(getDefaultCallParams(account))
+      .then(() => {
+        // only set for showing text if actually confirmed tx in MM
+        store.commit("appState/setAwaitingContract", true);
+      })
+      .catch((error) => {
+        console.warn("deployment transaction failed with error", error);
+        store.commit("appState/setIsLoading", false);
+      });
   } else {
     console.log("no user account to make call with, rejecting...");
   }
@@ -127,10 +139,16 @@ const performContractCall_deleteVNF = (parameters) => {
     const deleteVNFRequest = VNFContract.methods.deleteVNF(
       parameters.deploymentId
     );
-    deleteVNFRequest.send(getDefaultCallParams(account)).catch((error) => {
-      console.warn("deletion transaction failed with error", error);
-      store.commit("appState/setIsLoading", false);
-    });
+    deleteVNFRequest
+      .send(getDefaultCallParams(account))
+      .then(() => {
+        // only set for showing text if actually confirmed tx in MM
+        store.commit("appState/setAwaitingContract", true);
+      })
+      .catch((error) => {
+        console.warn("deletion transaction failed with error", error);
+        store.commit("appState/setIsLoading", false);
+      });
   } else {
     console.warn("no user account to make call with, rejecting...");
   }

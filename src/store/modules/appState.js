@@ -6,6 +6,9 @@ Store module for managing app state data globally
 const state = {
   isLoading: false,
   waitingForContractFeedback: false,
+  /*this state is specifically for the auth flow in ROOT/HOME, hence a separate
+  generic state for use with user feedback, spinner text etc. */
+  awaitingContract: false,
   registrationCheckDone: false,
   bearerToken: null,
   nonce: null,
@@ -49,6 +52,9 @@ const actions = {
   setRegistrationCheckDone({ commit }, value) {
     commit("setRegistrationCheckDone", value);
   },
+  setAwaitingContract({ commit }, value) {
+    commit("setAwaitingContract", value);
+  },
 };
 
 // mutations
@@ -64,6 +70,9 @@ const mutations = {
   },
   setWaitingForContractFeedback(state, value) {
     state.waitingForContractFeedback = value;
+  },
+  setAwaitingContract(state, value) {
+    state.awaitingContract = value;
   },
   setRegistrationCheckDone(state, value) {
     state.registrationCheckDone = value;

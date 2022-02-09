@@ -13,6 +13,7 @@ import CustomButton from "../atoms/CustomButton";
 import { actionIDs } from "../../constants/interfaceConfig";
 import {
   attachEventListener,
+  removeListenerAfterFeedback,
   EventTypes,
 } from "../../services/eventListenerService";
 
@@ -42,9 +43,8 @@ export default {
       );
     },
     handleUnregisterFeedback() {
-      this.listener.unsubscribe();
       setTimeout(() => {
-        this.$store.dispatch("appState/setIsLoading", false);
+        removeListenerAfterFeedback(this.listener, true);
       }, 1000);
     },
   },

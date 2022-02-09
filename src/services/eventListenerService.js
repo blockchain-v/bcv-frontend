@@ -24,9 +24,21 @@ export const attachEventListener = (eventType, callback) => {
 
 export const getEventMessage = (eventType, parameters) => {
   store.commit("appState/setWaitingForContractFeedback", false);
+  console.log("parameters", parameters);
   return parameters["success"]
     ? getEventMessageSuccess(eventType, parameters)
     : getEventMessageFailure(eventType, parameters);
+};
+
+export const removeListenerAfterFeedback = (
+  subscription,
+  manageStore = false
+) => {
+  subscription.unsubscribe();
+  if (manageStore) {
+    store.commit("appState/setIsLoading", false);
+    store.commit("appState/setAwaitingContract", false);
+  }
 };
 
 const getEventMessageSuccess = (eventType, parameters) => {
