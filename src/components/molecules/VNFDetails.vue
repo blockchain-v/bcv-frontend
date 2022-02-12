@@ -11,7 +11,7 @@
             :item="vnf"
             :baseFields="getBaseFields(vnf)"
             :isVnf="true"
-            :key="`${vnf.id}-details-view`"
+            :key="`${vnf.id}-details-view-${iteration}`"
           />
         </template>
       </Accordion>
@@ -36,6 +36,16 @@ export default {
   components: {
     DetailsView,
     Accordion,
+  },
+  data() {
+    return {
+      iteration: 0,
+    };
+  },
+  watch: {
+    vnfs() {
+      this.iteration += 1;
+    },
   },
   computed: {
     vnfs() {
