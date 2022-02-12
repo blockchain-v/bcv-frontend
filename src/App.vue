@@ -127,19 +127,28 @@ export default {
     },
     /* I separated the handlers so that only one trigger happens, else all
     listeners trigger the handler -> 4 triggers */
-    deploymentHandler(error, event) {
-      this.writeToEventNotificationQueue(event);
+    async deploymentHandler(error, event) {
+      if (event && event.event === "DeploymentStatus") {
+        await this.writeToEventNotificationQueue(event);
+      }
     },
-    deletionHandler(error, event) {
-      this.writeToEventNotificationQueue(event);
+    async deletionHandler(error, event) {
+      if (event && event.event === "DeletionStatus") {
+        await this.writeToEventNotificationQueue(event);
+      }
     },
-    registrationHandler(error, event) {
-      this.writeToEventNotificationQueue(event);
+    async registrationHandler(error, event) {
+      if (event && event.event === "RegistrationStatus") {
+        await this.writeToEventNotificationQueue(event);
+      }
     },
-    unregistrationHandler(error, event) {
-      this.writeToEventNotificationQueue(event);
+    async unregistrationHandler(error, event) {
+      if (event && event.event === "UnregistrationStatus") {
+        await this.writeToEventNotificationQueue(event);
+      }
     },
     writeToEventNotificationQueue(event) {
+      // TODO: fetch error message (if present)
       this.$store.commit("contracts/writeToEventNotificationQueue", {
         eventType: this.eventTypes[event.event],
         isError: !event.returnValues["success"],

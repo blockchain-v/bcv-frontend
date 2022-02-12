@@ -73,3 +73,4 @@ export const EventTypes = {
   DeploymentStatus: 2,
   DeletionStatus: 3,
 };
+
