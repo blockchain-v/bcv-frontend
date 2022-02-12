@@ -43,6 +43,8 @@ const uiTexts = {
     sectionLabelGeneral: "General",
     sectionLabelAttributes: "Attributes",
     deleteVnfButton: "Delete VNF",
+    deleteVnfButtonPendingCreate:
+      "VNF still pending create, unable to delete yet",
   },
   spinner: {
     awaitingContract:

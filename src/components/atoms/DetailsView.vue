@@ -2,12 +2,17 @@
   <div class="details-info">
     <div class="section-header">
       <p class="section-label">{{ texts.sectionLabelGeneral }}</p>
-      <CustomButton
-        v-if="isVnf"
-        :button-text="texts.deleteVnfButton"
-        @button-click="handleDelete"
-        theme-class="red"
-      />
+      <div v-if="isVnf" class="delete-button-container">
+        <div v-if="vnfInCreatePending" class="v-info pending-create-info">
+          {{ texts.deleteVnfButtonPendingCreate }}
+        </div>
+        <CustomButton
+          :button-text="texts.deleteVnfButton"
+          @button-click="handleDelete"
+          theme-class="red"
+          :disabled="vnfInCreatePending"
+        />
+      </div>
     </div>
     <div v-for="field in nonEmptyBaseFields" :key="field.id">
       <div class="form-element">
@@ -68,7 +73,7 @@
 </template>
 
 <script>
-import { isNil as _isNil } from "lodash";
+import { isNil as _isNil, find as _find } from "lodash";
 import CustomButton from "./CustomButton";
 import { uiTexts } from "../../constants/texts";
 import { performContractCall } from "../../services/contractCallService";
@@ -165,6 +170,12 @@ export default {
     },
   },
   computed: {
+    vnfInCreatePending() {
+      const statusField = _find(this.baseFields, (field) => {
+        return field.label === "Status";
+      });
+      return statusField.text === "PENDING_CREATE";
+    },
     nonEmptyBaseFields() {
       if (this.baseFields.length === 0) {
         return [];
@@ -234,9 +245,12 @@ export default {
   font-weight: bold;
 }
 
-.custom-button {
+.delete-button-container {
   position: relative;
   right: 95px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .btn-copy {
