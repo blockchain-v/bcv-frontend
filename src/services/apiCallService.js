@@ -25,13 +25,6 @@ const writeToNotificaitonQueue = (actionId, isError, body) => {
   });
 };
 
-/*
-TODO:
-  - CLEANUP log statements with the responses
-  - TODO: large parts of the calls are generic, there surely is a way to generalize and reduce
-      duplicate code
- */
-
 // --------------- API CALLS -------------------------------------------------------------------------------------------
 // AUTHENTICATION
 const apiCall_POST_token = (payload) => {
@@ -47,7 +40,6 @@ const apiCall_POST_token = (payload) => {
   axios
     .post(url, data, config)
     .then(async (response) => {
-      console.log(`response for url ${url}, with response`, response);
       if (response.status === 200 || response.status === 201) {
         if (response.data.isRegistered) {
           document.cookie = `token=${response.data.token}; expires=${add(
@@ -84,7 +76,6 @@ const apiCall_PUT_token = async (address) => {
   };
   try {
     axios.put(url, data, config).then(async (response) => {
-      console.log(`response for url ${url}, with response`, response);
       if (response.status === 201) {
         store.commit("appState/setNonce", response.data.nonce);
       }
@@ -95,6 +86,26 @@ const apiCall_PUT_token = async (address) => {
 };
 
 // DATA CALLS
+const apiCall_GET_errorMsg = async (params) => {
+  store.commit("appState/setIsLoading", true);
+  const bearerToken = await store.getters["appState/getBearerToken"];
+  if (_isNil(bearerToken)) {
+    console.warn("no bearertoken, rejecting...");
+    return;
+  }
+  const url = `${BACKEND_URL}/${ENDPOINTS.ERROR_MSG}`;
+  const config = {
+    headers: buildHeaderWithAuth(bearerToken),
+    params,
+  };
+  try {
+    const response = await axios.get(url, config);
+    return response.data;
+  } catch (error) {
+    console.log(`error whilst performing call to ${url}, error:`, error);
+  }
+};
+
 const apiCall_POST_vnfd = async (payload) => {
   store.commit("appState/setIsLoading", true);
   const bearerToken = await store.getters["appState/getBearerToken"];
@@ -112,7 +123,6 @@ const apiCall_POST_vnfd = async (payload) => {
   axios
     .post(url, data, config)
     .then(async (response) => {
-      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         actionId: id,
         data: response,
@@ -121,7 +131,6 @@ const apiCall_POST_vnfd = async (payload) => {
       writeToNotificaitonQueue(id, false, response);
     })
     .catch((error) => {
-      console.log("error", error.response); // TODO: CLEANUP
       writeToNotificaitonQueue(id, true, error.response);
     });
 
@@ -141,7 +150,6 @@ const apiCall_GET_vnfds = async () => {
   };
   try {
     await axios.get(url, config).then(async (response) => {
-      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         actionId: actionIDs.GET_VNFDS,
         data: response,
@@ -167,7 +175,6 @@ const apiCall_GET_vnfd = async (vnfdId) => {
   };
   try {
     await axios.get(url, config).then(async (response) => {
-      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         actionId: actionIDs.GET_VNFD,
         data: response,
@@ -193,7 +200,6 @@ const apiCall_GET_vnfs = async () => {
   };
   try {
     await axios.get(url, config).then(async (response) => {
-      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         actionId: actionIDs.GET_VNFS,
         data: response,
@@ -219,7 +225,6 @@ const apiCall_GET_vnf = async (vnfId) => {
   };
   try {
     await axios.get(url, config).then(async (response) => {
-      console.log(`response for url ${url}, with response`, response);
       store.commit("backend/setApiCallData", {
         actionId: actionIDs.GET_VNF_INSTANCE,
         data: response,
@@ -240,4 +245,5 @@ export {
   apiCall_GET_vnfd,
   apiCall_GET_vnfs,
   apiCall_GET_vnf,
+  apiCall_GET_errorMsg,
 };

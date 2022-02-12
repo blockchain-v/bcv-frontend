@@ -11,19 +11,19 @@
       <b>{{ notificationMessage }}</b
       ><br />
     </span>
-    <span
-      class="f-info message"
-      :class="{ 'event-error': isError }"
-      v-if="!remove && hasAdditionalMessage"
-      v-html="additionalMessage"
-    ></span>
+    <div v-if="!remove && hasAdditionalMessage">
+      <span
+        class="f-info message"
+        :class="{ 'event-error': isError }"
+        v-for="(msg, index) in additionalMessage"
+        :key="index"
+        >{{ msg }}<br
+      /></span>
+    </div>
   </div>
 </template>
 
 <script>
-
-// TODO: expecting dict type instead of string does not render message properly
-
 import { uiTexts } from "../../constants/texts";
 import { actionIDs } from "../../constants/interfaceConfig";
 import { isNil as _isNil } from "lodash";
@@ -66,8 +66,8 @@ export default {
       switch (this.payload.actionId) {
         case actionIDs.POST_VNFD:
           return this.isError
-            ? `${this.getErrorMsg()}`
-            : `With VNFD ID ${this.getVnfdId()}`;
+            ? this.getErrorMsg()
+            : [`With VNFD ID ${this.getVnfdId()}`];
         default:
           return null;
       }
@@ -88,9 +88,11 @@ export default {
       const errorObject = JSON.parse(errorString);
       if (errorObject?.TackerError) {
         // received a tacker specific error
-        return `Status code: ${this.payload?.body?.status}<br/>
-        Error type: ${errorObject?.TackerError?.type}<br/>
-        Message: ${errorObject?.TackerError?.message}`;
+        const messages = [];
+        messages.push(`Status code: ${this.payload?.body?.status}`);
+        messages.push(`Error type: ${errorObject?.TackerError?.type}`);
+        messages.push(`Message: ${errorObject?.TackerError?.message}`);
+        return messages;
       }
       // cases for e.g. regular non-tacker backend errors
       return "";

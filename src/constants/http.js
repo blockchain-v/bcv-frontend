@@ -10,6 +10,12 @@ const ENDPOINTS = {
   TOKEN: "token",
   VNFD: "vnfd",
   VNF: "vnf",
+  ERROR_MSG: "errormsg",
+};
+
+const QUERY_PARAMS = {
+  VNFID: "vnfid",
+  DEPLOYMENT_ID: "deploymentId",
 };
 
 const POST_FIELDNAMES = {
@@ -23,4 +29,10 @@ const POST_FIELDNAMES = {
   },
 };
 
-export { BACKEND_URL, DEFAULT_HEADERS, ENDPOINTS, POST_FIELDNAMES };
+export {
+  BACKEND_URL,
+  DEFAULT_HEADERS,
+  ENDPOINTS,
+  POST_FIELDNAMES,
+  QUERY_PARAMS,
+};

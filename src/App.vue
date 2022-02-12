@@ -47,6 +47,8 @@ import {
   removeListenerAfterFeedback,
 } from "./services/eventListenerService";
 import { isNil as _isNil } from "lodash";
+import { apiCall_GET_errorMsg } from "./services/apiCallService";
+import { QUERY_PARAMS } from "./constants/http";
 
 export default {
   name: "App",
@@ -58,6 +60,7 @@ export default {
   data() {
     return {
       eventTypes: EventTypes,
+      queryParams: QUERY_PARAMS,
       listeners: {},
     };
   },
@@ -127,33 +130,51 @@ export default {
           return () => {};
       }
     },
+    logEvent(event) {
+      // required as it (somehow) prevents the handlers from being called 4 times. not sure why that happens
+      console.log("e:", event);
+    },
     /* I separated the handlers so that only one trigger happens, else all
     listeners trigger the handler -> 4 triggers */
     async deploymentHandler(error, event) {
       if (event && event.event === "DeploymentStatus") {
-        await this.writeToEventNotificationQueue(event);
+        this.logEvent(event);
+        const params = {
+          [QUERY_PARAMS.DEPLOYMENT_ID]: event.returnValues.deploymentId,
+        };
+        await this.writeToEventNotificationQueue(event, params);
       }
     },
     async deletionHandler(error, event) {
       if (event && event.event === "DeletionStatus") {
+        this.logEvent(event);
         await this.writeToEventNotificationQueue(event);
       }
     },
     async registrationHandler(error, event) {
       if (event && event.event === "RegistrationStatus") {
+        this.logEvent(event);
         await this.writeToEventNotificationQueue(event);
       }
     },
     async unregistrationHandler(error, event) {
       if (event && event.event === "UnregistrationStatus") {
+        this.logEvent(event);
         await this.writeToEventNotificationQueue(event);
       }
     },
-    writeToEventNotificationQueue(event) {
-      // TODO: fetch error message (if present)
+    async writeToEventNotificationQueue(event, params = null) {
+      let errorMsg = null;
+      if (!event.returnValues["success"] && params) {
+        // if failure and for a call that treats those (has params) grab error message from backend
+        const response = await apiCall_GET_errorMsg(params);
+        errorMsg = response.message;
+      }
+
       this.$store.commit("contracts/writeToEventNotificationQueue", {
         eventType: this.eventTypes[event.event],
         isError: !event.returnValues["success"],
+        errorMsg,
         body: event,
         msg: getEventMessage(this.eventTypes[event.event], event.returnValues),
       });
