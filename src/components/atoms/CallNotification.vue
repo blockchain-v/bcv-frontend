@@ -21,6 +21,9 @@
 </template>
 
 <script>
+
+// TODO: expecting dict type instead of string does not render message properly
+
 import { uiTexts } from "../../constants/texts";
 import { actionIDs } from "../../constants/interfaceConfig";
 import { isNil as _isNil } from "lodash";
