@@ -151,7 +151,6 @@ export default {
       }
     },
     showTemplatePopup(newVal) {
-      console.log("show popup:", newVal);
       if (newVal === false) {
         if (this.selectedTemplateChange) {
           // selectedTemplate has actually changed -> write to textarea

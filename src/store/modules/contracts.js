@@ -23,8 +23,6 @@ const state = {
     pain with the possible combinations of config/no config/params/no params/no attributes */
   },
   eventNotificationQueue: [],
-  // DEV only
-  currentVNFDetailsID: null, // TODO CLEANUP
 };
 
 // getters
@@ -48,8 +46,17 @@ const actions = {
   setUserRegistered({ commit }, bool) {
     commit("setUserRegistered", bool);
   },
-  writeToEventNotificationQueue({ commit }, { eventType, isError, body, msg }) {
-    commit("writeToEventNotificationQueue", { eventType, isError, body, msg });
+  writeToEventNotificationQueue(
+    { commit },
+    { eventType, isError, errorMsg, body, msg }
+  ) {
+    commit("writeToEventNotificationQueue", {
+      eventType,
+      isError,
+      errorMsg,
+      body,
+      msg,
+    });
   },
   purgeEventNotification({ commit }, id) {
     commit("purgeEventNotification", id);
@@ -76,13 +83,15 @@ const mutations = {
   setUserRegistered(state, bool) {
     state.userRegistered = bool;
   },
-  writeToEventNotificationQueue(state, { eventType, isError, body, msg }) {
+  writeToEventNotificationQueue(
+    state,
+    { eventType, isError, errorMsg, body, msg }
+  ) {
     state.eventNotificationQueue.push(
-      createEventNotificationEntry(eventType, isError, body, msg)
+      createEventNotificationEntry(eventType, isError, errorMsg, body, msg)
     );
   },
   purgeEventNotification(state, id) {
-    console.log("supposed to purge with id:", id);
     const clone = _cloneDeep(state.eventNotificationQueue);
     _remove(clone, (entry) => {
       return entry.id === id;
@@ -96,18 +105,21 @@ const mutations = {
   setContractCallData(state, { actionId, data, fieldName }) {
     state[actionId][fieldName] = data;
   },
-  // DEV only
-  setCurrentVNFDetailsID(state, id) {
-    state.currentVNFDetailsID = id;
-  },
 };
 
 // helpers
-const createEventNotificationEntry = (eventType, isError, body, msg) => {
+const createEventNotificationEntry = (
+  eventType,
+  isError,
+  errorMsg,
+  body,
+  msg
+) => {
   return {
     id: uuidv4(),
     eventType,
     isError,
+    errorMsg,
     body,
     msg,
     timestamp: Date.now(),

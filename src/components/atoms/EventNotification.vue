@@ -11,6 +11,14 @@
       <b>{{ notificationMessage }}</b
       ><br />
     </span>
+    <span
+      class="f-info message"
+      :class="{ 'event-error': isError }"
+      v-if="!remove && errorMessage"
+    >
+      {{ errorMessage }}
+      ><br />
+    </span>
   </div>
 </template>
 
@@ -42,6 +50,9 @@ export default {
     },
     notificationMessage() {
       return this.payload.msg;
+    },
+    errorMessage() {
+      return this.payload.errorMsg;
     },
   },
   methods: {
