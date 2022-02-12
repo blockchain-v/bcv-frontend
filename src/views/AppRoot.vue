@@ -39,7 +39,8 @@ export default {
       return getToken();
     },
     showSpinner() {
-      return this.token && !this.ethereumAccountIsKnown;
+      // return this.token && !this.ethereumAccountIsKnown;
+      return false;
     },
     ethereumAccount() {
       return this.$store.state.contracts.userETHAccount;
@@ -53,8 +54,6 @@ export default {
   },
   methods: {
     async performAccountCheck() {
-      this.$store.dispatch("appState/setIsLoading", true);
-
       if (this.ethereumAccount) {
         /*
           catch case where you have an account, but manipulate the URL to be invalid
@@ -80,8 +79,6 @@ export default {
           }
         });
       }
-
-      this.$store.dispatch("appState/setIsLoading", false);
     },
     navigateToHome() {
       if (!this.token) {
@@ -104,7 +101,9 @@ export default {
         });
     },
     connectMetaMask() {
-      window.ethereum.request({ method: "eth_requestAccounts" });
+      window.ethereum
+        .request({ method: "eth_requestAccounts" })
+        .catch((e) => console.log(e));
     },
   },
 };

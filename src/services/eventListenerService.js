@@ -40,6 +40,12 @@ export const removeListenerAfterFeedback = (
   }
 };
 
+export const clearSubscriptions = () => {
+  // removes all existing subscriptions on web3
+  window.web3.eth.clearSubscriptions();
+  return true;
+};
+
 const getEventMessageSuccess = (eventType, parameters) => {
   switch (eventType) {
     case EventTypes.DeploymentStatus:
@@ -73,4 +79,3 @@ export const EventTypes = {
   DeploymentStatus: 2,
   DeletionStatus: 3,
 };
-

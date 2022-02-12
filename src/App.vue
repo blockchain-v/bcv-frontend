@@ -43,6 +43,7 @@ import { EventTypes } from "./services/eventListenerService";
 import {
   attachEventListener,
   getEventMessage,
+  clearSubscriptions,
   removeListenerAfterFeedback,
 } from "./services/eventListenerService";
 import { isNil as _isNil } from "lodash";
@@ -61,6 +62,7 @@ export default {
     };
   },
   created() {
+    clearSubscriptions();
     this.attachEventListeners();
   },
   beforeUnmount() {
