@@ -64,13 +64,14 @@ export default {
       listeners: {},
     };
   },
-  created() {
-    clearSubscriptions();
+  async created() {
+    await clearSubscriptions();
     this.attachEventListeners();
   },
-  beforeUnmount() {
+  async beforeUnmount() {
     try {
       this.removeAllEventListeners();
+      await clearSubscriptions();
     } catch (e) {
       console.warn("error whilst unsubscribing, refresh page");
     }
