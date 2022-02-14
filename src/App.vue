@@ -46,9 +46,24 @@ import {
   clearSubscriptions,
   removeListenerAfterFeedback,
 } from "./services/eventListenerService";
-import { isNil as _isNil } from "lodash";
+import { isNil as _isNil, debounce as _debounce } from "lodash";
 import { apiCall_GET_errorMsg } from "./services/apiCallService";
 import { QUERY_PARAMS } from "./constants/http";
+
+/*
+NOTE:
+we had major trouble to getting the web3 unsubscribe functionality to work
+for us when developing and initializing / removing the subscriptions in the lifecycle
+hooks mounted/beforeUnmount. However, this is in our opinion the location where such
+management should happen, as it affects the entire application and app is the outermost
+component.
+The trouble we faced is not entirely clear to us, as we were unable to pinpoint the exact
+cause. The issue revealed itself when the callback for a SC event would trigger multiple
+times, leading multiple notifications per event which is obviously undesirable.
+We finally settled with what you see here: trying to manage the subscriptions in the lifecycle
+hooks but as a fallback also debouncing the method responsible for creating the notifications,
+such that even if the callback gets spammed, we only get one notification.
+*/
 
 export default {
   name: "App",
@@ -64,7 +79,7 @@ export default {
       listeners: {},
     };
   },
-  async created() {
+  async mounted() {
     await clearSubscriptions();
     this.attachEventListeners();
   },
@@ -131,15 +146,10 @@ export default {
           return () => {};
       }
     },
-    logEvent(event) {
-      // required as it (somehow) prevents the handlers from being called 4 times. not sure why that happens
-      console.log("e:", event);
-    },
     /* I separated the handlers so that only one trigger happens, else all
     listeners trigger the handler -> 4 triggers */
     async deploymentHandler(error, event) {
       if (event && event.event === "DeploymentStatus") {
-        this.logEvent(event);
         const params = {
           [QUERY_PARAMS.DEPLOYMENT_ID]: event.returnValues.deploymentId,
         };
@@ -148,24 +158,25 @@ export default {
     },
     async deletionHandler(error, event) {
       if (event && event.event === "DeletionStatus") {
-        this.logEvent(event);
         await this.writeToEventNotificationQueue(event);
       }
     },
     async registrationHandler(error, event) {
       if (event && event.event === "RegistrationStatus") {
-        this.logEvent(event);
         await this.writeToEventNotificationQueue(event);
       }
     },
     async unregistrationHandler(error, event) {
       if (event && event.event === "UnregistrationStatus") {
-        this.logEvent(event);
         await this.writeToEventNotificationQueue(event);
       }
     },
-    async writeToEventNotificationQueue(event, params = null) {
+    writeToEventNotificationQueue: _debounce(async function (
+      event,
+      params = null
+    ) {
       let errorMsg = null;
+
       if (!event.returnValues["success"] && params) {
         // if failure and for a call that treats those (has params) grab error message from backend
         const response = await apiCall_GET_errorMsg(params);
@@ -180,6 +191,7 @@ export default {
         msg: getEventMessage(this.eventTypes[event.event], event.returnValues),
       });
     },
+    1000),
     removeAllEventListeners() {
       Object.values(this.listeners).forEach((handler) => {
         removeListenerAfterFeedback(handler);

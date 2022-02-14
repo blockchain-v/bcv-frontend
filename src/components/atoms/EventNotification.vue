@@ -39,7 +39,6 @@ export default {
   },
   created() {
     // initiate timer that destroy msg in store -> will resolve entire component
-    console.log("payload: ", this.payload.body);
     setTimeout(() => {
       this.purgeFromQueue();
     }, 10000);
