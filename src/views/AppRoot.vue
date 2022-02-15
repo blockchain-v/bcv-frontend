@@ -24,7 +24,7 @@ import { routeNames } from "../router";
 import { getToken } from "../services/appService";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { getAccount } from "../services/truffleService";
-import {uiTexts} from "../constants/texts";
+import { uiTexts } from "../constants/texts";
 
 export default {
   name: "AppRoot",
@@ -34,8 +34,8 @@ export default {
   },
   data() {
     return {
-      texts: uiTexts.appRoot
-    }
+      texts: uiTexts.appRoot,
+    };
   },
   computed: {
     token() {
