@@ -8,6 +8,17 @@ const uiTexts = {
     warningTextJSON: "Not valid JSON! Unable to apply pretty formatting.",
     warningTextYAML: "Not valid YAML! Unable to parse user input.",
   },
+  appRoot: {
+    noMMTitle: "No Ethereum Account Detected",
+    MMActionText:
+      "Please use MetaMask to set up a connection with an account<br/><br/>" +
+      "The MetaMask extension should open automatically. If it does not, press<br/>" +
+      "the button below",
+    MMActionWarning:
+      "Please note, that due to a current issue with the MetaMask extension you<br/>" +
+      "may have to manually open MetaMask and perform the connection. Once done<br/>" +
+      "you then may have to refresh the page.",
+  },
   deployVnf: {
     selectionLabel: "Select / paste VNF Descriptor Name",
     selectionIdLabel: "VNFD ID",
