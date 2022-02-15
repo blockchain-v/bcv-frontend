@@ -24,21 +24,22 @@ yarn lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Contract Management
-Put your contracts into `src/truffle/contracts`. To compile `cd` into
-`src/truffle` and run
-```
-truffle compile
-```
+The Smart Contract lives in a separate repository and has to be considered an external component, especially
+once deployed to a net / testnet. In order to access the available calls, the contract's `abi` has to be
+present in this repository. The file is to be located under `src/contract/abi/fileName.json`.
 
-After successful compilation, run migration to deploy the contracts
-```
-truffle migrate --reset
-```
-The `--reset` flag will make sure the contracts are fully migrated even if previous
-versions are already present on the network.
+This abi has to be updated manually, whenever changes are made to the contract.
 
-For local development simply open up Ganache with Quickstart. Alternatively, 
-create a workspace in Ganache and import the `truffle-config.js` for more detailed
-info within Ganache.
+The contract address can not necessarily be reliably pulled from the abi (e.g, abi only gets updated when
+changes are made to the contract, but simply re-deploying to contract does only alter the address within the
+abi). To avoid having to manually replace the abi whenever the contract is redeployed, we have provided an
+.env variable `VUE_APP_CONTRACT_ADDRESS` for a more convenient way of communicating contract address changes
+to the application.
 
-// TODO: how to when deployed etc.
+## Environment Variables
+This repository requires two environment variables to be set in the .env file:
+* VUE_APP_BACKEND_URL=http(s)://whatever-address-and-port.com/api/v1/bcv
+* VUE_APP_CONTRACT_ADDRESS=0xC5......
+
+Note once again, that the contract address provided through this variable is utilized and not the one present
+in the contract abi.
