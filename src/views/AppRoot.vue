@@ -4,18 +4,15 @@
       <PulseLoader />
     </div>
     <div v-else-if="!ethereumAccountIsKnown" class="container">
-      <h1 class="title">No Ethereum Account Detected</h1>
-      <p>Please use MetaMask to set up a connection with an account</p>
-      <p>
-        The MetaMask extension should open automatically. If it does not, press
-        the button below
-      </p>
+      <h1 class="title">{{ texts.noMMTitle }}</h1>
+      <p v-html="texts.MMActionText"></p>
       <div class="button-container">
         <CustomButton
           @button-click="connectMetaMask"
           button-text="Connect to Metamask"
         />
       </div>
+      <p v-html="texts.MMActionWarning"></p>
     </div>
   </div>
 </template>
@@ -27,12 +24,18 @@ import { routeNames } from "../router";
 import { getToken } from "../services/appService";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { getAccount } from "../services/truffleService";
+import { uiTexts } from "../constants/texts";
 
 export default {
   name: "AppRoot",
   components: {
     CustomButton,
     PulseLoader,
+  },
+  data() {
+    return {
+      texts: uiTexts.appRoot,
+    };
   },
   computed: {
     token() {
@@ -101,6 +104,9 @@ export default {
         });
     },
     connectMetaMask() {
+      // NOTE: https://github.com/MetaMask/metamask-extension/issues/9407
+      // this is a long-standing issue with MM that breaks on-boarding flows everywhere, have not found a way around it
+      // and essentially just telling users to reload the page once connected.
       window.ethereum
         .request({ method: "eth_requestAccounts" })
         .catch((e) => console.log(e));
