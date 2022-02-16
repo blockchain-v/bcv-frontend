@@ -150,7 +150,7 @@ export default {
     listeners trigger the handler -> 4 triggers */
     async deploymentHandler(error, event) {
       if (event && event.event === "DeploymentStatus") {
-        console.log('rec listener', new Date().toISOString());
+        console.log("rec listener", new Date().toISOString());
         const params = {
           [QUERY_PARAMS.DEPLOYMENT_ID]: event.returnValues.deploymentId,
         };
@@ -159,6 +159,7 @@ export default {
     },
     async deletionHandler(error, event) {
       if (event && event.event === "DeletionStatus") {
+        console.log("rec listener", new Date().toISOString());
         await this.writeToEventNotificationQueue(event);
       }
     },

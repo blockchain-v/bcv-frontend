@@ -113,11 +113,11 @@ const performContractCall_deployVNF = () => {
       VNFD_ID,
       JSON.stringify(parameters)
     );
-    console.log('before send', new Date().toISOString());
+    console.log("before send", new Date().toISOString());
     deployVNFrequest
       .send(getDefaultCallParams(account))
       .then((res) => {
-        console.log('contract response ', res, new Date().toISOString())
+        console.log("contract response", res, new Date().toISOString());
         // only set for showing text if actually confirmed tx in MM
         store.commit("appState/setAwaitingContract", true);
       })
@@ -141,10 +141,12 @@ const performContractCall_deleteVNF = (parameters) => {
     const deleteVNFRequest = VNFContract.methods.deleteVNF(
       parameters.deploymentId
     );
+    console.log("before send", new Date().toISOString());
     deleteVNFRequest
       .send(getDefaultCallParams(account))
-      .then(() => {
+      .then((res) => {
         // only set for showing text if actually confirmed tx in MM
+        console.log("contract response", res, new Date().toISOString());
         store.commit("appState/setAwaitingContract", true);
       })
       .catch((error) => {
