@@ -113,9 +113,11 @@ const performContractCall_deployVNF = () => {
       VNFD_ID,
       JSON.stringify(parameters)
     );
+    console.log('before send', new Date().toISOString());
     deployVNFrequest
       .send(getDefaultCallParams(account))
-      .then(() => {
+      .then((res) => {
+        console.log('contract response ', res, new Date().toISOString())
         // only set for showing text if actually confirmed tx in MM
         store.commit("appState/setAwaitingContract", true);
       })
