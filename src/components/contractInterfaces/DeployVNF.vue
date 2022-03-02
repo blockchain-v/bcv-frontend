@@ -125,7 +125,7 @@ export default {
     };
   },
   mounted() {
-    this.fetchVnfdsIfMissing();
+    this.fetchVnfds();
   },
   watch: {
     selectedVnfd(newVal) {
@@ -251,11 +251,8 @@ export default {
         });
       }
     },
-    fetchVnfdsIfMissing() {
-      /* if call to api has not been made yet (state -> null), perform call */
-      if (_isNil(this.vnfds.response)) {
-        apiCall_GET_vnfds();
-      }
+    fetchVnfds() {
+      apiCall_GET_vnfds();
     },
     scanForVnfdParams() {
       const params = [];
