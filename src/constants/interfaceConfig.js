@@ -76,7 +76,7 @@ const homeActionList = [
     groupings: [],
     displayText: "Register as new user",
     actionText: "Register",
-    infoText: "(register) imagine a longer text explanation here",
+    infoText: "Register a new user using the currently active address",
   },
 ];
 
@@ -86,7 +86,7 @@ const userActionList = [
     groupings: [],
     displayText: "Unregister current user",
     buttonText: "Unregister",
-    infoText: "(unregister) imagine a longer text explanation here",
+    infoText: "Remove the currently active user from the BCV system",
   },
 ];
 

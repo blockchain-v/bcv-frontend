@@ -28,8 +28,7 @@
     <div v-else-if="actionId === actionIDs.UNREGISTER">
       <UnregisterUser :interface-specification="actionUISpecification" />
     </div>
-    <!--    TODO-->
-    <div v-else>TODO: Error Page or smth.</div>
+    <div v-else>Oops, something went wrong!</div>
   </div>
 </template>
 
