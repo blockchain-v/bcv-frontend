@@ -154,7 +154,6 @@ const performContractCall_deleteVNF = (parameters) => {
   }
 };
 
-// TODO: Cleanup or uncomment?
 const performContractCall_DEV_getVNFs = async () => {
   console.log("call for DEV_getVNFS");
   const getVNFRequest = VNFContract.methods.getVnfs();
