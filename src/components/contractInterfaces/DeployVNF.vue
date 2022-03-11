@@ -125,7 +125,7 @@ export default {
     };
   },
   mounted() {
-    this.fetchVnfdsIfMissing();
+    this.fetchVnfds();
   },
   watch: {
     selectedVnfd(newVal) {
@@ -143,9 +143,6 @@ export default {
   computed: {
     ...mapState("backend", {
       vnfds: (state) => state[actionIDs.GET_VNFDS],
-      /* TODO: (maybe/low prio) consider to insert a field which is a combination of
-          id & name -> do in computed property -> would make 'search' in selector
-          more useful */
     }),
     ...mapState("contracts", {
       deployVnfState: (state) => state[actionIDs.DEPLOY_VNF],
@@ -251,11 +248,8 @@ export default {
         });
       }
     },
-    fetchVnfdsIfMissing() {
-      /* if call to api has not been made yet (state -> null), perform call */
-      if (_isNil(this.vnfds.response)) {
-        apiCall_GET_vnfds();
-      }
+    fetchVnfds() {
+      apiCall_GET_vnfds();
     },
     scanForVnfdParams() {
       const params = [];
@@ -279,7 +273,6 @@ export default {
         // return empty
         return params;
       }
-      console.log("jsonified yaml.", attributesObject); // TODO CLEANUP
 
       /*
       2. check if ANY 'get_input' field is present in object ('get_input' is the reserved

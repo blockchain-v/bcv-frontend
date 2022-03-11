@@ -2,17 +2,6 @@
   <div class="details-info">
     <div class="section-header">
       <p class="section-label">{{ texts.sectionLabelGeneral }}</p>
-      <div v-if="isVnf" class="delete-button-container">
-        <div v-if="vnfInCreatePending" class="v-info pending-create-info">
-          {{ texts.deleteVnfButtonPendingCreate }}
-        </div>
-        <CustomButton
-          :button-text="texts.deleteVnfButton"
-          @button-click="handleDelete"
-          theme-class="red"
-          :disabled="vnfInCreatePending"
-        />
-      </div>
     </div>
     <div v-for="field in nonEmptyBaseFields" :key="field.id">
       <div class="form-element">
@@ -68,6 +57,18 @@
           </button>
         </div>
       </div>
+    </div>
+    <hr v-if="isVnf" class="horizontal-divider margin-top" />
+    <div v-if="isVnf" class="delete-button-container">
+      <div v-if="vnfInCreatePending" class="v-info pending-create-info">
+        {{ texts.deleteVnfButtonPendingCreate }}
+      </div>
+      <CustomButton
+        :button-text="texts.deleteVnfButton"
+        @button-click="handleDelete"
+        theme-class="red"
+        :disabled="vnfInCreatePending"
+      />
     </div>
   </div>
 </template>
@@ -231,6 +232,9 @@ export default {
   margin-bottom: 20px;
   font-size: 10px;
   background-color: $green-mint-tulip;
+  &.margin-top {
+    margin-top: 25px;
+  }
 }
 
 .section-header {
@@ -247,10 +251,13 @@ export default {
 
 .delete-button-container {
   position: relative;
-  right: 95px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  margin-bottom: 15px;
+  margin-left: 12px;
+
+  .pending-create-info {
+    text-align: start;
+    margin-bottom: 5px;
+  }
 }
 
 .btn-copy {
